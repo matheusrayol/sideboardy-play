@@ -6,8 +6,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createApi } from '../../protocol/generated/api';
 import type { ClientErrorGroup, PlayerReport, ServerStats, TableView, UserView } from '../../protocol/generated/views';
 import { RpcClient } from '../../core/rpc/RpcClient';
+import { fetchSideboardyStaffRole, isSideboardyHost } from '../../core/deckImport/sideboardy';
 import { APP_NAME } from '../brand';
 import { api as appApi } from '../connection';
+import { useTx } from '../i18n';
 import { useSession } from '../stores/session';
 import { Button } from '../ui/Button';
 import { Field } from '../ui/Field';
@@ -39,6 +41,7 @@ interface StaffSession {
  * its own as an owner, for when nobody with a role can sign in.
  */
 export function AdminScreen() {
+  const tx = useTx();
   const phase = useSession((state) => state.phase);
   const userName = useSession((state) => state.userName);
   const client = useQueryClient();
@@ -51,7 +54,15 @@ export function AdminScreen() {
   }, []);
   const me = useQuery({
     queryKey: ['staffMe', userName],
-    queryFn: () => appApi.staffMe(),
+    queryFn: async () => {
+      const res = await appApi.staffMe();
+      if (res?.role) return res;
+      if (isSideboardyHost()) {
+        const sbRole = await fetchSideboardyStaffRole();
+        if (sbRole) return { role: sbRole, actor: userName };
+      }
+      return res;
+    },
     enabled: phase === 'signedIn',
     staleTime: 60_000,
   });
@@ -71,7 +82,7 @@ export function AdminScreen() {
     <main className={styles.page}>
       <header className={styles.head}>
         <Link to="/" className={styles.back}><ArrowLeft size={16} aria-hidden="true" /> {APP_NAME}</Link>
-        <h1 className={styles.title}>Server admin</h1>
+        <h1 className={styles.title}>{tx('Server admin')}</h1>
         {staff && <span className={styles.who}>{staff.actor} · {staff.role}</span>}
         {console_ && (
           <Button size="sm" variant="quiet" icon={<LogOut size={15} />} onClick={endConsole}>Leave console</Button>
@@ -81,9 +92,9 @@ export function AdminScreen() {
         ? <Console key={staff.actor} staff={staff} />
         : (
           <div className={styles.signIn}>
-            {phase === 'signingIn' || me.isLoading ? <p className={styles.quiet}>Checking your role…</p>
-              : phase !== 'signedIn' ? <p className={styles.lede}>Sign in with your staff account, then open Admin from the account menu. <Link to="/login" state={{ from: '/admin' }}>Sign in</Link></p>
-                : <p className={styles.lede}>{userName} has no staff role on this server. The owner gives roles from Admin, Staff.</p>}
+            {phase === 'signingIn' || me.isLoading ? <p className={styles.quiet}>{tx('Checking your role…')}</p>
+              : phase !== 'signedIn' ? <p className={styles.lede}>{tx('Sign in with your staff account, then open Admin from the account menu.')} <Link to="/login" state={{ from: '/admin' }}>{tx('Sign in')}</Link></p>
+                : <p className={styles.lede}>{userName} {tx('has no staff role on this server. The owner gives roles from Admin, Staff.')}</p>}
             {me.error && <p className={styles.error}>{String(me.error)}</p>}
             {dropped && <p className={styles.error} role="alert">The console connection dropped. Sign in again.</p>}
             <ConsoleSignIn onSignedIn={(next) => {
@@ -102,6 +113,7 @@ export function AdminScreen() {
 }
 
 function ConsoleSignIn({ onSignedIn }: { onSignedIn(admin: { api: AdminApi; rpc: RpcClient }): void }) {
+  const tx = useTx();
   const serverUrl = useSession((state) => state.serverUrl);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -129,12 +141,12 @@ function ConsoleSignIn({ onSignedIn }: { onSignedIn(admin: { api: AdminApi; rpc:
 
   return (
     <details className={styles.breakGlass}>
-      <summary><KeyRound size={15} aria-hidden="true" /> Console sign-in</summary>
+      <summary><KeyRound size={15} aria-hidden="true" /> {tx('Console sign-in')}</summary>
       <form className={styles.signIn} onSubmit={submit}>
-        <p className={styles.quiet}>For when no owner can sign in: the server's admin password (XMAGE_ADMIN_PASSWORD) opens the console as an owner on its own connection. Wrong passwords slow further tries down.</p>
+        <p className={styles.quiet}>{tx("For when no owner can sign in: the server's admin password (XMAGE_ADMIN_PASSWORD) opens the console as an owner on its own connection. Wrong passwords slow further tries down.")}</p>
         <Field label="Admin password" type="password" value={password} autoComplete="current-password"
           onChange={(event) => setPassword(event.target.value)} required />
-        {error && <p className={styles.error} role="alert">{error}</p>}
+        {error && <p className={styles.error} role="alert">{tx(error)}</p>}
         <Button type="submit" variant="decision" busy={busy} disabled={!password}>Open the console</Button>
       </form>
     </details>
@@ -161,6 +173,7 @@ const SECTIONS: { id: string; label: string; role: StaffRole }[] = [
 ];
 
 function Console({ staff }: { staff: StaffSession }) {
+  const tx = useTx();
   const { api, role } = staff;
   const sections = SECTIONS.filter((section) => atLeast(role, section.role));
   const fromHash = window.location.hash.slice(1);
@@ -171,8 +184,8 @@ function Console({ staff }: { staff: StaffSession }) {
   }
   return (
     <Tabs.Root value={section} onValueChange={choose} orientation="vertical" className={styles.console}>
-      <Tabs.List className={styles.sideNav} aria-label="Admin sections">
-        {sections.map((s) => <Tabs.Trigger key={s.id} value={s.id} className={styles.navItem}>{s.label}</Tabs.Trigger>)}
+      <Tabs.List className={styles.sideNav} aria-label={tx('Admin sections')}>
+        {sections.map((s) => <Tabs.Trigger key={s.id} value={s.id} className={styles.navItem}>{tx(s.label)}</Tabs.Trigger>)}
       </Tabs.List>
       <Tabs.Content value="overview" className={styles.panel}><Overview api={api} role={role} onUpdates={() => choose('updates')} /></Tabs.Content>
       <Tabs.Content value="players" className={styles.panel}><Players api={api} role={role} /></Tabs.Content>
@@ -198,6 +211,7 @@ function Console({ staff }: { staff: StaffSession }) {
 }
 
 function Overview({ api, role, onUpdates }: { api: AdminApi; role: StaffRole; onUpdates: () => void }) {
+  const tx = useTx();
   const stats = useQuery({ queryKey: ['admin', 'stats'], queryFn: () => api.adminServerStats(), refetchInterval: 5_000 });
   // the Updates section's answer (kept by the server for an hour), for a pointer beside the version
   const update = useQuery({
@@ -208,7 +222,7 @@ function Overview({ api, role, onUpdates }: { api: AdminApi; role: StaffRole; on
   });
   const data: ServerStats | undefined = stats.data;
   if (stats.error) return <p className={styles.error}>{String(stats.error)}</p>;
-  if (!data) return <p className={styles.quiet}>Loading…</p>;
+  if (!data) return <p className={styles.quiet}>{tx('Loading…')}</p>;
   const bridge = data.bridge;
   const buckets = bridge?.buckets ?? [];
   const limits = bridge?.bucketLimits ?? [];
@@ -248,7 +262,7 @@ function Overview({ api, role, onUpdates }: { api: AdminApi; role: StaffRole; on
       </dl>
 
       <section aria-labelledby="sizes" className={styles.block}>
-        <h2 id="sizes">Messages to web clients</h2>
+        <h2 id="sizes">{tx('Messages to web clients')}</h2>
         <p className={styles.quiet}>{(bridge?.messages ?? 0).toLocaleString()} sent, {formatBytes(bridge?.chars ?? 0)} of JSON; {(bridge?.requests ?? 0).toLocaleString()} requests received.</p>
         {(bridge?.stateFullChars ?? 0) > 0 && (
           <p className={styles.quiet}>
@@ -298,9 +312,9 @@ function Overview({ api, role, onUpdates }: { api: AdminApi; role: StaffRole; on
       )}
 
       <section aria-labelledby="heavy" className={styles.block}>
-        <h2 id="heavy">Heaviest callbacks</h2>
+        <h2 id="heavy">{tx('Heaviest callbacks')}</h2>
         <table className={styles.table}>
-          <thead><tr><th>Callback</th><th>Sent</th><th>Total</th><th>Largest</th></tr></thead>
+          <thead><tr><th>{tx('Callback')}</th><th>{tx('Sent')}</th><th>{tx('Total')}</th><th>{tx('Largest')}</th></tr></thead>
           <tbody>
             {(bridge?.heaviest ?? []).map((entry) => (
               <tr key={entry.method}>
@@ -329,9 +343,10 @@ function Overview({ api, role, onUpdates }: { api: AdminApi; role: StaffRole; on
 }
 
 function Stat({ label, value }: { label: string; value: string | number }) {
+  const tx = useTx();
   return (
     <div className={styles.stat}>
-      <dt>{label}</dt>
+      <dt>{tx(label)}</dt>
       <dd>{value}</dd>
     </div>
   );
@@ -340,6 +355,7 @@ function Stat({ label, value }: { label: string; value: string | number }) {
 type PlayerAction = { kind: 'lock' | 'deactivate' | 'disconnect'; name: string; sessionId?: string };
 
 function Players({ api, role }: { api: AdminApi; role: StaffRole }) {
+  const tx = useTx();
   const client = useQueryClient();
   const users = useQuery({ queryKey: ['admin', 'users'], queryFn: () => api.adminGetUsers(), refetchInterval: 5_000 });
   const [filter, setFilter] = useState('');
@@ -387,7 +403,7 @@ function Players({ api, role }: { api: AdminApi; role: StaffRole }) {
       )}
       {act.error && <p className={styles.error}>{String(act.error)}</p>}
       <table className={styles.table}>
-        <thead><tr><th>Player</th><th>Address</th><th>Status</th><th>Playing</th><th>Online for</th><th><span className="visually-hidden">Actions</span></th></tr></thead>
+        <thead><tr><th>{tx('Player')}</th><th>{tx('Address')}</th><th>{tx('Status')}</th><th>{tx('Playing')}</th><th>{tx('Online for')}</th><th><span className="visually-hidden">{tx('Actions')}</span></th></tr></thead>
         <tbody>
           {list.map((user, index) => {
             const name = user.userName ?? '';
@@ -428,6 +444,7 @@ function Players({ api, role }: { api: AdminApi; role: StaffRole }) {
 }
 
 function TablesPanel({ api, role }: { api: AdminApi; role: StaffRole }) {
+  const tx = useTx();
   const client = useQueryClient();
   const room = useQuery({ queryKey: ['admin', 'room'], queryFn: () => api.serverGetMainRoomId(), staleTime: Infinity });
   const tables = useQuery({
@@ -463,9 +480,9 @@ function TablesPanel({ api, role }: { api: AdminApi; role: StaffRole }) {
           confirmLabel="Remove" onConfirm={remove} onCancel={() => setPending(null)} />
       )}
       {watchError && <p className={styles.error} role="alert">{watchError}</p>}
-      {tables.data?.length === 0 && <p className={styles.quiet}>No tables are open.</p>}
+      {tables.data?.length === 0 && <p className={styles.quiet}>{tx('No tables are open.')}</p>}
       <table className={styles.table}>
-        <thead><tr><th>Table</th><th>Host</th><th>Game</th><th>State</th><th>Seats</th><th><span className="visually-hidden">Actions</span></th></tr></thead>
+        <thead><tr><th>{tx('Table')}</th><th>{tx('Host')}</th><th>{tx('Game')}</th><th>{tx('State')}</th><th>{tx('Seats')}</th><th><span className="visually-hidden">{tx('Actions')}</span></th></tr></thead>
         <tbody>
           {(tables.data ?? []).map((table: TableView) => (
             <tr key={table.tableId}>
@@ -492,6 +509,7 @@ function TablesPanel({ api, role }: { api: AdminApi; role: StaffRole }) {
 }
 
 function Reports({ api, role }: { api: AdminApi; role: StaffRole }) {
+  const tx = useTx();
   const client = useQueryClient();
   const [openOnly, setOpenOnly] = useState(true);
   const reports = useQuery({ queryKey: ['admin', 'reports', openOnly], queryFn: () => api.adminGetReports(openOnly), refetchInterval: 15_000 });
@@ -503,9 +521,9 @@ function Reports({ api, role }: { api: AdminApi; role: StaffRole }) {
   return (
     <div className={styles.block}>
       <label className={styles.check}>
-        <input type="checkbox" checked={!openOnly} onChange={(event) => setOpenOnly(!event.target.checked)} /> Show closed reports too
+        <input type="checkbox" checked={!openOnly} onChange={(event) => setOpenOnly(!event.target.checked)} /> {tx('Show closed reports too')}
       </label>
-      {reports.data?.length === 0 && <p className={styles.quiet}>{openOnly ? 'No reports are waiting.' : 'No reports yet.'}</p>}
+      {reports.data?.length === 0 && <p className={styles.quiet}>{tx(openOnly ? 'No reports are waiting.' : 'No reports yet.')}</p>}
       <ul className={styles.reports}>
         {(reports.data ?? []).map((report: PlayerReport) => (
           <li key={report.id} className={styles.report}>
@@ -550,6 +568,7 @@ function CloseReport({ api, role, report, onClose }: { api: AdminApi; role: Staf
 }
 
 function ClientErrors({ api }: { api: AdminApi }) {
+  const tx = useTx();
   const client = useQueryClient();
   const [showResolved, setShowResolved] = useState(false);
   const errors = useQuery({ queryKey: ['admin', 'errors', showResolved], queryFn: () => api.adminClientErrors(showResolved), refetchInterval: 15_000 });
@@ -561,7 +580,7 @@ function ClientErrors({ api }: { api: AdminApi }) {
   return (
     <div className={styles.block}>
       <label className={styles.check}>
-        <input type="checkbox" checked={showResolved} onChange={(event) => setShowResolved(event.target.checked)} /> Show resolved errors too
+        <input type="checkbox" checked={showResolved} onChange={(event) => setShowResolved(event.target.checked)} /> {tx('Show resolved errors too')}
       </label>
       {errors.error && <p className={styles.error}>{String(errors.error)}</p>}
       {resolve.error && <p className={styles.error} role="alert">{resolve.error.message}</p>}

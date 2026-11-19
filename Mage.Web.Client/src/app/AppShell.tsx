@@ -5,6 +5,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { NavLink, Outlet, useMatch, useNavigate } from 'react-router-dom';
 import { APP_NAME } from './brand';
 import { api } from './connection';
+import { fetchSideboardyStaffRole, isSideboardyHost } from '../core/deckImport/sideboardy';
 import { useT, type MessageKey } from './i18n';
 import type { ReleaseNotes } from '../core/util/releaseNotes';
 import { useServerInfo } from './queries';
@@ -137,7 +138,20 @@ export function AppShell() {
   const career = useServerInfo().data?.career === true;
   const t = useT();
   // staff get Admin in the account menu; the role is checked again on every admin action
-  const staff = useQuery({ queryKey: ['staffMe', userName], queryFn: () => api.staffMe(), enabled: connection === 'open', staleTime: 5 * 60_000 });
+  const staff = useQuery({
+    queryKey: ['staffMe', userName],
+    queryFn: async () => {
+      const me = await api.staffMe();
+      if (me?.role) return me;
+      if (isSideboardyHost()) {
+        const sbRole = await fetchSideboardyStaffRole();
+        if (sbRole) return { role: sbRole, actor: userName };
+      }
+      return me;
+    },
+    enabled: connection === 'open',
+    staleTime: 5 * 60_000,
+  });
   const support = useServerInfo().data?.support === true;
 
   return (
@@ -160,6 +174,14 @@ export function AppShell() {
                 {t(item.label)}
               </NavLink>
             ))}
+            {staff.data?.role && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) => [styles.navItem, isActive ? styles.active : ''].join(' ')}
+              >
+                {t('shell.admin')}
+              </NavLink>
+            )}
           </nav>
           <div className={styles.tools}>
             {connection !== 'open' && (

@@ -99,6 +99,7 @@ AUTH_TRUSTED_HEADER=X-Sideboardy-User
 AUTH_TRUSTED_PROXIES=private_ranges
 XMAGE_ALLOWED_ORIGINS=https://play.sideboardy.app
 XMAGE_PUBLIC_URL=https://play.sideboardy.app
+XMAGE_OWNER=matheus
 XMAGE_ADMIN_PASSWORD=TROCAR_POR_SENHA_FORTE
 XMAGE_AUTH=true
 XMAGE_PASSWORD_SIGNIN=false
@@ -110,6 +111,7 @@ EOF
 Notas importantes sobre essas variáveis:
 - `XMAGE_SERVER_IMAGE=` e `XMAGE_WEB_IMAGE=` vazios instruem o Compose a usar/construir as imagens locais (`xmage-web-server:local` e `xmage-web:local`).
 - `TLS_MODE=external` desativa o TLS automático do Caddy interno para que o `nginx` do host controle os certificados nas portas `80`/`443`.
+- `XMAGE_OWNER=matheus` concede o papel máximo (`owner`) à conta administradora sincronizada do Sideboardy, liberando o painel administrativo (`/admin`) e permitindo gerenciar papéis adicionais (`admin` / `moderator`) pela aba Equipe.
 - `AUTH_TRUSTED_HEADER=X-Sideboardy-User`, `AUTH_TRUSTED_PROXIES=private_ranges`, `XMAGE_AUTH=true` e `XMAGE_PASSWORD_SIGNIN=false` habilitam o login unificado exclusivo via `sideboardy.app`: quem já estiver logado em `sideboardy.app` entra automaticamente pelo cookie `.sideboardy.app` validado via `auth_request`, e quem abrir `play.sideboardy.app` deslogado faz login, cadastro ou recuperação de senha diretamente na API do `sideboardy.app` (`/sideboardy-api/auth/*`) antes de autenticar a conexão WebSocket via `X-Sideboardy-User`, sem contas paralelas no XMage.
 
 ### Passo 4 — Construir as imagens e subir a stack Docker Compose

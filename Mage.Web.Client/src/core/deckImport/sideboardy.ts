@@ -207,6 +207,18 @@ export async function logoutSideboardy(): Promise<void> {
   await fetchApiJson('/auth/logout', { method: 'POST' }).catch(() => null);
 }
 
+export async function fetchSideboardyStaffRole(): Promise<'admin' | 'moderator' | null> {
+  const result = await fetchApiJson('/auth/me');
+  if (!result || !result.response.ok) return null;
+  const user = (result.data as {
+    user?: { is_admin?: number | boolean; is_moderator?: number | boolean; role?: string };
+  })?.user;
+  if (!user) return null;
+  if (user.is_admin === 1 || user.is_admin === true || user.role === 'admin') return 'admin';
+  if (user.is_moderator === 1 || user.is_moderator === true || user.role === 'moderator') return 'moderator';
+  return null;
+}
+
 export async function fetchSideboardyMyDecks(): Promise<{ authenticated: boolean; decks: SideboardyDeckSummary[] }> {
   const result = await fetchApiJson('/decks');
   if (!result) return { authenticated: false, decks: [] };

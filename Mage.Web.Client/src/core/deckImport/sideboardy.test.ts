@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import {
+  fetchSideboardyStaffRole,
   forgotPasswordSideboardy,
   loginSideboardy,
   registerSideboardy,
@@ -105,5 +106,16 @@ describe('sideboardy auth & sso helpers', () => {
       playUsername: null,
       reachable: true,
     });
+  });
+
+  test('fetchSideboardyStaffRole resolves admin, moderator, and null from /sideboardy-api/auth/me', async () => {
+    fetchSpy.mockResolvedValueOnce(jsonResponse({ user: { id: 2, username: 'matheus', is_admin: 1, role: 'admin' } }));
+    await expect(fetchSideboardyStaffRole()).resolves.toBe('admin');
+
+    fetchSpy.mockResolvedValueOnce(jsonResponse({ user: { id: 3, username: 'mod', is_admin: 0, is_moderator: 1, role: 'moderator' } }));
+    await expect(fetchSideboardyStaffRole()).resolves.toBe('moderator');
+
+    fetchSpy.mockResolvedValueOnce(jsonResponse({ user: { id: 4, username: 'player', is_admin: 0, is_moderator: 0, role: 'user' } }));
+    await expect(fetchSideboardyStaffRole()).resolves.toBeNull();
   });
 });
