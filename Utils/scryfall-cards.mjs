@@ -166,17 +166,28 @@ function scanMageSets() {
     const setName = superMatch[1].replace(/\\"/g, '"');
     const code = superMatch[2].toUpperCase();
 
+    const excludedNames = new Set();
+    if (/cards\.removeIf\([^)]*\bunfinished\.contains\b/.test(src)) {
+      const listMatch = /\bunfinished\s*=\s*(?:Arrays\.asList|List\.of)\(([\s\S]*?)\);/.exec(src);
+      if (listMatch) {
+        for (const strMatch of listMatch[1].matchAll(/"((?:[^"\\]|\\.)*)"/g)) {
+          excludedNames.add(normalizeName(strMatch[1].replace(/\\"/g, '"')));
+        }
+      }
+    }
+
     const byName = new Map();
     const byNumber = new Set();
     let totalLines = 0;
 
     for (const m of src.matchAll(setCardRegex)) {
-      totalLines++;
       const cardName = m[1].replace(/\\"/g, '"');
+      const norm = normalizeName(cardName);
+      if (excludedNames.has(norm)) continue;
+      totalLines++;
       const number = m[2].replace(/^"|"$/g, '').toLowerCase();
       const rarity = m[3];
       const classFqn = m[4];
-      const norm = normalizeName(cardName);
 
       if (!byName.has(norm)) byName.set(norm, []);
       byName.get(norm).push({ name: cardName, number, rarity, classFqn });
