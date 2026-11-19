@@ -234,7 +234,7 @@ function Overview({ api, role, onUpdates }: { api: AdminApi; role: StaffRole; on
       <p className={styles.quiet}>
         Version {data.version ?? 'unknown'}
         {data.commit
-          ? <> · commit <a className={styles.code} href={`https://github.com/arcanite24/playmat/commit/${data.commit}`} target="_blank" rel="noreferrer">{data.commit.slice(0, 7)}</a></>
+          ? <> · commit <a className={styles.code} href={`https://github.com/matheusrayol/sideboardy-play/commit/${data.commit}`} target="_blank" rel="noreferrer">{data.commit.slice(0, 7)}</a></>
           : ' · a development build'}
         {update.data?.updateAvailable && (
           <> · <button type="button" className={styles.linkButton} onClick={onUpdates}>a newer version is out</button></>

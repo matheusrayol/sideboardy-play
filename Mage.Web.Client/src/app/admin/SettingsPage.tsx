@@ -57,7 +57,7 @@ const ABOUT: Record<string, { label: string; help: string; choices?: { value: st
   },
   'support.goalCents': { label: 'Monthly goal', help: 'In US cents, for the calendar month (UTC): 4000 is $40.', unit: 'cents' },
   'support.kofiUrl': { label: 'Ko-fi page', help: 'Where “Support the server” leads, e.g. https://ko-fi.com/playmat. Empty hides support.', text: 'https://ko-fi.com/…' },
-  'support.sponsorsUrl': { label: 'GitHub Sponsors page', help: 'Offered beside Ko-fi, e.g. https://github.com/sponsors/arcanite24.', text: 'https://github.com/sponsors/…' },
+  'support.sponsorsUrl': { label: 'GitHub Sponsors page', help: 'Offered beside Ko-fi, e.g. https://github.com/sponsors/matheusrayol.', text: 'https://github.com/sponsors/…' },
   'support.costs': { label: 'What it pays for', help: 'Shown on the support page: lines separated by “ · ” or new lines.', text: 'Server · Backups · Mail' },
   'support.discordAmounts': {
     label: 'Amounts on Discord',

@@ -112,6 +112,7 @@ services:
       XMAGE_TURNSTILE_SECRET: ${XMAGE_TURNSTILE_SECRET:-}
       XMAGE_CONTACT_EMAIL: ${XMAGE_CONTACT_EMAIL:-}
       XMAGE_UPDATE_CHECK: ${XMAGE_UPDATE_CHECK:-}
+      XMAGE_SOURCE_REPO: ${XMAGE_SOURCE_REPO:-matheusrayol/sideboardy-play}
       # support for the server: Ko-fi's verification token, the GitHub Sponsors webhook secret, and the port Caddy
       # forwards /hooks and /public to (on the compose network only: nothing publishes it)
       XMAGE_KOFI_TOKEN: ${XMAGE_KOFI_TOKEN:-}

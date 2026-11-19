@@ -6,24 +6,24 @@ const GENERATED = `<!-- Release notes generated using configuration in .github/r
 
 ## What's Changed
 ### Features
-* Players see the version and what changed by @arcanite24 in https://github.com/arcanite24/playmat/pull/60
-* **Career**: a third tier of opponents by @someone-else in https://github.com/arcanite24/playmat/pull/61
+* Players see the version and what changed by @arcanite24 in https://github.com/matheusrayol/sideboardy-play/pull/60
+* **Career**: a third tier of opponents by @someone-else in https://github.com/matheusrayol/sideboardy-play/pull/61
 ### Fixes
-* The draft timer no longer stops at zero by @arcanite24 in https://github.com/arcanite24/playmat/pull/62
+* The draft timer no longer stops at zero by @arcanite24 in https://github.com/matheusrayol/sideboardy-play/pull/62
 ### Ops
-* Deploys from GitHub releases by @arcanite24 in https://github.com/arcanite24/playmat/pull/63
+* Deploys from GitHub releases by @arcanite24 in https://github.com/matheusrayol/sideboardy-play/pull/63
 
 ## New Contributors
-* @someone-else made their first contribution in https://github.com/arcanite24/playmat/pull/61
+* @someone-else made their first contribution in https://github.com/matheusrayol/sideboardy-play/pull/61
 
-**Full Changelog**: https://github.com/arcanite24/playmat/compare/v1.2.0...v1.3.0
+**Full Changelog**: https://github.com/matheusrayol/sideboardy-play/compare/v1.2.0...v1.3.0
 `;
 
 describe('release notes', () => {
   test('generated notes become headed lists of changes', () => {
-    expect(parseReleaseNotes(GENERATED, 'v1.3.0', 'https://github.com/arcanite24/playmat/releases/tag/v1.3.0')).toEqual({
+    expect(parseReleaseNotes(GENERATED, 'v1.3.0', 'https://github.com/matheusrayol/sideboardy-play/releases/tag/v1.3.0')).toEqual({
       version: 'v1.3.0',
-      url: 'https://github.com/arcanite24/playmat/releases/tag/v1.3.0',
+      url: 'https://github.com/matheusrayol/sideboardy-play/releases/tag/v1.3.0',
       sections: [
         { id: 'features', title: 'Features', items: ['Players see the version and what changed', 'Career: a third tier of opponents'] },
         { id: 'fixes', title: 'Fixes', items: ['The draft timer no longer stops at zero'] },

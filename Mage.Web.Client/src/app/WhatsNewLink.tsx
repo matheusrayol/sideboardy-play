@@ -9,7 +9,7 @@ registerMessages(messages);
 const WhatsNewDialog = lazy(() => import('./WhatsNewDialog').then((module) => ({ default: module.WhatsNewDialog })));
 
 /** where every release's notes live, for a build without its own (development, or notes that failed to load) */
-const RELEASES_URL = 'https://github.com/arcanite24/playmat/releases';
+const RELEASES_URL = 'https://github.com/matheusrayol/sideboardy-play/releases';
 
 /** "What's new" beside the version (About, Settings): this build's notes again, after the one-time dialog (#139). */
 export function WhatsNewLink({ className }: { className?: string }) {

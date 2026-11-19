@@ -7,7 +7,7 @@ describe('WhatsNewDialog', () => {
     const onClose = vi.fn();
     render(<WhatsNewDialog onClose={onClose} notes={{
       version: 'v1.3.0',
-      url: 'https://github.com/arcanite24/playmat/releases/tag/v1.3.0',
+      url: 'https://github.com/matheusrayol/sideboardy-play/releases/tag/v1.3.0',
       sections: [
         { id: 'features', title: 'Features', items: ['Sealed events'] },
         { title: 'Highlights', items: ['A new playmat'] },
@@ -17,7 +17,7 @@ describe('WhatsNewDialog', () => {
     expect(screen.getByRole('heading', { name: 'New' })).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'Highlights' })).toBeTruthy();
     expect(screen.getByText('Sealed events')).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'All changes' }).getAttribute('href')).toBe('https://github.com/arcanite24/playmat/releases/tag/v1.3.0');
+    expect(screen.getByRole('link', { name: 'All changes' }).getAttribute('href')).toBe('https://github.com/matheusrayol/sideboardy-play/releases/tag/v1.3.0');
     fireEvent.click(screen.getByRole('button', { name: 'Got it' }));
     expect(onClose).toHaveBeenCalled();
   });

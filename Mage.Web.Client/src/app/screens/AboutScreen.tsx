@@ -8,7 +8,7 @@ import { WhatsNewLink } from '../WhatsNewLink';
 import styles from './AboutScreen.module.css';
 
 const XMAGE_URL = 'https://github.com/magefree/mage';
-const SOURCE_URL = 'https://github.com/arcanite24/playmat';
+const SOURCE_URL = 'https://github.com/matheusrayol/sideboardy-play';
 const FAN_CONTENT_POLICY_URL = 'https://company.wizards.com/en/legal/fancontentpolicy';
 const SCRYFALL_URL = 'https://scryfall.com';
 
