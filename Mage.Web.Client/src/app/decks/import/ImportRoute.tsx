@@ -13,9 +13,12 @@ export function ImportRoute() {
   const location = useLocation();
 
   useEffect(() => {
-    const url = new URLSearchParams(location.search).get('url');
+    const params = new URLSearchParams(location.search);
+    const url = params.get('url');
+    const deckId = params.get('deck') || params.get('importDeck');
     const payload = location.hash.includes('deck=') ? decodePayload(location.hash) : null;
     if (payload) openImport({ kind: 'payload', payload });
+    else if (deckId && /^\d+$/.test(deckId)) openImport({ kind: 'text', text: `https://sideboardy.app/decks/${deckId}` });
     else if (url) openImport({ kind: 'text', text: url });
     else if (location.hash.includes('deck=')) notify('Couldn’t read that deck', 'The bookmark sent something that isn’t a deck list. Try copying the list instead.', 'error');
     else openImport();

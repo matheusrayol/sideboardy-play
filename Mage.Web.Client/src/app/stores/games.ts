@@ -2,11 +2,16 @@ import { create } from 'zustand';
 import { api, events, rpc } from '../connection';
 import { GameSession, type GameSessionMode } from '../../core/game/gameSession';
 import { leaveRequest, type LeaveRequest } from '../../core/game/leave';
+import { matchProgress } from '../../core/game/matchProgress';
 import { stripMarkup } from '../../core/game/prompt';
+import type { MatchEventAccumulator } from '../../core/playgroup/playgroup';
+import type { GameView } from '../../protocol/generated/views';
+import { useI18n } from '../i18n';
 import { attention } from './attention';
 import { useCoach } from './coach';
 import { forgetOpenGame, openGameRecord, openGamesToRestore, rememberOpenGame } from './openGames';
 import { usePlay } from './play';
+import { usePlaygroup } from './playgroup';
 import { useSession } from './session';
 import { notify } from './toasts';
 
@@ -86,6 +91,94 @@ function watchForAttention(session: GameSession): () => void {
   };
 }
 
+/** Captures live GameView events for human multiplayer matches and syncs finished games with Playgroup.gg. */
+function watchPlaygroup(session: GameSession, table?: GameTable): () => void {
+  const { gameId } = session.getState();
+  const pendingViews: { view: GameView; at: number }[] = [];
+  let accumulator: MatchEventAccumulator | null = null;
+  let playgroupMod: typeof import('../../core/playgroup/playgroup') | null = null;
+  let lastView: unknown = null;
+  let finalizeTimer: ReturnType<typeof setTimeout> | null = null;
+  let finalized = false;
+  let cancelled = false;
+
+  const initialView = session.getState().view;
+  if (initialView) {
+    lastView = initialView;
+    pendingViews.push({ view: initialView, at: Date.now() });
+  }
+
+  const finalize = () => {
+    finalizeTimer = null;
+    if (cancelled || finalized || !playgroupMod || !accumulator) return;
+    const current = session.getState();
+    if (!current.gameOver || current.mode !== 'play') return;
+    finalized = true;
+
+    if (current.view && current.view !== lastView) {
+      lastView = current.view;
+      accumulator.applyView(current.view);
+    }
+    const progress = matchProgress(current.endInfo);
+    if (progress && !progress.over) return;
+
+    const players = current.view?.players ?? [];
+    const opponents = players.filter((player) => player.playerId !== current.playerId);
+    const vsAi = opponents.length > 0 && opponents.every((player) => player.isHuman === false);
+    const career = Boolean(usePlay.getState().returnPath?.startsWith('/career'));
+    if (vsAi || career || opponents.length === 0) return;
+
+    const myName = players.find((player) => player.playerId === current.playerId)?.name ?? null;
+    const winner = playgroupMod.resolveWinnerName(current.gameOver, current.endInfo, current.view, myName);
+    const draw = !winner && /\bdraw\b/i.test(`${current.endInfo?.gameInfo ?? ''}\n${current.gameOver}`);
+    const record = accumulator.finish(winner, draw);
+
+    const pg = usePlaygroup.getState();
+    pg.setMatchRecord(record);
+
+    const pgTableId = table?.parentTableId ?? table?.tableId ?? null;
+    const tablePgId = pgTableId ? pg.tableConfigs[pgTableId]?.playgroupId : undefined;
+    if (pg.user && pg.autoSync && (tablePgId || pg.defaultPlaygroupId) && !pg.syncedGames[gameId]) {
+      void pg.syncGame(record, { tableId: pgTableId })
+        .then(async (res) => {
+          await import('../match/matchMessages');
+          const t = useI18n.getState().t;
+          notify(t('match.playgroup.autoToastTitle'), t('match.playgroup.autoToastBody', { id: res.gameId, count: res.imported }));
+        })
+        .catch(() => undefined);
+    }
+  };
+
+  void import('../../core/playgroup/playgroup').then((mod) => {
+    if (cancelled) return;
+    playgroupMod = mod;
+    accumulator = new mod.MatchEventAccumulator(gameId);
+    for (const item of pendingViews) accumulator.applyView(item.view, item.at);
+    pendingViews.length = 0;
+    if (session.getState().gameOver && !finalized && !finalizeTimer) {
+      finalizeTimer = setTimeout(finalize, session.getState().endInfo ? 0 : 150);
+    }
+  }).catch(() => undefined);
+
+  const unsubscribe = session.store.subscribe((state) => {
+    if (state.view && state.view !== lastView) {
+      lastView = state.view;
+      if (accumulator) accumulator.applyView(state.view);
+      else pendingViews.push({ view: state.view, at: Date.now() });
+    }
+    if (state.gameOver && !finalized) {
+      if (finalizeTimer) clearTimeout(finalizeTimer);
+      finalizeTimer = setTimeout(finalize, state.endInfo ? 0 : 150);
+    }
+  });
+
+  return () => {
+    cancelled = true;
+    if (finalizeTimer) clearTimeout(finalizeTimer);
+    unsubscribe();
+  };
+}
+
 export const useGames = create<GamesState>((set, get) => ({
   sessions: {},
   latestGameId: null,
@@ -96,7 +189,10 @@ export const useGames = create<GamesState>((set, get) => ({
     if (existing) return existing;
     const session = new GameSession(api, events, { gameId, playerId, mode });
     const stops: (() => void)[] = [];
-    if (mode === 'play') stops.push(watchForAttention(session));
+    if (mode === 'play') {
+      stops.push(watchForAttention(session));
+      stops.push(watchPlaygroup(session, table));
+    }
     // remembered so a reload can rejoin it (replays are not worth it), until it ends: a reload then has nothing to rejoin
     const { serverUrl, userName } = useSession.getState();
     let leadsBack: string | null | undefined;

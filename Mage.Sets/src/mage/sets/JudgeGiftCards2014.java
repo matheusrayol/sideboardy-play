@@ -21,7 +21,7 @@ public class JudgeGiftCards2014 extends ExpansionSet {
         this.hasBasicLands = true;
 
         // Phyrexian-only printing. Non-English, so not adding it https://github.com/magefree/mage/pull/6190#issuecomment-582354790
-        //cards.add(new SetCardInfo("Elesh Norn, Grand Cenobite", 8, Rarity.RARE, mage.cards.e.EleshNornGrandCenobite.class));
+        cards.add(new SetCardInfo("Elesh Norn, Grand Cenobite", 8, Rarity.RARE, mage.cards.e.EleshNornGrandCenobite.class));
         cards.add(new SetCardInfo("Force of Will", 4, Rarity.RARE, mage.cards.f.ForceOfWill.class));
         cards.add(new SetCardInfo("Forest", "5*", Rarity.LAND, mage.cards.basiclands.Forest.class, FULL_ART_ZEN_VARIOUS));
         cards.add(new SetCardInfo("Greater Good", 2, Rarity.RARE, mage.cards.g.GreaterGood.class));

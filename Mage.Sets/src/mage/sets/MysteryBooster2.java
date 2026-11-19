@@ -216,6 +216,7 @@ public class MysteryBooster2 extends ExpansionSet {
         cards.add(new SetCardInfo("Serra the Benevolent", 17, Rarity.MYTHIC, mage.cards.s.SerraTheBenevolent.class));
         cards.add(new SetCardInfo("Serum Powder", 142, Rarity.RARE, mage.cards.s.SerumPowder.class));
         cards.add(new SetCardInfo("Show and Tell", 171, Rarity.MYTHIC, mage.cards.s.ShowAndTell.class));
+        cards.add(new SetCardInfo("Sigardian Evangel", 258, Rarity.UNCOMMON, mage.cards.s.SigardianEvangel.class));
         cards.add(new SetCardInfo("Simian Spirit Guide", 61, Rarity.COMMON, mage.cards.s.SimianSpiritGuide.class));
         cards.add(new SetCardInfo("Skyclave Apparition", 18, Rarity.RARE, mage.cards.s.SkyclaveApparition.class));
         cards.add(new SetCardInfo("Smokestack", 232, Rarity.RARE, mage.cards.s.Smokestack.class));
@@ -248,6 +249,7 @@ public class MysteryBooster2 extends ExpansionSet {
         cards.add(new SetCardInfo("Teferi, Time Raveler", 91, Rarity.RARE, mage.cards.t.TeferiTimeRaveler.class));
         cards.add(new SetCardInfo("Temporal Manipulation", 174, Rarity.MYTHIC, mage.cards.t.TemporalManipulation.class));
         cards.add(new SetCardInfo("Temporary Truce", 22, Rarity.RARE, mage.cards.t.TemporaryTruce.class));
+        cards.add(new SetCardInfo("Tenacious Pup", 262, Rarity.UNCOMMON, mage.cards.t.TenaciousPup.class));
         cards.add(new SetCardInfo("Tendrils of Agony", 50, Rarity.UNCOMMON, mage.cards.t.TendrilsOfAgony.class));
         cards.add(new SetCardInfo("Thassa's Oracle", 175, Rarity.RARE, mage.cards.t.ThassasOracle.class));
         cards.add(new SetCardInfo("The Rack", 141, Rarity.UNCOMMON, mage.cards.t.TheRack.class));

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { cleanTag, cleanTags, filterShelf, MAX_TAG_LENGTH, MAX_TAGS, NO_SHELF_FILTER, parseTags, tagCounts } from './tags';
+import { cleanTag, cleanTags, filterShelf, MAX_TAG_LENGTH, MAX_TAGS, NO_SHELF_FILTER, parseTags, searchShelf, tagCounts } from './tags';
 
 describe('deck tags (#200)', () => {
   test('a tag is trimmed, its spaces folded, and kept short', () => {
@@ -37,5 +37,16 @@ describe('deck tags (#200)', () => {
     expect(ids({ tag: 'BURN' })).toEqual(['a', 'b']);
     expect(ids({ hideDrafts: true })).toEqual(['a', 'c']);
     expect(ids({ tag: 'ideas', hideDrafts: true })).toEqual([]);
+  });
+
+  test('searchShelf filters by tag, unknown-tag reset, deck name, commander cover, and set', () => {
+    const decks = [
+      { id: '1', name: 'Mardu Surge', note: 'Tarkir Dragonstorm (2025) · 100 cards', cover: { name: 'Zurgo Stormrender' }, starter: { set: 'Tarkir Dragonstorm (2025)' }, tags: ['Commander', 'Precon'] },
+      { id: '2', name: 'Chandra, Bold Pyromancer', note: 'Starter deck · 60 cards', cover: { name: 'Chandra, Bold Pyromancer' }, tags: ['Starter'] },
+    ];
+    expect(searchShelf(decks, { tag: 'Missing', hideDrafts: false }, '')).toHaveLength(2);
+    expect(searchShelf(decks, { tag: 'Precon', hideDrafts: false }, '').map((d) => d.id)).toEqual(['1']);
+    expect(searchShelf(decks, NO_SHELF_FILTER, 'zurgo').map((d) => d.id)).toEqual(['1']);
+    expect(searchShelf(decks, NO_SHELF_FILTER, 'tarkir').map((d) => d.id)).toEqual(['1']);
   });
 });

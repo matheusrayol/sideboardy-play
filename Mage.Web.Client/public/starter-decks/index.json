@@ -1,92 +1,1778 @@
 [
   {
-    "file": "ajani-valiant-protector.dck",
-    "name": "Ajani, Valiant Protector",
-    "cards": 60,
+    "file": "precon-blight-curse.dck",
+    "name": "Blight Curse",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Lorwyn Eclipsed (2026)",
+    "colors": [
+      "B",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
     "cover": {
-      "name": "Ajani, Valiant Protector",
-      "setCode": "AER",
-      "cardNumber": "185"
+      "name": "Auntie Ool, Cursewretch",
+      "setCode": "ECC",
+      "cardNumber": "2"
     }
   },
   {
-    "file": "chandra-bold-pyromancer.dck",
-    "name": "Chandra, Bold Pyromancer",
-    "cards": 60,
+    "file": "precon-eternal-might.dck",
+    "name": "Eternal Might",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Aetherdrift (2025)",
+    "colors": [
+      "W",
+      "U",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
     "cover": {
-      "name": "Chandra, Bold Pyromancer",
-      "setCode": "DOM",
-      "cardNumber": "275"
+      "name": "Temmet, Naktamun's Will",
+      "setCode": "DRC",
+      "cardNumber": "4"
     }
   },
   {
-    "file": "chandra-pyrogenius.dck",
-    "name": "Chandra, Pyrogenius",
-    "cards": 60,
+    "file": "precon-living-energy.dck",
+    "name": "Living Energy",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Aetherdrift (2025)",
+    "colors": [
+      "U",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
     "cover": {
-      "name": "Chandra, Pyrogenius",
-      "setCode": "KLD",
-      "cardNumber": "265"
+      "name": "Saheeli, Radiant Creator",
+      "setCode": "DRC",
+      "cardNumber": "3"
     }
   },
   {
-    "file": "gideon-martial-paragon.dck",
-    "name": "Gideon, Martial Paragon",
-    "cards": 60,
+    "file": "precon-counter-intelligence.dck",
+    "name": "Counter Intelligence",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Edge of Eternities (2025)",
+    "colors": [
+      "W",
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
     "cover": {
-      "name": "Gideon, Martial Paragon",
-      "setCode": "AKH",
-      "cardNumber": "270"
+      "name": "Inspirit, Flagship Vessel",
+      "setCode": "EOC",
+      "cardNumber": "2"
     }
   },
   {
-    "file": "huatli-dinosaur-knight.dck",
-    "name": "Huatli, Dinosaur Knight",
-    "cards": 60,
+    "file": "precon-world-shaper.dck",
+    "name": "World Shaper",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Edge of Eternities (2025)",
+    "colors": [
+      "B",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
     "cover": {
-      "name": "Huatli, Dinosaur Knight",
-      "setCode": "XLN",
-      "cardNumber": "285"
+      "name": "Hearthhull, the Worldseed",
+      "setCode": "EOC",
+      "cardNumber": "1"
     }
   },
   {
-    "file": "liliana-death-wielder.dck",
-    "name": "Liliana, Death Wielder",
-    "cards": 60,
+    "file": "precon-counter-blitz.dck",
+    "name": "Counter Blitz",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Final Fantasy (2025)",
+    "colors": [
+      "W",
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
     "cover": {
-      "name": "Liliana, Death Wielder",
-      "setCode": "AKH",
-      "cardNumber": "275"
+      "name": "Tidus, Yuna's Guardian",
+      "setCode": "FIC",
+      "cardNumber": "5"
     }
   },
   {
-    "file": "nissa-genesis-mage.dck",
-    "name": "Nissa, Genesis Mage",
-    "cards": 60,
+    "file": "precon-limit-break.dck",
+    "name": "Limit Break",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Final Fantasy (2025)",
+    "colors": [
+      "W",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
     "cover": {
-      "name": "Nissa, Genesis Mage",
-      "setCode": "HOU",
+      "name": "Cloud, Ex-SOLDIER",
+      "setCode": "FIC",
+      "cardNumber": "2"
+    }
+  },
+  {
+    "file": "precon-revival-trance.dck",
+    "name": "Revival Trance",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Final Fantasy (2025)",
+    "colors": [
+      "W",
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Terra, Herald of Hope",
+      "setCode": "FIC",
+      "cardNumber": "4"
+    }
+  },
+  {
+    "file": "precon-scions-spellcraft.dck",
+    "name": "Scions & Spellcraft",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Final Fantasy (2025)",
+    "colors": [
+      "W",
+      "U",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Y'shtola, Night's Blessed",
+      "setCode": "FIC",
+      "cardNumber": "7"
+    }
+  },
+  {
+    "file": "precon-abzan-armor.dck",
+    "name": "Abzan Armor",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Tarkir Dragonstorm (2025)",
+    "colors": [
+      "W",
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Felothar the Steadfast",
+      "setCode": "TDC",
+      "cardNumber": "4"
+    }
+  },
+  {
+    "file": "precon-jeskai-striker.dck",
+    "name": "Jeskai Striker",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Tarkir Dragonstorm (2025)",
+    "colors": [
+      "W",
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Shiko and Narset, Unified",
+      "setCode": "TDC",
+      "cardNumber": "7"
+    }
+  },
+  {
+    "file": "precon-mardu-surge.dck",
+    "name": "Mardu Surge",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Tarkir Dragonstorm (2025)",
+    "colors": [
+      "W",
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Zurgo Stormrender",
+      "setCode": "TDC",
+      "cardNumber": "10"
+    }
+  },
+  {
+    "file": "precon-sultai-arisen.dck",
+    "name": "Sultai Arisen",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Tarkir Dragonstorm (2025)",
+    "colors": [
+      "U",
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Teval, the Balanced Scale",
+      "setCode": "TDC",
+      "cardNumber": "8"
+    }
+  },
+  {
+    "file": "precon-temur-roar.dck",
+    "name": "Temur Roar",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Tarkir Dragonstorm (2025)",
+    "colors": [
+      "U",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Eshki, Temur's Roar",
+      "setCode": "TDC",
+      "cardNumber": "3"
+    }
+  },
+  {
+    "file": "precon-endless-punishment.dck",
+    "name": "Endless Punishment",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Duskmourn - House of Horror (2024)",
+    "colors": [
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Valgavoth, Harrower of Souls",
+      "setCode": "DSC",
+      "cardNumber": "6"
+    }
+  },
+  {
+    "file": "precon-jump-scare.dck",
+    "name": "Jump Scare",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Duskmourn - House of Horror (2024)",
+    "colors": [
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Zimone, Mystery Unraveler",
+      "setCode": "DSC",
+      "cardNumber": "8"
+    }
+  },
+  {
+    "file": "precon-creative-energy.dck",
+    "name": "Creative Energy",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Modern Horizons 3 (2024)",
+    "colors": [
+      "W",
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Satya, Aetherflux Genius",
+      "setCode": "M3C",
+      "cardNumber": "3"
+    }
+  },
+  {
+    "file": "precon-eldrazi-incursion.dck",
+    "name": "Eldrazi Incursion",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Modern Horizons 3 (2024)",
+    "colors": [
+      "W",
+      "U",
+      "B",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Ulalek, Fused Atrocity",
+      "setCode": "M3C",
+      "cardNumber": "4"
+    }
+  },
+  {
+    "file": "precon-graveyard-overdrive.dck",
+    "name": "Graveyard Overdrive",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Modern Horizons 3 (2024)",
+    "colors": [
+      "B",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Disa the Restless",
+      "setCode": "M3C",
+      "cardNumber": "1"
+    }
+  },
+  {
+    "file": "precon-buckle-up.dck",
+    "name": "Buckle Up",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Kamigawa Neon Dynasty (2022)",
+    "colors": [
+      "W",
+      "U"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Kotori, Pilot Prodigy",
+      "setCode": "NEC",
+      "cardNumber": "2"
+    }
+  },
+  {
+    "file": "precon-upgrades-unleashed.dck",
+    "name": "Upgrades Unleashed",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Kamigawa Neon Dynasty (2022)",
+    "colors": [
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Chishiro, the Shattered Blade",
+      "setCode": "NEC",
+      "cardNumber": "1"
+    }
+  },
+  {
+    "file": "precon-bedecked-brokers.dck",
+    "name": "Bedecked Brokers",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Streets of New Capenna (2022)",
+    "colors": [
+      "W",
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Perrie, the Pulverizer",
+      "setCode": "NCC",
+      "cardNumber": "5"
+    }
+  },
+  {
+    "file": "precon-cabaretti-cacophony.dck",
+    "name": "Cabaretti Cacophony",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Streets of New Capenna (2022)",
+    "colors": [
+      "W",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Kitt Kanto, Mayhem Diva",
+      "setCode": "NCC",
+      "cardNumber": "4"
+    }
+  },
+  {
+    "file": "precon-maestros-massacre.dck",
+    "name": "Maestros Massacre",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Streets of New Capenna (2022)",
+    "colors": [
+      "U",
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Anhelo, the Painter",
+      "setCode": "NCC",
+      "cardNumber": "1"
+    }
+  },
+  {
+    "file": "precon-obscura-operation.dck",
+    "name": "Obscura Operation",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Streets of New Capenna (2022)",
+    "colors": [
+      "W",
+      "U",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Kamiz, Obscura Oculus",
+      "setCode": "NCC",
+      "cardNumber": "3"
+    }
+  },
+  {
+    "file": "precon-aura-of-courage.dck",
+    "name": "Aura of Courage",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Adventures in the Forgotten Realms (2021)",
+    "colors": [
+      "W",
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Galea, Kindler of Hope",
+      "setCode": "AFC",
+      "cardNumber": "1"
+    }
+  },
+  {
+    "file": "precon-draconic-rage.dck",
+    "name": "Draconic Rage",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Adventures in the Forgotten Realms (2021)",
+    "colors": [
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Vrondiss, Rage of Ancients",
+      "setCode": "AFC",
+      "cardNumber": "328"
+    }
+  },
+  {
+    "file": "precon-dungeons-of-death.dck",
+    "name": "Dungeons of Death",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Adventures in the Forgotten Realms (2021)",
+    "colors": [
+      "W",
+      "U",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Sefris of the Hidden Ways",
+      "setCode": "AFC",
+      "cardNumber": "3"
+    }
+  },
+  {
+    "file": "precon-planar-portal.dck",
+    "name": "Planar Portal",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Adventures in the Forgotten Realms (2021)",
+    "colors": [
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Prosper, Tome-Bound",
+      "setCode": "AFC",
+      "cardNumber": "2"
+    }
+  },
+  {
+    "file": "precon-lorehold-legacies.dck",
+    "name": "Lorehold Legacies",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2021",
+    "colors": [
+      "W",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Osgir, the Reconstructor",
+      "setCode": "C21",
+      "cardNumber": "335"
+    }
+  },
+  {
+    "file": "precon-prismari-performance.dck",
+    "name": "Prismari Performance",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2021",
+    "colors": [
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Zaffai, Thunder Conductor",
+      "setCode": "C21",
+      "cardNumber": "331"
+    }
+  },
+  {
+    "file": "precon-quantum-quandrix.dck",
+    "name": "Quantum Quandrix",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2021",
+    "colors": [
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Adrix and Nev, Twincasters",
+      "setCode": "MKC",
+      "cardNumber": "198"
+    }
+  },
+  {
+    "file": "precon-silverquill-statement.dck",
+    "name": "Silverquill Statement",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2021",
+    "colors": [
+      "W",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Breena, the Demagogue",
+      "setCode": "OTC",
+      "cardNumber": "217"
+    }
+  },
+  {
+    "file": "precon-witherbloom-witchcraft.dck",
+    "name": "Witherbloom Witchcraft",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2021",
+    "colors": [
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Willowdusk, Essence Seer",
+      "setCode": "C21",
+      "cardNumber": "333"
+    }
+  },
+  {
+    "file": "precon-spirit-squadron.dck",
+    "name": "Spirit Squadron",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Innistrad Crimson Vow (2021)",
+    "colors": [
+      "W",
+      "U"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Millicent, Restless Revenant",
+      "setCode": "VOC",
+      "cardNumber": "1"
+    }
+  },
+  {
+    "file": "precon-vampiric-bloodline.dck",
+    "name": "Vampiric Bloodline",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Innistrad Crimson Vow (2021)",
+    "colors": [
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Strefan, Maurer Progenitor",
+      "setCode": "VOC",
+      "cardNumber": "2"
+    }
+  },
+  {
+    "file": "precon-coven-counters.dck",
+    "name": "Coven Counters",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Innistrad Midnight Hunt (2021)",
+    "colors": [
+      "W",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Leinore, Autumn Sovereign",
+      "setCode": "MIC",
+      "cardNumber": "1"
+    }
+  },
+  {
+    "file": "precon-undead-unleashed.dck",
+    "name": "Undead Unleashed",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Innistrad Midnight Hunt (2021)",
+    "colors": [
+      "U",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Wilhelt, the Rotcleaver",
+      "setCode": "MIC",
+      "cardNumber": "2"
+    }
+  },
+  {
+    "file": "precon-elven-empire.dck",
+    "name": "Elven Empire",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Kaldheim",
+    "colors": [
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Lathril, Blade of the Elves",
+      "setCode": "KHC",
+      "cardNumber": "1"
+    }
+  },
+  {
+    "file": "precon-phantom-premonition.dck",
+    "name": "Phantom Premonition",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Kaldheim",
+    "colors": [
+      "W",
+      "U"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Ranar the Ever-Watchful",
+      "setCode": "KHC",
+      "cardNumber": "2"
+    }
+  },
+  {
+    "file": "precon-heads-i-win-tails-you-lose.dck",
+    "name": "Heads I Win, Tails You Lose",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "SECRET LAIR Heads I Win, Tails You Lose (2021)",
+    "colors": [
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Okaun, Eye of Chaos",
+      "setCode": "SLD",
+      "cardNumber": "380"
+    }
+  },
+  {
+    "file": "precon-arcane-maelstrom.dck",
+    "name": "Arcane Maelstrom",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2020",
+    "colors": [
+      "U",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Kalamax, the Stormsire",
+      "setCode": "C20",
+      "cardNumber": "9"
+    }
+  },
+  {
+    "file": "precon-ruthless-regiment.dck",
+    "name": "Ruthless Regiment",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2020",
+    "colors": [
+      "W",
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Jirina Kudro",
+      "setCode": "C20",
+      "cardNumber": "8"
+    }
+  },
+  {
+    "file": "precon-symbiotic-swarm.dck",
+    "name": "Symbiotic Swarm",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2020",
+    "colors": [
+      "W",
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Kathril, Aspect Warper",
+      "setCode": "C20",
+      "cardNumber": "10"
+    }
+  },
+  {
+    "file": "precon-timeless-wisdom.dck",
+    "name": "Timeless Wisdom",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2020",
+    "colors": [
+      "W",
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Gavi, Nest Warden",
+      "setCode": "C20",
+      "cardNumber": "7"
+    }
+  },
+  {
+    "file": "precon-arm-for-battle.dck",
+    "name": "Arm for Battle",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander Legends",
+    "colors": [
+      "W",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Wyleth, Soul of Steel",
+      "setCode": "CMR",
+      "cardNumber": "362"
+    }
+  },
+  {
+    "file": "precon-reap-the-tides.dck",
+    "name": "Reap the Tides",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander Legends",
+    "colors": [
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Aesi, Tyrant of Gyre Strait",
+      "setCode": "CMR",
+      "cardNumber": "365"
+    }
+  },
+  {
+    "file": "precon-land-s-wrath.dck",
+    "name": "Land's Wrath",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Zendikar Rising",
+    "colors": [
+      "W",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Obuun, Mul Daya Ancestor",
+      "setCode": "ZNC",
+      "cardNumber": "2"
+    }
+  },
+  {
+    "file": "precon-sneak-attack.dck",
+    "name": "Sneak Attack",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Zendikar Rising",
+    "colors": [
+      "U",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Anowon, the Ruin Thief",
+      "setCode": "ZNC",
+      "cardNumber": "1"
+    }
+  },
+  {
+    "file": "precon-faceless-menace.dck",
+    "name": "Faceless Menace",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2019",
+    "colors": [
+      "U",
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Kadena, Slinking Sorcerer",
+      "setCode": "C19",
+      "cardNumber": "45"
+    }
+  },
+  {
+    "file": "precon-merciless-rage.dck",
+    "name": "Merciless Rage",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2019",
+    "colors": [
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Anje Falkenrath",
+      "setCode": "C19",
+      "cardNumber": "37"
+    }
+  },
+  {
+    "file": "precon-mystic-intellect.dck",
+    "name": "Mystic Intellect",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2019",
+    "colors": [
+      "W",
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Sevinne, the Chronoclasm",
+      "setCode": "C19",
+      "cardNumber": "49"
+    }
+  },
+  {
+    "file": "precon-primal-genesis.dck",
+    "name": "Primal Genesis",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2019",
+    "colors": [
+      "W",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Ghired, Conclave Exile",
+      "setCode": "C19",
+      "cardNumber": "42"
+    }
+  },
+  {
+    "file": "precon-adaptive-enchantment.dck",
+    "name": "Adaptive Enchantment",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2018",
+    "colors": [
+      "W",
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Estrid, the Masked",
+      "setCode": "C18",
+      "cardNumber": "40"
+    }
+  },
+  {
+    "file": "precon-exquisite-invention.dck",
+    "name": "Exquisite Invention",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2018",
+    "colors": [
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Saheeli, the Gifted",
+      "setCode": "C18",
+      "cardNumber": "44"
+    }
+  },
+  {
+    "file": "precon-nature-s-vengeance.dck",
+    "name": "Nature's Vengeance",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2018",
+    "colors": [
+      "B",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Lord Windgrace",
+      "setCode": "C18",
+      "cardNumber": "43"
+    }
+  },
+  {
+    "file": "precon-subjective-reality.dck",
+    "name": "Subjective Reality",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2018",
+    "colors": [
+      "W",
+      "U",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Aminatou, the Fateshifter",
+      "setCode": "C18",
+      "cardNumber": "37"
+    }
+  },
+  {
+    "file": "precon-arcane-wizardry.dck",
+    "name": "Arcane Wizardry",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2017",
+    "colors": [
+      "U",
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Inalla, Archmage Ritualist",
+      "setCode": "C17",
+      "cardNumber": "38"
+    }
+  },
+  {
+    "file": "precon-draconic-domination.dck",
+    "name": "Draconic Domination",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2017",
+    "colors": [
+      "W",
+      "U",
+      "B",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "The Ur-Dragon",
+      "setCode": "C17",
+      "cardNumber": "48"
+    }
+  },
+  {
+    "file": "precon-feline-ferocity.dck",
+    "name": "Feline Ferocity",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2017",
+    "colors": [
+      "W",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Arahbo, Roar of the World",
+      "setCode": "C17",
+      "cardNumber": "35"
+    }
+  },
+  {
+    "file": "precon-vampiric-bloodlust.dck",
+    "name": "Vampiric Bloodlust",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2017",
+    "colors": [
+      "W",
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Edgar Markov",
+      "setCode": "C17",
+      "cardNumber": "36"
+    }
+  },
+  {
+    "file": "precon-breed-lethality.dck",
+    "name": "Breed Lethality",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2016",
+    "colors": [
+      "W",
+      "U",
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Atraxa, Praetors' Voice",
+      "setCode": "C16",
+      "cardNumber": "28"
+    }
+  },
+  {
+    "file": "precon-entropic-uprising.dck",
+    "name": "Entropic Uprising",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2016",
+    "colors": [
+      "U",
+      "B",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Yidris, Maelstrom Wielder",
+      "setCode": "C16",
+      "cardNumber": "50"
+    }
+  },
+  {
+    "file": "precon-invent-superiority.dck",
+    "name": "Invent Superiority",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2016",
+    "colors": [
+      "W",
+      "U",
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Breya, Etherium Shaper",
+      "setCode": "C16",
+      "cardNumber": "29"
+    }
+  },
+  {
+    "file": "precon-open-hostility.dck",
+    "name": "Open Hostility",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2016",
+    "colors": [
+      "W",
+      "B",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Saskia the Unyielding",
+      "setCode": "C16",
+      "cardNumber": "41"
+    }
+  },
+  {
+    "file": "precon-stalwart-unity.dck",
+    "name": "Stalwart Unity",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2016",
+    "colors": [
+      "W",
+      "U",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Kynaios and Tiro of Meletis",
+      "setCode": "C16",
+      "cardNumber": "36"
+    }
+  },
+  {
+    "file": "precon-call-the-spirits.dck",
+    "name": "Call the Spirits",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2015",
+    "colors": [
+      "W",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Daxos the Returned",
+      "setCode": "C15",
+      "cardNumber": "43"
+    }
+  },
+  {
+    "file": "precon-plunder-the-graves.dck",
+    "name": "Plunder the Graves",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2015",
+    "colors": [
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Meren of Clan Nel Toth",
+      "setCode": "C15",
+      "cardNumber": "49"
+    }
+  },
+  {
+    "file": "precon-seize-control.dck",
+    "name": "Seize Control",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2015",
+    "colors": [
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Mizzix of the Izmagnus",
+      "setCode": "C15",
+      "cardNumber": "50"
+    }
+  },
+  {
+    "file": "precon-swell-the-host.dck",
+    "name": "Swell the Host",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2015",
+    "colors": [
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Ezuri, Claw of Progress",
+      "setCode": "C15",
+      "cardNumber": "44"
+    }
+  },
+  {
+    "file": "precon-wade-into-battle.dck",
+    "name": "Wade into Battle",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2015",
+    "colors": [
+      "W",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Kalemne, Disciple of Iroas",
+      "setCode": "C15",
+      "cardNumber": "45"
+    }
+  },
+  {
+    "file": "precon-built-from-scratch.dck",
+    "name": "Built from Scratch",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2014",
+    "colors": [
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Daretti, Scrap Savant",
+      "setCode": "C14",
+      "cardNumber": "33"
+    }
+  },
+  {
+    "file": "precon-forged-in-stone.dck",
+    "name": "Forged in Stone",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2014",
+    "colors": [
+      "W"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Nahiri, the Lithomancer",
+      "setCode": "C14",
+      "cardNumber": "10"
+    }
+  },
+  {
+    "file": "precon-guided-by-nature.dck",
+    "name": "Guided by Nature",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2014",
+    "colors": [
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Freyalise, Llanowar's Fury",
+      "setCode": "C14",
+      "cardNumber": "43"
+    }
+  },
+  {
+    "file": "precon-peer-through-time.dck",
+    "name": "Peer Through Time",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2014",
+    "colors": [
+      "U"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Teferi, Temporal Archmage",
+      "setCode": "C14",
+      "cardNumber": "19"
+    }
+  },
+  {
+    "file": "precon-sworn-to-darkness.dck",
+    "name": "Sworn to Darkness",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2014",
+    "colors": [
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Ob Nixilis of the Black Oath",
+      "setCode": "C14",
+      "cardNumber": "27"
+    }
+  },
+  {
+    "file": "precon-eternal-bargain.dck",
+    "name": "Eternal Bargain",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2013",
+    "colors": [
+      "W",
+      "U",
+      "B"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Oloro, Ageless Ascetic",
+      "setCode": "C13",
+      "cardNumber": "203"
+    }
+  },
+  {
+    "file": "precon-evasive-maneuvers.dck",
+    "name": "Evasive Maneuvers",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2013",
+    "colors": [
+      "W",
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Derevi, Empyrial Tactician",
+      "setCode": "C13",
+      "cardNumber": "186"
+    }
+  },
+  {
+    "file": "precon-mind-seize.dck",
+    "name": "Mind Seize",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2013",
+    "colors": [
+      "U",
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Jeleva, Nephalia's Scourge",
+      "setCode": "C13",
+      "cardNumber": "194"
+    }
+  },
+  {
+    "file": "precon-nature-of-the-beast.dck",
+    "name": "Nature of the Beast",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2013",
+    "colors": [
+      "W",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Marath, Will of the Wild",
+      "setCode": "C13",
+      "cardNumber": "198"
+    }
+  },
+  {
+    "file": "precon-power-hungry.dck",
+    "name": "Power Hungry",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2013",
+    "colors": [
+      "B",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Prossh, Skyraider of Kher",
+      "setCode": "C13",
+      "cardNumber": "204"
+    }
+  },
+  {
+    "file": "precon-counterpunch.dck",
+    "name": "Counterpunch",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2011",
+    "colors": [
+      "W",
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Ghave, Guru of Spores",
+      "setCode": "CMD",
       "cardNumber": "200"
     }
   },
   {
-    "file": "nissa-nature-s-artisan.dck",
-    "name": "Nissa, Nature's Artisan",
-    "cards": 60,
+    "file": "precon-devour-for-power.dck",
+    "name": "Devour for Power",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2011",
+    "colors": [
+      "U",
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
     "cover": {
-      "name": "Nissa, Nature's Artisan",
-      "setCode": "KLD",
-      "cardNumber": "270"
+      "name": "The Mimeoplasm",
+      "setCode": "CMD",
+      "cardNumber": "210"
     }
   },
   {
-    "file": "tezzeret-master-of-metal.dck",
-    "name": "Tezzeret, Master of Metal",
-    "cards": 60,
+    "file": "precon-heavenly-inferno.dck",
+    "name": "Heavenly Inferno",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2011",
+    "colors": [
+      "W",
+      "B",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
     "cover": {
-      "name": "Tezzeret, Master of Metal",
-      "setCode": "AER",
-      "cardNumber": "190"
+      "name": "Kaalia of the Vast",
+      "setCode": "CMD",
+      "cardNumber": "206"
+    }
+  },
+  {
+    "file": "precon-mirror-mastery.dck",
+    "name": "Mirror Mastery",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2011",
+    "colors": [
+      "U",
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Riku of Two Reflections",
+      "setCode": "CMD",
+      "cardNumber": "220"
+    }
+  },
+  {
+    "file": "precon-political-puppets.dck",
+    "name": "Political Puppets",
+    "cards": 100,
+    "format": "Variant Magic - Commander",
+    "set": "Commander 2011",
+    "colors": [
+      "W",
+      "U",
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Precon"
+    ],
+    "cover": {
+      "name": "Zedruu the Greathearted",
+      "setCode": "CMD",
+      "cardNumber": "240"
     }
   },
   {
@@ -98,7 +1784,14 @@
       "name": "Krenko, Mob Boss",
       "setCode": "FDN",
       "cardNumber": "204"
-    }
+    },
+    "colors": [
+      "R"
+    ],
+    "tags": [
+      "Commander",
+      "Starter"
+    ]
   },
   {
     "file": "talrand-spellstorm.dck",
@@ -109,7 +1802,14 @@
       "name": "Talrand, Sky Summoner",
       "setCode": "M13",
       "cardNumber": "72"
-    }
+    },
+    "colors": [
+      "U"
+    ],
+    "tags": [
+      "Commander",
+      "Starter"
+    ]
   },
   {
     "file": "trostani-selesnya-swarm.dck",
@@ -120,6 +1820,167 @@
       "name": "Trostani, Selesnya's Voice",
       "setCode": "RTR",
       "cardNumber": "206"
-    }
+    },
+    "colors": [
+      "W",
+      "G"
+    ],
+    "tags": [
+      "Commander",
+      "Starter"
+    ]
+  },
+  {
+    "file": "ajani-valiant-protector.dck",
+    "name": "Ajani, Valiant Protector",
+    "cards": 60,
+    "cover": {
+      "name": "Ajani, Valiant Protector",
+      "setCode": "AER",
+      "cardNumber": "185"
+    },
+    "colors": [
+      "W",
+      "G"
+    ],
+    "tags": [
+      "Starter"
+    ]
+  },
+  {
+    "file": "chandra-bold-pyromancer.dck",
+    "name": "Chandra, Bold Pyromancer",
+    "cards": 60,
+    "cover": {
+      "name": "Chandra, Bold Pyromancer",
+      "setCode": "DOM",
+      "cardNumber": "275"
+    },
+    "colors": [
+      "R",
+      "G"
+    ],
+    "tags": [
+      "Starter"
+    ]
+  },
+  {
+    "file": "chandra-pyrogenius.dck",
+    "name": "Chandra, Pyrogenius",
+    "cards": 60,
+    "cover": {
+      "name": "Chandra, Pyrogenius",
+      "setCode": "KLD",
+      "cardNumber": "265"
+    },
+    "colors": [
+      "W",
+      "R"
+    ],
+    "tags": [
+      "Starter"
+    ]
+  },
+  {
+    "file": "gideon-martial-paragon.dck",
+    "name": "Gideon, Martial Paragon",
+    "cards": 60,
+    "cover": {
+      "name": "Gideon, Martial Paragon",
+      "setCode": "AKH",
+      "cardNumber": "270"
+    },
+    "colors": [
+      "W",
+      "R"
+    ],
+    "tags": [
+      "Starter"
+    ]
+  },
+  {
+    "file": "huatli-dinosaur-knight.dck",
+    "name": "Huatli, Dinosaur Knight",
+    "cards": 60,
+    "cover": {
+      "name": "Huatli, Dinosaur Knight",
+      "setCode": "XLN",
+      "cardNumber": "285"
+    },
+    "colors": [
+      "W",
+      "R"
+    ],
+    "tags": [
+      "Starter"
+    ]
+  },
+  {
+    "file": "liliana-death-wielder.dck",
+    "name": "Liliana, Death Wielder",
+    "cards": 60,
+    "cover": {
+      "name": "Liliana, Death Wielder",
+      "setCode": "AKH",
+      "cardNumber": "275"
+    },
+    "colors": [
+      "B",
+      "G"
+    ],
+    "tags": [
+      "Starter"
+    ]
+  },
+  {
+    "file": "nissa-genesis-mage.dck",
+    "name": "Nissa, Genesis Mage",
+    "cards": 60,
+    "cover": {
+      "name": "Nissa, Genesis Mage",
+      "setCode": "HOU",
+      "cardNumber": "200"
+    },
+    "colors": [
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Starter"
+    ]
+  },
+  {
+    "file": "nissa-nature-s-artisan.dck",
+    "name": "Nissa, Nature's Artisan",
+    "cards": 60,
+    "cover": {
+      "name": "Nissa, Nature's Artisan",
+      "setCode": "KLD",
+      "cardNumber": "270"
+    },
+    "colors": [
+      "U",
+      "G"
+    ],
+    "tags": [
+      "Starter"
+    ]
+  },
+  {
+    "file": "tezzeret-master-of-metal.dck",
+    "name": "Tezzeret, Master of Metal",
+    "cards": 60,
+    "cover": {
+      "name": "Tezzeret, Master of Metal",
+      "setCode": "AER",
+      "cardNumber": "190"
+    },
+    "colors": [
+      "U",
+      "B"
+    ],
+    "tags": [
+      "Starter"
+    ]
   }
 ]

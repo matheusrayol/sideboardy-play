@@ -10,9 +10,9 @@ export const CARD_BACKS = [
   'die-laurel', 'damask', 'world-tree', 'moon-peaks', 'labyrinth', 'orrery', 'knotwork', 'lantern',
 ] as const;
 
-export type CardBackId = (typeof CARD_BACKS)[number] | 'classic';
+export type CardBackId = (typeof CARD_BACKS)[number] | 'sideboardy' | 'classic';
 
-export const DEFAULT_CARD_BACK: CardBackId = 'stitch-hand';
+export const DEFAULT_CARD_BACK: CardBackId = 'sideboardy';
 
 /** The original Magic card back as Scryfall serves it (its default card_back_id), through the image proxy if any. */
 export const CLASSIC_BACK = proxiedScryfallUrl(
@@ -23,7 +23,10 @@ export const CLASSIC_BACK = proxiedScryfallUrl(
 /** The picture of a card back choice (whatever the painted-art setting). */
 export function cardBackImage(id: CardBackId): string {
   if (id === 'classic') return CLASSIC_BACK;
-  return `/card-back/${(CARD_BACKS as readonly string[]).includes(id) ? id : DEFAULT_CARD_BACK}.webp`;
+  if (id === 'sideboardy') return '/card-back/sideboardy.svg';
+  return (CARD_BACKS as readonly string[]).includes(id)
+    ? `/card-back/${id}.webp`
+    : '/card-back/sideboardy.svg';
 }
 
 /**

@@ -126,6 +126,7 @@ public final class Visions extends ExpansionSet {
         cards.add(new SetCardInfo("Necromancy", 64, Rarity.UNCOMMON, mage.cards.n.Necromancy.class, RETRO_ART));
         cards.add(new SetCardInfo("Necrosavant", 65, Rarity.RARE, mage.cards.n.Necrosavant.class, RETRO_ART));
         cards.add(new SetCardInfo("Nekrataal", 66, Rarity.UNCOMMON, mage.cards.n.Nekrataal.class, RETRO_ART));
+        cards.add(new SetCardInfo("Ogre Enforcer", 89, Rarity.RARE, mage.cards.o.OgreEnforcer.class, RETRO_ART));
         cards.add(new SetCardInfo("Ovinomancer", 39, Rarity.UNCOMMON, mage.cards.o.Ovinomancer.class, RETRO_ART));
         cards.add(new SetCardInfo("Panther Warriors", 115, Rarity.COMMON, mage.cards.p.PantherWarriors.class, RETRO_ART));
         cards.add(new SetCardInfo("Parapet", 14, Rarity.COMMON, mage.cards.p.Parapet.class, RETRO_ART));
@@ -216,8 +217,7 @@ class VisionsCollator implements BoosterCollator {
     private final CardRun commonB = new CardRun(true, "55", "82", "115", "24", "34", "70", "90", "105", "17", "43", "56", "77", "118", "17", "26", "55", "90", "115", "21", "26", "74", "82", "118", "24", "29", "71", "79", "113", "6", "47", "74", "97", "110", "20", "29", "70", "77", "105", "21", "34", "71", "79", "110", "6", "43", "56", "97", "113", "20", "47");
     private final CardRun commonC = new CardRun(false, "68", "81", "124", "154", "9", "35", "152");
     private final CardRun uncommon = new CardRun(false, "157", "125", "40", "161", "7", "64", "111", "132", "83", "22", "46" , "148", "22", "53", "123", "142", "149", "13", "146", "122", "149", "66", "150", "31", "95", "15", "58", "122", "50", "84", "111", "31", "88", "150", "69", "135", "50", "135", "16", "166", "80", "162", "64", "103", "160", "88", "145", "52", "144", "136", "121", "148", "164", "12", "144", "46", "123", "162", "100", "12", "42", "164", "7", "53", "104", "142", "84", "2", "73", "136", "16", "73", "161", "33", "98", "15", "58", "147", "39", "80", "157", "42", "100", "165", "147", "125", "139", "98", "160", "66", "95", "132", "126", "121", "39", "126", "13", "52", "104", "33", "145", "83", "166", "69", "103", "40", "146", "2", "139", "165");
-    // omitted "89" unimplemented Ogre Enforcer
-    private final CardRun rare = new CardRun(false, "151", "45", "137", "114", "131", "72", "143", "4", "140", "63", "28", "153", "109", "129", "60", "44", "23", "155", "76", "128", "30", "156", "112", "158", "51", "134", "25", "130", "78", "141", "32", "3", "116", "86", "67", "159", "1", "102", "91", "127", "41", "167", "119", "138", "65", "133", "19", "163", "87");
+    private final CardRun rare = new CardRun(false, "151", "45", "137", "114", "131", "72", "143", "4", "140", "63", "28", "153", "109", "129", "60", "44", "23", "155", "76", "128", "30", "156", "112", "158", "51", "134", "25", "130", "78", "141", "32", "3", "116", "86", "67", "159", "1", "102", "89", "91", "127", "41", "167", "119", "138", "65", "133", "19", "163", "87");
 
     private final BoosterStructure AAAAABBBBBC = new BoosterStructure(
         commonA, commonA, commonA, commonA, commonA,

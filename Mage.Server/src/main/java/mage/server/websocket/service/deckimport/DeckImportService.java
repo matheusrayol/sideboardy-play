@@ -98,7 +98,7 @@ public final class DeckImportService {
     }
 
     static List<DeckSource> defaultSources() {
-        return Arrays.asList(new ArchidektSource(), new TcgplayerSource(), new MtgTop8Source(), new ScryfallSource(), new ManaboxSource());
+        return Arrays.asList(new ArchidektSource(), new TcgplayerSource(), new MtgTop8Source(), new ScryfallSource(), new ManaboxSource(), new SideboardySource());
     }
 
     static Set<String> allowedHosts(List<DeckSource> sources) {

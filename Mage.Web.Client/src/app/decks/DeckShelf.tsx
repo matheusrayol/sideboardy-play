@@ -1,8 +1,8 @@
 import { Copy, Image as ImageIcon, Plus, Search, Share2, X } from 'lucide-react';
-import { useMemo, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import type { DeckCardLists } from '../../core/decks/types';
 import { formatRules } from '../../core/decks/formats';
-import { cleanTag, MAX_TAGS, tagCounts } from '../../core/decks/tags';
+import { cleanTag, MAX_TAGS } from '../../core/decks/tags';
 import type { SharedDeck } from '../../protocol/generated/views';
 import { useCardImage } from '../../core/images/useCardImage';
 import { useT } from '../i18n';
@@ -14,40 +14,9 @@ import { Dialog } from '../ui/Dialog';
 import { CoverDialog } from './CoverDialog';
 import styles from './DeckShelf.module.css';
 
-const errorText = (error: unknown) => (error instanceof Error ? error.message : String(error));
+export { ShelfFilterBar } from './ShelfFilterBar';
 
-/** The shelf's filter (#200): every tag in use as a chip, and drafts shown or hidden. */
-export function ShelfFilterBar({ decks }: { decks: RosterDeck[] }) {
-  const t = useT();
-  const filter = useDecks((state) => state.shelfFilter);
-  const setFilter = useDecks((state) => state.setShelfFilter);
-  const tags = useMemo(() => tagCounts(decks), [decks]);
-  const drafts = decks.some((deck) => deck.draft);
-  // a tag nobody uses any more doesn't keep hiding every deck
-  const current = filter.tag && tags.some((entry) => entry.tag.toLowerCase() === filter.tag!.toLowerCase()) ? filter.tag : null;
-  if (tags.length === 0 && !drafts && !filter.hideDrafts) return null;
-  return (
-    <div className={styles.filterBar} role="group" aria-label={t('decks.filter.label')}>
-      <button type="button" className={current === null ? styles.chipOn : styles.chip} aria-pressed={current === null} onClick={() => setFilter({ tag: null })}>
-        {t('decks.filter.all')}
-      </button>
-      {tags.map(({ tag, count }) => {
-        const on = current?.toLowerCase() === tag.toLowerCase();
-        return (
-          <button key={tag} type="button" className={on ? styles.chipOn : styles.chip} aria-pressed={on} onClick={() => setFilter({ tag: on ? null : tag })}>
-            {tag}<small>{count}</small>
-          </button>
-        );
-      })}
-      {(drafts || filter.hideDrafts) && (
-        <label className={styles.check}>
-          <input type="checkbox" checked={filter.hideDrafts} onChange={(event) => setFilter({ hideDrafts: event.target.checked })} />
-          {t('decks.filter.hideDrafts')}
-        </label>
-      )}
-    </div>
-  );
-}
+const errorText = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
 /** A saved deck's tags, draft mark, cover and sharing, in the deck panel. */
 export function DeckOrganizer({ deck }: { deck: RosterDeck }) {

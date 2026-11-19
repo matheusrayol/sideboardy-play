@@ -11,7 +11,7 @@ import { useDegradedSites } from '../decks/import/useImportFlow';
 import { PASTE_KEYS } from '../decks/import/text';
 import { deckStorage } from '../../core/decks/DeckStorageService';
 import { applyUpdate } from '../../core/deckImport/diff';
-import { filterShelf } from '../../core/decks/tags';
+import { searchShelf } from '../../core/decks/tags';
 import { t as translate, useT } from '../i18n';
 import { RichText } from '../i18n/RichText';
 import { SLEEVE_COLORS, chosenSleeve, sleeveFor, useDecks, type RosterDeck } from '../stores/decks';
@@ -43,12 +43,10 @@ export function DecksScreen() {
   const decks = useDecks();
   const t = useT();
   const roster = useDeckRoster();
-  // the shelf under its tag and drafts filter (#200); the chosen deck's panel stays put even when filtered out
+  const [query, setQuery] = useState('');
+  // the shelf under its tag, drafts and search filter (#200); the chosen deck's panel stays put even when filtered out
   const shelfFilter = useDecks((state) => state.shelfFilter);
-  const shelf = useMemo(() => {
-    const known = shelfFilter.tag && roster.some((deck) => deck.tags.some((tag) => tag.toLowerCase() === shelfFilter.tag!.toLowerCase()));
-    return filterShelf(roster, { ...shelfFilter, tag: known ? shelfFilter.tag : null });
-  }, [roster, shelfFilter]);
+  const shelf = useMemo(() => searchShelf(roster, shelfFilter, query), [roster, shelfFilter, query]);
   const [removing, setRemoving] = useState<RosterDeck | null>(null);
   const [updating, setUpdating] = useState<string | null>(null);
   const [renaming, setRenaming] = useState<RosterDeck | null>(null);
@@ -125,7 +123,7 @@ export function DecksScreen() {
             <span>{t('decks.dropHint')}</span>
           </div>
         )}
-        <ShelfFilterBar decks={roster} />
+        <ShelfFilterBar decks={roster} query={query} onQueryChange={setQuery} />
         <div className={styles.grid} role="list">
           {decks.loaded && decks.saved.length === 0 && (
             <p role="listitem" className={styles.emptyShelf}>

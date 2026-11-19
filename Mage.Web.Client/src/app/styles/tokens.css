@@ -1,34 +1,33 @@
 /*
- * Playmat world: the app is the player's own mat.
- * Dyed neoprene ground, screen-printed ivory ink for zones and labels, a stitched edge,
- * and one amber reserved for "your decision now".
+ * Sideboardy Play: official Sideboardy palette (midnight blue #141A2E, cream #F7F5F0, brand orange #F4A340)
+ * adapted for the dyed neoprene ground, screen-printed labels, stitched edge, and interactive decisions.
  */
 :root {
   color-scheme: dark;
 
-  /* neoprene, darkest to lightest */
-  --mat-950: #070c0a;
-  --mat-900: #0b120f;
-  --mat-800: #0f1714;
-  --mat-700: #142019;
-  --mat-600: #1c2d27;
-  --mat-500: #27403a;
-  --mat-400: #3a5a51;
+  /* neoprene / superfície Sideboardy (azul-noite, do mais escuro ao mais claro) */
+  --mat-950: #0c101e;
+  --mat-900: #111629;
+  --mat-800: #141a2e;
+  --mat-700: #1a2138;
+  --mat-600: #252c45;
+  --mat-500: #373f5a;
+  --mat-400: #565c72;
 
-  /* screen-print ink (ivory) and its printed densities */
-  --ink: #e9e4d6;
-  --ink-strong: #f6f2e8;
-  --ink-soft: rgb(233 228 214 / 0.78);
-  --ink-dim: rgb(233 228 214 / 0.62);
-  --ink-faint: rgb(233 228 214 / 0.3);
-  --ink-ghost: rgb(233 228 214 / 0.12);
-  --thread: #d4ccb6;
+  /* tinta creme (#F7F5F0) e densidades impressas */
+  --ink: #f7f5f0;
+  --ink-strong: #fdfcfa;
+  --ink-soft: rgb(247 245 240 / 0.8);
+  --ink-dim: rgb(247 245 240 / 0.64);
+  --ink-faint: rgb(247 245 240 / 0.3);
+  --ink-ghost: rgb(247 245 240 / 0.12);
+  --thread: #cdc9bf;
 
-  /* the only highlight: your decision now */
-  --decision: #f0b13d;
-  --decision-strong: #ffc65a;
-  --decision-ink: #1d1406;
-  --decision-glow: rgb(240 177 61 / 0.35);
+  /* destaque da marca: laranja Sideboardy (#F4A340) */
+  --decision: #f4a340;
+  --decision-strong: #f9c074;
+  --decision-ink: #141a2e;
+  --decision-glow: rgb(244 163 64 / 0.35);
 
   /* damage, destructive actions, errors */
   --oxblood: #8a2f2a;
@@ -49,38 +48,38 @@
   --copper-rgb: 224 116 63;
 
   /* colour channels, for tints: rgb(var(--ink-rgb) / 0.1) */
-  --ink-rgb: 233 228 214;
-  --ink-strong-rgb: 246 242 232;
-  --mat-rgb: 7 12 10;
-  --void-rgb: 4 7 6;
+  --ink-rgb: 247 245 240;
+  --ink-strong-rgb: 253 252 250;
+  --mat-rgb: 12 16 30;
+  --void-rgb: 7 10 19;
   --shade-rgb: 0 0 0;
   --gloss-rgb: 255 255 255;
-  --decision-rgb: 240 177 61;
+  --decision-rgb: 244 163 64;
   --oxblood-rgb: 138 47 42;
   --danger-rgb: 229 135 124;
 
   /* physical objects on the mat: card paper and backs, the default sleeve, a print's dye */
-  --paper: #e9e4d6;
-  --paper-shade: #d8d2c0;
-  --paper-ink: #1a1f1b;
-  --paper-ink-dim: #4a5450;
-  --card-void: #111;
-  --card-blank-top: #2b2a26;
-  --card-blank-bottom: #1c1b18;
-  --sleeve-default: #20302b;
-  --print-dye: #2f6b58;
+  --paper: #f7f5f0;
+  --paper-shade: #e3dfd5;
+  --paper-ink: #141a2e;
+  --paper-ink-dim: #565c72;
+  --card-void: #0c101e;
+  --card-blank-top: #252c45;
+  --card-blank-bottom: #141a2e;
+  --sleeve-default: #181e33;
+  --print-dye: #3b5284;
 
-  /* mana pips */
-  --mana-w: #f3ecd0;
-  --mana-u: #6aa3e3;
-  --mana-b: #a998b6;
-  --mana-r: #e86c4c;
-  --mana-g: #6fbb7c;
-  --mana-c: #c4bfb3;
+  /* mana pips (paleta Sideboardy) */
+  --mana-w: #f8e7b9;
+  --mana-u: #4aa3df;
+  --mana-b: #9c8aa5;
+  --mana-r: #e8613c;
+  --mana-g: #3fa66b;
+  --mana-c: #b6b0a8;
 
   /* type */
-  --font-ui: 'Barlow', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-print: 'Barlow Condensed', 'Barlow', ui-sans-serif, system-ui, sans-serif;
+  --font-ui: 'Bricolage Grotesque', 'Inter', 'Barlow', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-print: 'Bricolage Grotesque', 'Barlow Condensed', 'Barlow', ui-sans-serif, system-ui, sans-serif;
 
   --text-xs: 0.75rem;
   --text-sm: 0.8125rem;
@@ -91,8 +90,8 @@
   --text-3xl: 3rem;
   --text-4xl: 4.5rem;
 
-  --tracking-print: 0.08em;
-  --tracking-print-wide: 0.16em;
+  --tracking-print: 0.04em;
+  --tracking-print-wide: 0.09em;
 
   /* space (4px grid) */
   --space-1: 4px;
@@ -149,5 +148,5 @@
   --dur-print: 620ms;
 
   /* printed grain of the mat (authored SVG noise) */
-  --mat-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.95  0 0 0 0 0.9  0 0 0 0.09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --mat-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.92  0 0 0 0 0.96  0 0 0 0.09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }

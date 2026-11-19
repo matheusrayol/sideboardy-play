@@ -60,7 +60,7 @@ public final class PortalSecondAge extends ExpansionSet {
         cards.add(new SetCardInfo("Coastal Wizard", 34, Rarity.RARE, mage.cards.c.CoastalWizard.class, RETRO_ART));
         cards.add(new SetCardInfo("Coercion", 66, Rarity.UNCOMMON, mage.cards.c.Coercion.class, RETRO_ART));
         cards.add(new SetCardInfo("Cruel Edict", 67, Rarity.COMMON, mage.cards.c.CruelEdict.class, RETRO_ART));
-//        cards.add(new SetCardInfo("Cunning Giant", 93, Rarity.RARE, mage.cards.c.CunningGiant.class, RETRO_ART));
+        cards.add(new SetCardInfo("Cunning Giant", 93, Rarity.RARE, mage.cards.c.CunningGiant.class, RETRO_ART));
         cards.add(new SetCardInfo("Dakmor Bat", 68, Rarity.COMMON, mage.cards.d.DakmorBat.class, RETRO_ART));
         cards.add(new SetCardInfo("Dakmor Plague", 69, Rarity.UNCOMMON, mage.cards.d.DakmorPlague.class, RETRO_ART));
         cards.add(new SetCardInfo("Dakmor Scorpion", 70, Rarity.COMMON, mage.cards.d.DakmorScorpion.class, RETRO_ART));
@@ -130,7 +130,7 @@ public final class PortalSecondAge extends ExpansionSet {
         cards.add(new SetCardInfo("Ogre Taskmaster", 112, Rarity.UNCOMMON, mage.cards.o.OgreTaskmaster.class, RETRO_ART));
         cards.add(new SetCardInfo("Ogre Warrior", 113, Rarity.COMMON, mage.cards.o.OgreWarrior.class, RETRO_ART));
         cards.add(new SetCardInfo("Path of Peace", 18, Rarity.COMMON, mage.cards.p.PathOfPeace.class, RETRO_ART));
-//        cards.add(new SetCardInfo("Piracy", 42, Rarity.RARE, mage.cards.p.Piracy.class, RETRO_ART));
+        cards.add(new SetCardInfo("Piracy", 42, Rarity.RARE, mage.cards.p.Piracy.class, RETRO_ART));
         cards.add(new SetCardInfo("Plains", 151, Rarity.LAND, mage.cards.basiclands.Plains.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Plains", 152, Rarity.LAND, mage.cards.basiclands.Plains.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Plains", 153, Rarity.LAND, mage.cards.basiclands.Plains.class, RETRO_ART_USE_VARIOUS));

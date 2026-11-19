@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { Check, ClipboardPaste, ExternalLink, FileUp, Link2, TriangleAlert } from 'lucide-react';
+import { Check, ClipboardPaste, ExternalLink, FileUp, Link2, Search, TriangleAlert } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toDeck, type CardIssue, type ImportDraft } from '../../../core/deckImport/draft';
 import { alternatesFor } from '../../../core/deckImport/resolve';
+import { fetchSideboardyMyDecks, type SideboardyDeckSummary } from '../../../core/deckImport/sideboardy';
 import { DECK_SITES, exportLinkFor, siteById, type DeckSite } from '../../../core/deckImport/sites';
 import type { CardView } from '../../../protocol/generated/views';
 import type { DeckCardInfo } from '../../../core/decks/types';
@@ -87,9 +88,25 @@ function InputStep({ flow, failure }: { flow: Flow; failure?: string }) {
   const field = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
+  const [sideboardyFilter, setSideboardyFilter] = useState('');
   const { recognized, degraded } = flow;
   const site = recognized.kind === 'site' ? siteById(recognized.site) : undefined;
   const direct = site && site.tier === 'direct' && !degraded.has(site.id);
+  const sideboardySite = siteById('sideboardy');
+
+  const sideboardyDecks = useQuery({
+    queryKey: ['sideboardyMyDecks'],
+    queryFn: fetchSideboardyMyDecks,
+    staleTime: 30_000,
+    retry: false,
+  });
+
+  const filteredSideboardyDecks = useMemo(() => {
+    const list: SideboardyDeckSummary[] = sideboardyDecks.data?.decks ?? [];
+    const term = sideboardyFilter.trim().toLowerCase();
+    if (!term) return list;
+    return list.filter((deck) => deck.name.toLowerCase().includes(term) || (deck.format ?? '').toLowerCase().includes(term));
+  }, [sideboardyDecks.data?.decks, sideboardyFilter]);
 
   // back from a step: the last input is selected, so a new paste replaces it
   useEffect(() => {
@@ -131,6 +148,50 @@ function InputStep({ flow, failure }: { flow: Flow; failure?: string }) {
         }
       }}
     >
+      {sideboardyDecks.data?.authenticated && (
+        <section className={styles.sideboardyBox} aria-label="Meus Decks no Sideboardy">
+          <div className={styles.sideboardyHeader}>
+            <span className={styles.sideboardyTitle}>
+              {sideboardySite && <SiteMark site={sideboardySite} size="sm" />}
+              <span>Meus Decks no Sideboardy</span>
+            </span>
+            {(sideboardyDecks.data.decks.length > 0 || sideboardyFilter) && (
+              <div className={styles.sideboardySearchWrap}>
+                <Search size={14} className={styles.sideboardySearchIcon} aria-hidden="true" />
+                <input
+                  type="search"
+                  className={styles.sideboardySearch}
+                  value={sideboardyFilter}
+                  onChange={(event) => setSideboardyFilter(event.target.value)}
+                  placeholder="Filtrar decks…"
+                  aria-label="Filtrar decks do Sideboardy"
+                />
+              </div>
+            )}
+          </div>
+          {filteredSideboardyDecks.length > 0 ? (
+            <div className={styles.sideboardyGrid}>
+              {filteredSideboardyDecks.map((deck) => (
+                <button
+                  key={deck.id}
+                  type="button"
+                  className={styles.sideboardyDeckBtn}
+                  onClick={() => void flow.importSideboardyDeck(String(deck.id), deck.name)}
+                >
+                  <span className={styles.sideboardyDeckName}>{deck.name}</span>
+                  <span className={styles.sideboardyDeckMeta}>
+                    {(deck.format || 'Livre').replace(/^\w/, (c) => c.toUpperCase())} · {deck.total_quantity} cartas
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className={styles.sideboardyEmpty}>
+              {sideboardyFilter ? 'Nenhum deck encontrado para esse filtro.' : 'Você ainda não tem decks criados no Sideboardy.'}
+            </p>
+          )}
+        </section>
+      )}
       <label className={styles.fieldLabel} htmlFor="import-input">Deck link or list</label>
       <div className={styles.inputWrap}>
         <textarea

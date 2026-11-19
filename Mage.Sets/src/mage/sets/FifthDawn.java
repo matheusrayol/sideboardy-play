@@ -164,6 +164,7 @@ public final class FifthDawn extends ExpansionSet {
         cards.add(new SetCardInfo("Solarion", 153, Rarity.RARE, mage.cards.s.Solarion.class));
         cards.add(new SetCardInfo("Spark Elemental", 79, Rarity.COMMON, mage.cards.s.SparkElemental.class));
         cards.add(new SetCardInfo("Sparring Collar", 154, Rarity.COMMON, mage.cards.s.SparringCollar.class));
+        cards.add(new SetCardInfo("Spectral Shift", 37, Rarity.RARE, mage.cards.s.SpectralShift.class));
         cards.add(new SetCardInfo("Spinal Parasite", 155, Rarity.UNCOMMON, mage.cards.s.SpinalParasite.class));
         cards.add(new SetCardInfo("Staff of Domination", 156, Rarity.RARE, mage.cards.s.StaffOfDomination.class));
         cards.add(new SetCardInfo("Stand Firm", 17, Rarity.COMMON, mage.cards.s.StandFirm.class));

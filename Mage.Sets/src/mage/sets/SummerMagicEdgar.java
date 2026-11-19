@@ -72,6 +72,7 @@ public class SummerMagicEdgar extends ExpansionSet {
         cards.add(new SetCardInfo("Clone", 51, Rarity.UNCOMMON, mage.cards.c.Clone.class, RETRO_ART));
         cards.add(new SetCardInfo("Cockatrice", 189, Rarity.RARE, mage.cards.c.Cockatrice.class, RETRO_ART));
         cards.add(new SetCardInfo("Conservator", 241, Rarity.UNCOMMON, mage.cards.c.Conservator.class, RETRO_ART));
+        cards.add(new SetCardInfo("Contract from Below", 97, Rarity.RARE, mage.cards.c.ContractFromBelow.class, RETRO_ART));
         cards.add(new SetCardInfo("Control Magic", 52, Rarity.UNCOMMON, mage.cards.c.ControlMagic.class, RETRO_ART));
         cards.add(new SetCardInfo("Conversion", 14, Rarity.UNCOMMON, mage.cards.c.Conversion.class, RETRO_ART));
         cards.add(new SetCardInfo("Copy Artifact", 53, Rarity.RARE, mage.cards.c.CopyArtifact.class, RETRO_ART));
@@ -84,9 +85,11 @@ public class SummerMagicEdgar extends ExpansionSet {
         cards.add(new SetCardInfo("Cursed Land", 98, Rarity.UNCOMMON, mage.cards.c.CursedLand.class, RETRO_ART));
         cards.add(new SetCardInfo("Dancing Scimitar", 243, Rarity.RARE, mage.cards.d.DancingScimitar.class, RETRO_ART));
         cards.add(new SetCardInfo("Dark Ritual", 99, Rarity.COMMON, mage.cards.d.DarkRitual.class, RETRO_ART));
+        cards.add(new SetCardInfo("Darkpact", 100, Rarity.RARE, mage.cards.d.Darkpact.class, RETRO_ART));
         cards.add(new SetCardInfo("Death Ward", 16, Rarity.COMMON, mage.cards.d.DeathWard.class, RETRO_ART));
         cards.add(new SetCardInfo("Deathgrip", 101, Rarity.UNCOMMON, mage.cards.d.Deathgrip.class, RETRO_ART));
         cards.add(new SetCardInfo("Deathlace", 102, Rarity.RARE, mage.cards.d.Deathlace.class, RETRO_ART));
+        cards.add(new SetCardInfo("Demonic Attorney", 103, Rarity.RARE, mage.cards.d.DemonicAttorney.class, RETRO_ART));
         cards.add(new SetCardInfo("Demonic Hordes", 104, Rarity.RARE, mage.cards.d.DemonicHordes.class, RETRO_ART));
         cards.add(new SetCardInfo("Demonic Tutor", 105, Rarity.UNCOMMON, mage.cards.d.DemonicTutor.class, RETRO_ART));
         cards.add(new SetCardInfo("Desert Twister", 192, Rarity.UNCOMMON, mage.cards.d.DesertTwister.class, RETRO_ART));
@@ -187,6 +190,7 @@ public class SummerMagicEdgar extends ExpansionSet {
         cards.add(new SetCardInfo("Lord of Atlantis", 64, Rarity.RARE, mage.cards.l.LordOfAtlantis.class, RETRO_ART));
         cards.add(new SetCardInfo("Lord of the Pit", 116, Rarity.RARE, mage.cards.l.LordOfThePit.class, RETRO_ART));
         cards.add(new SetCardInfo("Lure", 212, Rarity.UNCOMMON, mage.cards.l.Lure.class, RETRO_ART));
+        cards.add(new SetCardInfo("Magical Hack", 65, Rarity.RARE, mage.cards.m.MagicalHack.class, RETRO_ART));
         cards.add(new SetCardInfo("Magnetic Mountain", 163, Rarity.RARE, mage.cards.m.MagneticMountain.class, RETRO_ART));
         cards.add(new SetCardInfo("Mahamoti Djinn", 66, Rarity.RARE, mage.cards.m.MahamotiDjinn.class, RETRO_ART));
         cards.add(new SetCardInfo("Mana Flare", 164, Rarity.RARE, mage.cards.m.ManaFlare.class, RETRO_ART));
@@ -268,6 +272,7 @@ public class SummerMagicEdgar extends ExpansionSet {
         cards.add(new SetCardInfo("Shivan Dragon", 177, Rarity.RARE, mage.cards.s.ShivanDragon.class, RETRO_ART));
         cards.add(new SetCardInfo("Simulacrum", 130, Rarity.UNCOMMON, mage.cards.s.Simulacrum.class, RETRO_ART));
         cards.add(new SetCardInfo("Siren's Call", 80, Rarity.UNCOMMON, mage.cards.s.SirensCall.class, RETRO_ART));
+        cards.add(new SetCardInfo("Sleight of Mind", 81, Rarity.RARE, mage.cards.s.SleightOfMind.class, RETRO_ART));
         cards.add(new SetCardInfo("Smoke", 178, Rarity.RARE, mage.cards.s.Smoke.class, RETRO_ART));
         cards.add(new SetCardInfo("Sol Ring", 274, Rarity.UNCOMMON, mage.cards.s.SolRing.class, RETRO_ART));
         cards.add(new SetCardInfo("Sorceress Queen", 131, Rarity.RARE, mage.cards.s.SorceressQueen.class, RETRO_ART));

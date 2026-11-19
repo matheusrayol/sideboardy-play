@@ -88,14 +88,15 @@ public final class Invasion extends ExpansionSet {
         cards.add(new SetCardInfo("Collective Restraint", 49, Rarity.RARE, mage.cards.c.CollectiveRestraint.class, RETRO_ART));
         cards.add(new SetCardInfo("Cremate", 96, Rarity.UNCOMMON, mage.cards.c.Cremate.class, RETRO_ART));
         cards.add(new SetCardInfo("Crimson Acolyte", 11, Rarity.COMMON, mage.cards.c.CrimsonAcolyte.class, RETRO_ART));
-        cards.add(new SetCardInfo("Crosis's Attendant", 300, Rarity.UNCOMMON, mage.cards.c.CrosissAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Crosis, the Purger", 242, Rarity.RARE, mage.cards.c.CrosisThePurger.class, RETRO_ART));
+        cards.add(new SetCardInfo("Crosis's Attendant", 300, Rarity.UNCOMMON, mage.cards.c.CrosissAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Crown of Flames", 142, Rarity.COMMON, mage.cards.c.CrownOfFlames.class, RETRO_ART));
         cards.add(new SetCardInfo("Crusading Knight", 12, Rarity.RARE, mage.cards.c.CrusadingKnight.class, RETRO_ART));
         cards.add(new SetCardInfo("Crypt Angel", 97, Rarity.RARE, mage.cards.c.CryptAngel.class, RETRO_ART));
+        cards.add(new SetCardInfo("Crystal Spray", 50, Rarity.RARE, mage.cards.c.CrystalSpray.class, RETRO_ART));
         cards.add(new SetCardInfo("Cursed Flesh", 98, Rarity.COMMON, mage.cards.c.CursedFlesh.class, RETRO_ART));
-        cards.add(new SetCardInfo("Darigaaz's Attendant", 301, Rarity.UNCOMMON, mage.cards.d.DarigaazsAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Darigaaz, the Igniter", 243, Rarity.RARE, mage.cards.d.DarigaazTheIgniter.class, RETRO_ART));
+        cards.add(new SetCardInfo("Darigaaz's Attendant", 301, Rarity.UNCOMMON, mage.cards.d.DarigaazsAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Death or Glory", 13, Rarity.RARE, mage.cards.d.DeathOrGlory.class, RETRO_ART));
         cards.add(new SetCardInfo("Defiling Tears", 99, Rarity.UNCOMMON, mage.cards.d.DefilingTears.class, RETRO_ART));
         cards.add(new SetCardInfo("Desperate Research", 100, Rarity.RARE, mage.cards.d.DesperateResearch.class, RETRO_ART));
@@ -108,8 +109,8 @@ public final class Invasion extends ExpansionSet {
         cards.add(new SetCardInfo("Drake-Skull Cameo", 302, Rarity.UNCOMMON, mage.cards.d.DrakeSkullCameo.class, RETRO_ART));
         cards.add(new SetCardInfo("Dream Thrush", 53, Rarity.COMMON, mage.cards.d.DreamThrush.class, RETRO_ART));
         cards.add(new SetCardInfo("Dredge", 103, Rarity.UNCOMMON, mage.cards.d.Dredge.class, RETRO_ART));
-        cards.add(new SetCardInfo("Dromar's Attendant", 303, Rarity.UNCOMMON, mage.cards.d.DromarsAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Dromar, the Banisher", 244, Rarity.RARE, mage.cards.d.DromarTheBanisher.class, RETRO_ART));
+        cards.add(new SetCardInfo("Dromar's Attendant", 303, Rarity.UNCOMMON, mage.cards.d.DromarsAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Dueling Grounds", 245, Rarity.RARE, mage.cards.d.DuelingGrounds.class, RETRO_ART));
         cards.add(new SetCardInfo("Duskwalker", 104, Rarity.COMMON, mage.cards.d.Duskwalker.class, RETRO_ART));
         cards.add(new SetCardInfo("Elfhame Palace", 322, Rarity.UNCOMMON, mage.cards.e.ElfhamePalace.class, RETRO_ART));
@@ -252,8 +253,8 @@ public final class Invasion extends ExpansionSet {
         cards.add(new SetCardInfo("Rewards of Diversity", 32, Rarity.UNCOMMON, mage.cards.r.RewardsOfDiversity.class, RETRO_ART));
         cards.add(new SetCardInfo("Reya Dawnbringer", 33, Rarity.RARE, mage.cards.r.ReyaDawnbringer.class, RETRO_ART));
         cards.add(new SetCardInfo("Riptide Crab", 266, Rarity.UNCOMMON, mage.cards.r.RiptideCrab.class, RETRO_ART));
-        cards.add(new SetCardInfo("Rith's Attendant", 310, Rarity.UNCOMMON, mage.cards.r.RithsAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Rith, the Awakener", 267, Rarity.RARE, mage.cards.r.RithTheAwakener.class, RETRO_ART));
+        cards.add(new SetCardInfo("Rith's Attendant", 310, Rarity.UNCOMMON, mage.cards.r.RithsAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Rogue Kavu", 160, Rarity.COMMON, mage.cards.r.RogueKavu.class, RETRO_ART));
         cards.add(new SetCardInfo("Rooting Kavu", 207, Rarity.UNCOMMON, mage.cards.r.RootingKavu.class, RETRO_ART));
         cards.add(new SetCardInfo("Rout", 34, Rarity.RARE, mage.cards.r.Rout.class, RETRO_ART));
@@ -293,6 +294,7 @@ public final class Invasion extends ExpansionSet {
         cards.add(new SetCardInfo("Soul Burn", 124, Rarity.COMMON, mage.cards.s.SoulBurn.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Soul Burn", "124s", Rarity.COMMON, mage.cards.s.SoulBurn.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Soul Burn", "124*", Rarity.COMMON, mage.cards.s.SoulBurn.class, RETRO_ART_USE_VARIOUS));
+        cards.add(new SetCardInfo("Soul Burn", "124★", Rarity.COMMON, mage.cards.s.SoulBurn.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Sparring Golem", 312, Rarity.UNCOMMON, mage.cards.s.SparringGolem.class, RETRO_ART));
         cards.add(new SetCardInfo("Spinal Embrace", 276, Rarity.RARE, mage.cards.s.SpinalEmbrace.class, RETRO_ART));
         cards.add(new SetCardInfo("Spirit of Resistance", 38, Rarity.RARE, mage.cards.s.SpiritOfResistance.class, RETRO_ART));
@@ -338,8 +340,8 @@ public final class Invasion extends ExpansionSet {
         cards.add(new SetCardInfo("Traveler's Cloak", 83, Rarity.COMMON, mage.cards.t.TravelersCloak.class, RETRO_ART));
         cards.add(new SetCardInfo("Treefolk Healer", 218, Rarity.UNCOMMON, mage.cards.t.TreefolkHealer.class, RETRO_ART));
         cards.add(new SetCardInfo("Trench Wurm", 127, Rarity.UNCOMMON, mage.cards.t.TrenchWurm.class, RETRO_ART));
-        cards.add(new SetCardInfo("Treva's Attendant", 315, Rarity.UNCOMMON, mage.cards.t.TrevasAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Treva, the Renewer", 280, Rarity.RARE, mage.cards.t.TrevaTheRenewer.class, RETRO_ART));
+        cards.add(new SetCardInfo("Treva's Attendant", 315, Rarity.UNCOMMON, mage.cards.t.TrevasAttendant.class, RETRO_ART));
         cards.add(new SetCardInfo("Tribal Flames", 176, Rarity.COMMON, mage.cards.t.TribalFlames.class, RETRO_ART));
         cards.add(new SetCardInfo("Troll-Horn Cameo", 316, Rarity.UNCOMMON, mage.cards.t.TrollHornCameo.class, RETRO_ART));
         cards.add(new SetCardInfo("Tsabo Tavoc", 281, Rarity.RARE, mage.cards.t.TsaboTavoc.class, RETRO_ART));
@@ -356,6 +358,7 @@ public final class Invasion extends ExpansionSet {
         cards.add(new SetCardInfo("Urborg Skeleton", 134, Rarity.COMMON, mage.cards.u.UrborgSkeleton.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Urborg Skeleton", "134s", Rarity.COMMON, mage.cards.u.UrborgSkeleton.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Urborg Skeleton", "134*", Rarity.COMMON, mage.cards.u.UrborgSkeleton.class, RETRO_ART_USE_VARIOUS));
+        cards.add(new SetCardInfo("Urborg Skeleton", "134★", Rarity.COMMON, mage.cards.u.UrborgSkeleton.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Urborg Volcano", 330, Rarity.UNCOMMON, mage.cards.u.UrborgVolcano.class, RETRO_ART));
         cards.add(new SetCardInfo("Urza's Filter", 318, Rarity.RARE, mage.cards.u.UrzasFilter.class, RETRO_ART));
         cards.add(new SetCardInfo("Urza's Rage", 178, Rarity.RARE, mage.cards.u.UrzasRage.class, RETRO_ART));

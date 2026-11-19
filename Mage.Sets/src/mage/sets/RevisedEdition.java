@@ -69,6 +69,7 @@ public final class RevisedEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Clone", 51, Rarity.UNCOMMON, mage.cards.c.Clone.class, RETRO_ART));
         cards.add(new SetCardInfo("Cockatrice", 189, Rarity.RARE, mage.cards.c.Cockatrice.class, RETRO_ART));
         cards.add(new SetCardInfo("Conservator", 241, Rarity.UNCOMMON, mage.cards.c.Conservator.class, RETRO_ART));
+        cards.add(new SetCardInfo("Contract from Below", 97, Rarity.RARE, mage.cards.c.ContractFromBelow.class, RETRO_ART));
         cards.add(new SetCardInfo("Control Magic", 52, Rarity.UNCOMMON, mage.cards.c.ControlMagic.class, RETRO_ART));
         cards.add(new SetCardInfo("Conversion", 14, Rarity.UNCOMMON, mage.cards.c.Conversion.class, RETRO_ART));
         cards.add(new SetCardInfo("Copy Artifact", 53, Rarity.RARE, mage.cards.c.CopyArtifact.class, RETRO_ART));
@@ -81,9 +82,11 @@ public final class RevisedEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Cursed Land", 98, Rarity.UNCOMMON, mage.cards.c.CursedLand.class, RETRO_ART));
         cards.add(new SetCardInfo("Dancing Scimitar", 243, Rarity.RARE, mage.cards.d.DancingScimitar.class, RETRO_ART));
         cards.add(new SetCardInfo("Dark Ritual", 99, Rarity.COMMON, mage.cards.d.DarkRitual.class, RETRO_ART));
+        cards.add(new SetCardInfo("Darkpact", 100, Rarity.RARE, mage.cards.d.Darkpact.class, RETRO_ART));
         cards.add(new SetCardInfo("Death Ward", 16, Rarity.COMMON, mage.cards.d.DeathWard.class, RETRO_ART));
         cards.add(new SetCardInfo("Deathgrip", 101, Rarity.UNCOMMON, mage.cards.d.Deathgrip.class, RETRO_ART));
         cards.add(new SetCardInfo("Deathlace", 102, Rarity.RARE, mage.cards.d.Deathlace.class, RETRO_ART));
+        cards.add(new SetCardInfo("Demonic Attorney", 103, Rarity.RARE, mage.cards.d.DemonicAttorney.class, RETRO_ART));
         cards.add(new SetCardInfo("Demonic Hordes", 104, Rarity.RARE, mage.cards.d.DemonicHordes.class, RETRO_ART));
         cards.add(new SetCardInfo("Demonic Tutor", 105, Rarity.UNCOMMON, mage.cards.d.DemonicTutor.class, RETRO_ART));
         cards.add(new SetCardInfo("Desert Twister", 192, Rarity.UNCOMMON, mage.cards.d.DesertTwister.class, RETRO_ART));

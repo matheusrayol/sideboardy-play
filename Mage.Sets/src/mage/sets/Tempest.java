@@ -120,6 +120,7 @@ public final class Tempest extends ExpansionSet {
         cards.add(new SetCardInfo("Energizer", 285, Rarity.RARE, mage.cards.e.Energizer.class, RETRO_ART));
         cards.add(new SetCardInfo("Enfeeblement", 133, Rarity.COMMON, mage.cards.e.Enfeeblement.class, RETRO_ART));
         cards.add(new SetCardInfo("Enraging Licid", 171, Rarity.UNCOMMON, mage.cards.e.EnragingLicid.class, RETRO_ART));
+        cards.add(new SetCardInfo("Ertai's Meddling", 61, Rarity.RARE, mage.cards.e.ErtaisMeddling.class, RETRO_ART));
         cards.add(new SetCardInfo("Escaped Shapeshifter", 62, Rarity.RARE, mage.cards.e.EscapedShapeshifter.class, RETRO_ART));
         cards.add(new SetCardInfo("Essence Bottle", 286, Rarity.UNCOMMON, mage.cards.e.EssenceBottle.class, RETRO_ART));
         cards.add(new SetCardInfo("Evincar's Justice", 134, Rarity.COMMON, mage.cards.e.EvincarsJustice.class, RETRO_ART));
@@ -196,6 +197,7 @@ public final class Tempest extends ExpansionSet {
         cards.add(new SetCardInfo("Lowland Giant", 187, Rarity.COMMON, mage.cards.l.LowlandGiant.class, RETRO_ART));
         cards.add(new SetCardInfo("Maddening Imp", 143, Rarity.RARE, mage.cards.m.MaddeningImp.class, RETRO_ART));
         cards.add(new SetCardInfo("Magmasaur", 188, Rarity.RARE, mage.cards.m.Magmasaur.class, RETRO_ART));
+        cards.add(new SetCardInfo("Magnetic Web", 295, Rarity.RARE, mage.cards.m.MagneticWeb.class, RETRO_ART));
         cards.add(new SetCardInfo("Mana Severance", 73, Rarity.RARE, mage.cards.m.ManaSeverance.class, RETRO_ART));
         cards.add(new SetCardInfo("Manakin", 296, Rarity.COMMON, mage.cards.m.Manakin.class, RETRO_ART));
         cards.add(new SetCardInfo("Manta Riders", 74, Rarity.COMMON, mage.cards.m.MantaRiders.class, RETRO_ART));
@@ -367,6 +369,7 @@ public final class Tempest extends ExpansionSet {
         cards.add(new SetCardInfo("Warmth", 51, Rarity.UNCOMMON, mage.cards.w.Warmth.class, RETRO_ART));
         cards.add(new SetCardInfo("Wasteland", 330, Rarity.UNCOMMON, mage.cards.w.Wasteland.class, RETRO_ART));
         cards.add(new SetCardInfo("Watchdog", 314, Rarity.UNCOMMON, mage.cards.w.Watchdog.class, RETRO_ART));
+        cards.add(new SetCardInfo("Whim of Volrath", 102, Rarity.RARE, mage.cards.w.WhimOfVolrath.class, RETRO_ART));
         cards.add(new SetCardInfo("Whispers of the Muse", 103, Rarity.UNCOMMON, mage.cards.w.WhispersOfTheMuse.class, RETRO_ART));
         cards.add(new SetCardInfo("Wild Wurm", 212, Rarity.UNCOMMON, mage.cards.w.WildWurm.class, RETRO_ART));
         cards.add(new SetCardInfo("Wind Dancer", 104, Rarity.UNCOMMON, mage.cards.w.WindDancer.class, RETRO_ART));
@@ -392,8 +395,7 @@ class TempestCollator implements BoosterCollator {
     private final CardRun commonC = new CardRun(true, "133", "238", "167", "99", "14", "134", "255", "211", "66", "17", "144", "245", "174", "89", "1", "133", "260", "160", "66", "44", "144", "217", "167", "59", "47", "148", "245", "187", "89", "14", "123", "260", "211", "96", "17", "134", "238", "174", "59", "1", "148", "217", "160", "99", "44", "123", "255", "187", "96", "47");
     private final CardRun commonD = new CardRun(true, "109", "215", "182", "101", "13", "150", "239", "206", "94", "12", "118", "254", "169", "95", "9", "153", "231", "203", "87", "8", "150", "246", "182", "65", "12", "156", "239", "178", "95", "50", "153", "215", "203", "101", "8", "109", "254", "206", "87", "13", "118", "231", "178", "94", "50", "156", "246", "169", "65", "9");
     private final CardRun uncommon = new CardRun(false, "107", "161", "315", "2", "214", "4", "163", "165", "278", "218", "56", "219", "317", "120", "121", "124", "125", "58", "130", "171", "286", "287", "63", "172", "227", "19", "175", "64", "20", "318", "179", "230", "181", "233", "234", "138", "68", "69", "25", "183", "26", "140", "235", "141", "71", "72", "27", "267", "319", "145", "77", "298", "320", "192", "241", "242", "194", "32", "243", "299", "147", "302", "303", "80", "304", "36", "149", "268", "151", "247", "152", "197", "37", "323", "81", "253", "155", "201", "269", "40", "202", "88", "157", "271", "41", "45", "46", "158", "273", "327", "49", "90", "91", "259", "208", "209", "311", "92", "328", "262", "329", "264", "51", "330", "314", "103", "212", "104", "265", "53");
-    // excluding unimplemented rares 61|Ertai's Meddling, 102|Whim of Volrath, 193|No Quarter, 295|Magnetic Web
-    private final CardRun rare = new CardRun(false, "276", "213", "162", "6", "7", "108", "54", "277", "110", "316", "166", "111", "168", "114", "280", "115", "116", "220", "281", "170", "127", "221", "266", "131", "60", "222", "282", "224", "223", "225", "283", "284", "285",       "62", "135", "136", "18", "288", "176", "289", "229", "177", "21", "290", "180", "22", "232", "291", "24", "70", "292", "293", "139", "142", "143", "188",        "73", "28", "75", "76", "146", "236", "237", "240",        "31", "33", "195", "300", "35", "301", "321", "79", "196", "248", "322", "250", "83", "84", "305", "38", "39", "324", "306", "154", "325", "307", "200", "308", "270", "204", "326", "42", "272", "48", "205", "310", "312", "97", "210", "313", "98", "100", "263", "274",        "52", "275");
+    private final CardRun rare = new CardRun(false, "276", "213", "162", "6", "7", "108", "54", "277", "110", "316", "166", "111", "168", "114", "280", "115", "116", "220", "281", "170", "127", "221", "266", "131", "60", "222", "282", "224", "223", "225", "283", "284", "285", "61", "62", "135", "136", "18", "288", "176", "289", "229", "177", "21", "290", "180", "22", "232", "291", "24", "70", "292", "293", "139", "142", "143", "188", "295", "73", "28", "75", "76", "146", "236", "237", "240", "193", "31", "33", "195", "300", "35", "301", "321", "79", "196", "248", "322", "250", "83", "84", "305", "38", "39", "324", "306", "154", "325", "307", "200", "308", "270", "204", "326", "42", "272", "48", "205", "310", "312", "97", "210", "313", "98", "100", "263", "274", "102", "52", "275");
 
     private final BoosterStructure AAABBB = new BoosterStructure(
             commonA, commonA, commonA,

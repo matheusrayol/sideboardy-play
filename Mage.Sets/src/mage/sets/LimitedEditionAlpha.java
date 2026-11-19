@@ -69,6 +69,7 @@ public final class LimitedEditionAlpha extends ExpansionSet {
         cards.add(new SetCardInfo("Cockatrice", 189, Rarity.RARE, mage.cards.c.Cockatrice.class, RETRO_ART));
         cards.add(new SetCardInfo("Consecrate Land", 14, Rarity.UNCOMMON, mage.cards.c.ConsecrateLand.class, RETRO_ART));
         cards.add(new SetCardInfo("Conservator", 237, Rarity.UNCOMMON, mage.cards.c.Conservator.class, RETRO_ART));
+        cards.add(new SetCardInfo("Contract from Below", 96, Rarity.RARE, mage.cards.c.ContractFromBelow.class, RETRO_ART));
         cards.add(new SetCardInfo("Control Magic", 52, Rarity.UNCOMMON, mage.cards.c.ControlMagic.class, RETRO_ART));
         cards.add(new SetCardInfo("Conversion", 15, Rarity.UNCOMMON, mage.cards.c.Conversion.class, RETRO_ART));
         cards.add(new SetCardInfo("Copper Tablet", 238, Rarity.UNCOMMON, mage.cards.c.CopperTablet.class, RETRO_ART));
@@ -81,9 +82,11 @@ public final class LimitedEditionAlpha extends ExpansionSet {
         cards.add(new SetCardInfo("Cursed Land", 97, Rarity.UNCOMMON, mage.cards.c.CursedLand.class, RETRO_ART));
         cards.add(new SetCardInfo("Cyclopean Tomb", 240, Rarity.RARE, mage.cards.c.CyclopeanTomb.class, RETRO_ART));
         cards.add(new SetCardInfo("Dark Ritual", 98, Rarity.COMMON, mage.cards.d.DarkRitual.class, RETRO_ART));
+        cards.add(new SetCardInfo("Darkpact", 99, Rarity.RARE, mage.cards.d.Darkpact.class, RETRO_ART));
         cards.add(new SetCardInfo("Death Ward", 17, Rarity.COMMON, mage.cards.d.DeathWard.class, RETRO_ART));
         cards.add(new SetCardInfo("Deathgrip", 100, Rarity.UNCOMMON, mage.cards.d.Deathgrip.class, RETRO_ART));
         cards.add(new SetCardInfo("Deathlace", 101, Rarity.RARE, mage.cards.d.Deathlace.class, RETRO_ART));
+        cards.add(new SetCardInfo("Demonic Attorney", 102, Rarity.RARE, mage.cards.d.DemonicAttorney.class, RETRO_ART));
         cards.add(new SetCardInfo("Demonic Hordes", 103, Rarity.RARE, mage.cards.d.DemonicHordes.class, RETRO_ART));
         cards.add(new SetCardInfo("Demonic Tutor", 104, Rarity.UNCOMMON, mage.cards.d.DemonicTutor.class, RETRO_ART));
         cards.add(new SetCardInfo("Dingus Egg", 241, Rarity.RARE, mage.cards.d.DingusEgg.class, RETRO_ART));

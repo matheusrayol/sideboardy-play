@@ -223,3 +223,72 @@ describe('shipped AI deck pool', () => {
     expect(all.some((card) => card.cardName === entry.cover.name && card.setCode === entry.cover.setCode && card.cardNumber === entry.cover.cardNumber)).toBe(true);
   });
 });
+
+interface StarterIndexEntry {
+  file: string;
+  name: string;
+  cards: number;
+  format?: string;
+  set?: string;
+  colors?: string[];
+  tags?: string[];
+  cover: { name: string; setCode: string; cardNumber: string };
+}
+
+const STARTERS_DIR = join(__dirname, '../../../public/starter-decks');
+const starterIndex = JSON.parse(readFileSync(join(STARTERS_DIR, 'index.json'), 'utf8')) as StarterIndexEntry[];
+
+describe('shipped starter and Commander precon pool', () => {
+  test('the starter index and .dck files match with no duplicate entries', () => {
+    const files = starterIndex.map((deck) => deck.file);
+    expect(new Set(files).size).toBe(files.length);
+    expect([...files].sort()).toEqual(readdirSync(STARTERS_DIR).filter((file) => file.endsWith('.dck')).sort());
+    expect(starterIndex.filter((deck) => deck.file.startsWith('precon-')).length).toBeGreaterThanOrEqual(86);
+  });
+
+  test.each(starterIndex)('$file parses cleanly with implemented printings and legal lists', (entry) => {
+    expect(entry.file).toMatch(/^[a-z0-9_-]+\.dck$/);
+    const text = readFileSync(join(STARTERS_DIR, entry.file), 'utf8');
+    const commander = isCommanderFormat(entry.format);
+    const lines = text.trim().split(/\r?\n/);
+    if (commander || lines[0]?.startsWith('NAME:')) {
+      expect(lines.shift()).toBe(`NAME:${entry.name}`);
+    }
+    const deck = DeckSerializer.importDeck(text);
+    const all = [...deck.cards, ...deck.sideboard];
+    const main = deck.cards.reduce((sum, card) => sum + card.amount, 0);
+    const side = deck.sideboard.reduce((sum, card) => sum + card.amount, 0);
+    expect(entry.cards).toBe(commander ? 100 : 60);
+    expect(main + (commander ? side : 0)).toBe(entry.cards);
+    if (commander) {
+      expect(side).toBeGreaterThanOrEqual(1);
+      expect(side).toBeLessThanOrEqual(2);
+    }
+
+    const rules = commander ? formatRules('Variant Magic - Commander') : null;
+    const commanderColors = new Set(
+      commander
+        ? deck.sideboard.flatMap((leader) => [...colorIdentity(cardSource(printings.get(`${leader.setCode}:${leader.cardNumber}`)!.implementation))])
+        : [],
+    );
+    const counts = new Map<string, number>();
+    for (const card of all) {
+      const printing = printings.get(`${card.setCode}:${card.cardNumber}`);
+      expect(printing?.name, `${entry.file} ${card.setCode}:${card.cardNumber}`).toBe(card.cardName);
+      expect(existsSync(join(SETS, printing!.implementation)) || existsSync(join(CORE, printing!.implementation)), card.cardName).toBe(true);
+      counts.set(card.cardName, (counts.get(card.cardName) ?? 0) + card.amount);
+      if (rules) {
+        expect(rules.banned.has(card.cardName), `${entry.file} banned: ${card.cardName}`).toBe(false);
+        const source = cardSource(printing!.implementation);
+        expect([...colorIdentity(source)].filter((color) => !commanderColors.has(color)), `${entry.file} color identity: ${card.cardName}`).toEqual([]);
+      }
+    }
+    if (rules) {
+      for (const card of deck.sideboard) expect(rules.bannedCommander.has(card.cardName), `banned commander: ${card.cardName}`).toBe(false);
+      for (const [name, count] of counts) {
+        if (!basics.has(name) && !anyNumber.has(name)) expect(count, `${entry.file} singleton: ${name}`).toBe(1);
+      }
+    }
+    expect(all.some((card) => card.cardName === entry.cover.name && card.setCode === entry.cover.setCode && card.cardNumber === entry.cover.cardNumber)).toBe(true);
+  });
+});

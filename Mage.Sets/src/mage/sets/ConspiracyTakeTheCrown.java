@@ -28,12 +28,16 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         this.ratioBoosterMythic = 8;
         this.maxCardNumberInBooster = 221;
         cards.add(new SetCardInfo("Absorb Vis", 126, Rarity.COMMON, mage.cards.a.AbsorbVis.class));
+        cards.add(new SetCardInfo("Adriana's Valor", 1, Rarity.COMMON, mage.cards.a.AdrianasValor.class));
         cards.add(new SetCardInfo("Adriana, Captain of the Guard", 73, Rarity.RARE, mage.cards.a.AdrianaCaptainOfTheGuard.class));
         cards.add(new SetCardInfo("Affa Guard Hound", 81, Rarity.UNCOMMON, mage.cards.a.AffaGuardHound.class));
         cards.add(new SetCardInfo("Akroan Hoplite", 197, Rarity.UNCOMMON, mage.cards.a.AkroanHoplite.class));
         cards.add(new SetCardInfo("Altar's Reap", 127, Rarity.COMMON, mage.cards.a.AltarsReap.class));
+        cards.add(new SetCardInfo("Animus of Predation", 60, Rarity.UNCOMMON, mage.cards.a.AnimusOfPredation.class));
+        cards.add(new SetCardInfo("Arcane Savant", 27, Rarity.RARE, mage.cards.a.ArcaneSavant.class));
         cards.add(new SetCardInfo("Archdemon of Paliano", 39, Rarity.RARE, mage.cards.a.ArchdemonOfPaliano.class)); // draftmatters ability not implemented
         cards.add(new SetCardInfo("Ascended Lawmage", 198, Rarity.UNCOMMON, mage.cards.a.AscendedLawmage.class));
+        cards.add(new SetCardInfo("Assemble the Rank and Vile", 2, Rarity.COMMON, mage.cards.a.AssembleTheRankAndVile.class));
         cards.add(new SetCardInfo("Avatar of Woe", 128, Rarity.MYTHIC, mage.cards.a.AvatarOfWoe.class));
         cards.add(new SetCardInfo("Ballot Broker", 13, Rarity.COMMON, mage.cards.b.BallotBroker.class));
         cards.add(new SetCardInfo("Beast Within", 174, Rarity.UNCOMMON, mage.cards.b.BeastWithin.class));
@@ -49,6 +53,7 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Burn Away", 151, Rarity.UNCOMMON, mage.cards.b.BurnAway.class));
         cards.add(new SetCardInfo("Burning Wish", 152, Rarity.RARE, mage.cards.b.BurningWish.class));
         cards.add(new SetCardInfo("Caller of Gales", 103, Rarity.COMMON, mage.cards.c.CallerOfGales.class));
+        cards.add(new SetCardInfo("Caller of the Untamed", 62, Rarity.RARE, mage.cards.c.CallerOfTheUntamed.class));
         cards.add(new SetCardInfo("Canal Courier", 28, Rarity.COMMON, mage.cards.c.CanalCourier.class));
         cards.add(new SetCardInfo("Capital Punishment", 40, Rarity.RARE, mage.cards.c.CapitalPunishment.class));
         cards.add(new SetCardInfo("Carnage Gladiator", 199, Rarity.UNCOMMON, mage.cards.c.CarnageGladiator.class));
@@ -62,6 +67,7 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Coveted Peacock", 29, Rarity.UNCOMMON, mage.cards.c.CovetedPeacock.class));
         cards.add(new SetCardInfo("Crown-Hunter Hireling", 50, Rarity.COMMON, mage.cards.c.CrownHunterHireling.class));
         cards.add(new SetCardInfo("Custodi Lich", 41, Rarity.RARE, mage.cards.c.CustodiLich.class));
+        cards.add(new SetCardInfo("Custodi Peacekeeper", 14, Rarity.COMMON, mage.cards.c.CustodiPeacekeeper.class));
         cards.add(new SetCardInfo("Custodi Soulcaller", 15, Rarity.UNCOMMON, mage.cards.c.CustodiSoulcaller.class));
         cards.add(new SetCardInfo("Daretti, Ingenious Iconoclast", 74, Rarity.MYTHIC, mage.cards.d.DarettiIngeniousIconoclast.class));
         cards.add(new SetCardInfo("Deadly Designs", 42, Rarity.UNCOMMON, mage.cards.d.DeadlyDesigns.class));
@@ -79,7 +85,9 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Dread Statuary", 217, Rarity.UNCOMMON, mage.cards.d.DreadStatuary.class));
         cards.add(new SetCardInfo("Driver of the Dead", 133, Rarity.COMMON, mage.cards.d.DriverOfTheDead.class));
         cards.add(new SetCardInfo("Duskmantle Seer", 202, Rarity.RARE, mage.cards.d.DuskmantleSeer.class));
+        cards.add(new SetCardInfo("Echoing Boon", 3, Rarity.UNCOMMON, mage.cards.e.EchoingBoon.class));
         cards.add(new SetCardInfo("Ember Beast", 155, Rarity.COMMON, mage.cards.e.EmberBeast.class));
+        cards.add(new SetCardInfo("Emissary's Ploy", 4, Rarity.RARE, mage.cards.e.EmissarysPloy.class));
         cards.add(new SetCardInfo("Entourage of Trest", 64, Rarity.COMMON, mage.cards.e.EntourageOfTrest.class));
         cards.add(new SetCardInfo("Evolving Wilds", 218, Rarity.COMMON, mage.cards.e.EvolvingWilds.class));
         cards.add(new SetCardInfo("Exotic Orchard", 219, Rarity.RARE, mage.cards.e.ExoticOrchard.class));
@@ -97,6 +105,7 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Followed Footsteps", 111, Rarity.RARE, mage.cards.f.FollowedFootsteps.class));
         cards.add(new SetCardInfo("Forgotten Ancient", 182, Rarity.RARE, mage.cards.f.ForgottenAncient.class));
         cards.add(new SetCardInfo("Gang of Devils", 158, Rarity.UNCOMMON, mage.cards.g.GangOfDevils.class));
+        cards.add(new SetCardInfo("Garbage Fire", 52, Rarity.COMMON, mage.cards.g.GarbageFire.class));
         cards.add(new SetCardInfo("Garrulous Sycophant", 43, Rarity.COMMON, mage.cards.g.GarrulousSycophant.class));
         cards.add(new SetCardInfo("Ghostly Possession", 85, Rarity.COMMON, mage.cards.g.GhostlyPossession.class));
         cards.add(new SetCardInfo("Ghostly Prison", 86, Rarity.UNCOMMON, mage.cards.g.GhostlyPrison.class));
@@ -119,13 +128,17 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Havengul Vampire", 164, Rarity.UNCOMMON, mage.cards.h.HavengulVampire.class));
         cards.add(new SetCardInfo("Hedron Matrix", 209, Rarity.RARE, mage.cards.h.HedronMatrix.class));
         cards.add(new SetCardInfo("Hexplate Golem", 210, Rarity.COMMON, mage.cards.h.HexplateGolem.class));
+        cards.add(new SetCardInfo("Hired Heist", 5, Rarity.COMMON, mage.cards.h.HiredHeist.class));
+        cards.add(new SetCardInfo("Hold the Perimeter", 6, Rarity.RARE, mage.cards.h.HoldThePerimeter.class));
         cards.add(new SetCardInfo("Hollowhenge Spirit", 92, Rarity.UNCOMMON, mage.cards.h.HollowhengeSpirit.class));
         cards.add(new SetCardInfo("Horn of Greed", 211, Rarity.RARE, mage.cards.h.HornOfGreed.class));
         cards.add(new SetCardInfo("Hundred-Handed One", 93, Rarity.RARE, mage.cards.h.HundredHandedOne.class));
         cards.add(new SetCardInfo("Hurly-Burly", 165, Rarity.COMMON, mage.cards.h.HurlyBurly.class));
+        cards.add(new SetCardInfo("Hymn of the Wilds", 7, Rarity.MYTHIC, mage.cards.h.HymnOfTheWilds.class));
         cards.add(new SetCardInfo("Ill-Tempered Cyclops", 166, Rarity.COMMON, mage.cards.i.IllTemperedCyclops.class));
         cards.add(new SetCardInfo("Illusion of Choice", 31, Rarity.UNCOMMON, mage.cards.i.IllusionOfChoice.class));
         cards.add(new SetCardInfo("Illusionary Informant", 32, Rarity.COMMON, mage.cards.i.IllusionaryInformant.class)); // draftmatters ability not implemented
+        cards.add(new SetCardInfo("Incendiary Dissent", 8, Rarity.COMMON, mage.cards.i.IncendiaryDissent.class));
         cards.add(new SetCardInfo("Infest", 139, Rarity.UNCOMMON, mage.cards.i.Infest.class));
         cards.add(new SetCardInfo("Inquisition of Kozilek", 140, Rarity.RARE, mage.cards.i.InquisitionOfKozilek.class));
         cards.add(new SetCardInfo("Into the Void", 112, Rarity.UNCOMMON, mage.cards.i.IntoTheVoid.class));
@@ -155,9 +168,11 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Messenger Jays", 35, Rarity.COMMON, mage.cards.m.MessengerJays.class));
         cards.add(new SetCardInfo("Mnemonic Wall", 116, Rarity.COMMON, mage.cards.m.MnemonicWall.class));
         cards.add(new SetCardInfo("Murder", 143, Rarity.COMMON, mage.cards.m.Murder.class));
+        cards.add(new SetCardInfo("Natural Unity", 9, Rarity.COMMON, mage.cards.n.NaturalUnity.class));
         cards.add(new SetCardInfo("Negate", 117, Rarity.COMMON, mage.cards.n.Negate.class));
         cards.add(new SetCardInfo("Nessian Asp", 187, Rarity.UNCOMMON, mage.cards.n.NessianAsp.class));
         cards.add(new SetCardInfo("Netcaster Spider", 188, Rarity.COMMON, mage.cards.n.NetcasterSpider.class));
+        cards.add(new SetCardInfo("Noble Banneret", 17, Rarity.UNCOMMON, mage.cards.n.NobleBanneret.class));
         cards.add(new SetCardInfo("Ogre Sentry", 168, Rarity.COMMON, mage.cards.o.OgreSentry.class));
         cards.add(new SetCardInfo("Omenspeaker", 118, Rarity.COMMON, mage.cards.o.Omenspeaker.class));
         cards.add(new SetCardInfo("Opaline Unicorn", 213, Rarity.COMMON, mage.cards.o.OpalineUnicorn.class));
@@ -165,6 +180,7 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Overrun", 189, Rarity.UNCOMMON, mage.cards.o.Overrun.class));
         cards.add(new SetCardInfo("Palace Jailer", 18, Rarity.UNCOMMON, mage.cards.p.PalaceJailer.class));
         cards.add(new SetCardInfo("Palace Sentinels", 19, Rarity.COMMON, mage.cards.p.PalaceSentinels.class));
+        cards.add(new SetCardInfo("Paliano Vanguard", 20, Rarity.RARE, mage.cards.p.PalianoVanguard.class));
         cards.add(new SetCardInfo("Pariah", 95, Rarity.RARE, mage.cards.p.Pariah.class));
         cards.add(new SetCardInfo("Pharika's Mender", 205, Rarity.UNCOMMON, mage.cards.p.PharikasMender.class));
         cards.add(new SetCardInfo("Phyrexian Arena", 144, Rarity.RARE, mage.cards.p.PhyrexianArena.class));
@@ -174,12 +190,14 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Protector of the Crown", 21, Rarity.RARE, mage.cards.p.ProtectorOfTheCrown.class));
         cards.add(new SetCardInfo("Psychosis Crawler", 215, Rarity.RARE, mage.cards.p.PsychosisCrawler.class));
         cards.add(new SetCardInfo("Public Execution", 145, Rarity.UNCOMMON, mage.cards.p.PublicExecution.class));
+        cards.add(new SetCardInfo("Pyretic Hunter", 56, Rarity.UNCOMMON, mage.cards.p.PyreticHunter.class));
         cards.add(new SetCardInfo("Queen Marchesa", 78, Rarity.MYTHIC, mage.cards.q.QueenMarchesa.class));
         cards.add(new SetCardInfo("Raise Dead", 146, Rarity.COMMON, mage.cards.r.RaiseDead.class));
         cards.add(new SetCardInfo("Raise the Alarm", 96, Rarity.COMMON, mage.cards.r.RaiseTheAlarm.class));
         cards.add(new SetCardInfo("Ravenous Leucrocota", 192, Rarity.COMMON, mage.cards.r.RavenousLeucrocota.class));
         cards.add(new SetCardInfo("Recruiter of the Guard", 22, Rarity.RARE, mage.cards.r.RecruiterOfTheGuard.class));
         cards.add(new SetCardInfo("Regal Behemoth", 69, Rarity.RARE, mage.cards.r.RegalBehemoth.class));
+        cards.add(new SetCardInfo("Regicide", 45, Rarity.COMMON, mage.cards.r.Regicide.class));
         cards.add(new SetCardInfo("Repulse", 119, Rarity.COMMON, mage.cards.r.Repulse.class));
         cards.add(new SetCardInfo("Reviving Dose", 97, Rarity.COMMON, mage.cards.r.RevivingDose.class));
         cards.add(new SetCardInfo("Rogue's Passage", 220, Rarity.UNCOMMON, mage.cards.r.RoguesPassage.class));
@@ -196,10 +214,14 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Sinuous Vermin", 46, Rarity.COMMON, mage.cards.s.SinuousVermin.class));
         cards.add(new SetCardInfo("Skittering Crustacean", 36, Rarity.COMMON, mage.cards.s.SkitteringCrustacean.class));
         cards.add(new SetCardInfo("Skyline Despot", 57, Rarity.RARE, mage.cards.s.SkylineDespot.class));
+        cards.add(new SetCardInfo("Smuggler Captain", 47, Rarity.UNCOMMON, mage.cards.s.SmugglerCaptain.class));
+        cards.add(new SetCardInfo("Sovereign's Realm", 10, Rarity.MYTHIC, mage.cards.s.SovereignsRealm.class));
         cards.add(new SetCardInfo("Spectral Grasp", 24, Rarity.UNCOMMON, mage.cards.s.SpectralGrasp.class));
         cards.add(new SetCardInfo("Sphinx of Magosi", 122, Rarity.RARE, mage.cards.s.SphinxOfMagosi.class));
+        cards.add(new SetCardInfo("Spire Phantasm", 37, Rarity.UNCOMMON, mage.cards.s.SpirePhantasm.class));
         cards.add(new SetCardInfo("Spirit of the Hearth", 98, Rarity.RARE, mage.cards.s.SpiritOfTheHearth.class));
         cards.add(new SetCardInfo("Splitting Slime", 72, Rarity.RARE, mage.cards.s.SplittingSlime.class));
+        cards.add(new SetCardInfo("Spy Kit", 79, Rarity.UNCOMMON, mage.cards.s.SpyKit.class));
         cards.add(new SetCardInfo("Stoneshock Giant", 169, Rarity.UNCOMMON, mage.cards.s.StoneshockGiant.class));
         cards.add(new SetCardInfo("Stormchaser Chimera", 207, Rarity.UNCOMMON, mage.cards.s.StormchaserChimera.class));
         cards.add(new SetCardInfo("Strength in Numbers", 193, Rarity.COMMON, mage.cards.s.StrengthInNumbers.class));
@@ -207,6 +229,7 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Stunt Double", 38, Rarity.RARE, mage.cards.s.StuntDouble.class));
         cards.add(new SetCardInfo("Subterranean Tremors", 58, Rarity.MYTHIC, mage.cards.s.SubterraneanTremors.class));
         cards.add(new SetCardInfo("Sulfurous Blast", 170, Rarity.UNCOMMON, mage.cards.s.SulfurousBlast.class));
+        cards.add(new SetCardInfo("Summoner's Bond", 11, Rarity.UNCOMMON, mage.cards.s.SummonersBond.class));
         cards.add(new SetCardInfo("Sylvan Bounty", 194, Rarity.COMMON, mage.cards.s.SylvanBounty.class));
         cards.add(new SetCardInfo("Thorn of the Black Rose", 48, Rarity.COMMON, mage.cards.t.ThornOfTheBlackRose.class));
         cards.add(new SetCardInfo("Throne Warden", 25, Rarity.COMMON, mage.cards.t.ThroneWarden.class));
@@ -218,7 +241,9 @@ public final class ConspiracyTakeTheCrown extends ExpansionSet {
         cards.add(new SetCardInfo("Unnerve", 150, Rarity.COMMON, mage.cards.u.Unnerve.class));
         cards.add(new SetCardInfo("Vaporkin", 124, Rarity.COMMON, mage.cards.v.Vaporkin.class));
         cards.add(new SetCardInfo("Vertigo Spawn", 125, Rarity.UNCOMMON, mage.cards.v.VertigoSpawn.class));
+        cards.add(new SetCardInfo("Volatile Chimera", 59, Rarity.RARE, mage.cards.v.VolatileChimera.class));
         cards.add(new SetCardInfo("Voyaging Satyr", 195, Rarity.COMMON, mage.cards.v.VoyagingSatyr.class));
+        cards.add(new SetCardInfo("Weight Advantage", 12, Rarity.RARE, mage.cards.w.WeightAdvantage.class));
         cards.add(new SetCardInfo("Wild Griffin", 99, Rarity.COMMON, mage.cards.w.WildGriffin.class));
         cards.add(new SetCardInfo("Wild Pair", 196, Rarity.RARE, mage.cards.w.WildPair.class));
         cards.add(new SetCardInfo("Windborne Charge", 100, Rarity.UNCOMMON, mage.cards.w.WindborneCharge.class));

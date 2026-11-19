@@ -36,7 +36,7 @@ public final class Rinascimento extends ExpansionSet {
         cards.add(new SetCardInfo("Ashnod's Transmogrant", 103, Rarity.UNCOMMON, mage.cards.a.AshnodsTransmogrant.class, RETRO_ART));
         cards.add(new SetCardInfo("Battering Ram", 105, Rarity.COMMON, mage.cards.b.BatteringRam.class, RETRO_ART));
         cards.add(new SetCardInfo("Bird Maiden", 72, Rarity.COMMON, mage.cards.b.BirdMaiden.class, RETRO_ART));
-        //cards.add(new SetCardInfo("Bronze Tablet", 106, Rarity.UNCOMMON, mage.cards.b.BronzeTablet.class, RETRO_ART));
+        cards.add(new SetCardInfo("Bronze Tablet", 106, Rarity.UNCOMMON, mage.cards.b.BronzeTablet.class, RETRO_ART));
         cards.add(new SetCardInfo("Circle of Protection: Artifacts", 5, Rarity.UNCOMMON, mage.cards.c.CircleOfProtectionArtifacts.class, RETRO_ART));
         cards.add(new SetCardInfo("City of Brass", 171, Rarity.UNCOMMON, mage.cards.c.CityOfBrass.class, RETRO_ART));
         cards.add(new SetCardInfo("Clay Statue", 109, Rarity.COMMON, mage.cards.c.ClayStatue.class, RETRO_ART));
@@ -59,7 +59,7 @@ public final class Rinascimento extends ExpansionSet {
         cards.add(new SetCardInfo("Hurr Jackal", 81, Rarity.COMMON, mage.cards.h.HurrJackal.class, RETRO_ART));
         cards.add(new SetCardInfo("Ironclaw Orcs", 82, Rarity.COMMON, mage.cards.i.IronclawOrcs.class, RETRO_ART));
         cards.add(new SetCardInfo("Jalum Tome", 127, Rarity.UNCOMMON, mage.cards.j.JalumTome.class, RETRO_ART));
-        //cards.add(new SetCardInfo("Jeweled Bird", 128, Rarity.UNCOMMON, mage.cards.j.JeweledBird.class, RETRO_ART));
+        cards.add(new SetCardInfo("Jeweled Bird", 128, Rarity.UNCOMMON, mage.cards.j.JeweledBird.class, RETRO_ART));
         cards.add(new SetCardInfo("Junun Efreet", 55, Rarity.UNCOMMON, mage.cards.j.JununEfreet.class, RETRO_ART));
         cards.add(new SetCardInfo("Metamorphosis", 130, Rarity.COMMON, mage.cards.m.Metamorphosis.class, RETRO_ART));
         cards.add(new SetCardInfo("Mishra's Factory", 172, Rarity.UNCOMMON, mage.cards.m.MishrasFactory.class, RETRO_ART));

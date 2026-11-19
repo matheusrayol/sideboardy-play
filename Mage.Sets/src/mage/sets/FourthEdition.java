@@ -66,6 +66,7 @@ public final class FourthEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Bottle of Suleiman", 301, Rarity.RARE, mage.cards.b.BottleOfSuleiman.class, RETRO_ART));
         cards.add(new SetCardInfo("Brainwash", 11, Rarity.COMMON, mage.cards.b.Brainwash.class, RETRO_ART));
         cards.add(new SetCardInfo("Brass Man", 302, Rarity.UNCOMMON, mage.cards.b.BrassMan.class, RETRO_ART));
+        cards.add(new SetCardInfo("Bronze Tablet", 303, Rarity.RARE, mage.cards.b.BronzeTablet.class, RETRO_ART));
         cards.add(new SetCardInfo("Brothers of Fire", 179, Rarity.COMMON, mage.cards.b.BrothersOfFire.class, RETRO_ART));
         cards.add(new SetCardInfo("Burrowing", 180, Rarity.UNCOMMON, mage.cards.b.Burrowing.class, RETRO_ART));
         cards.add(new SetCardInfo("Carnivorous Plant", 235, Rarity.COMMON, mage.cards.c.CarnivorousPlant.class, RETRO_ART));
@@ -224,6 +225,7 @@ public final class FourthEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Lord of the Pit", 144, Rarity.RARE, mage.cards.l.LordOfThePit.class, RETRO_ART));
         cards.add(new SetCardInfo("Lost Soul", 145, Rarity.COMMON, mage.cards.l.LostSoul.class, RETRO_ART));
         cards.add(new SetCardInfo("Lure", 262, Rarity.UNCOMMON, mage.cards.l.Lure.class, RETRO_ART));
+        cards.add(new SetCardInfo("Magical Hack", 83, Rarity.RARE, mage.cards.m.MagicalHack.class, RETRO_ART));
         cards.add(new SetCardInfo("Magnetic Mountain", 209, Rarity.RARE, mage.cards.m.MagneticMountain.class, RETRO_ART));
         cards.add(new SetCardInfo("Mahamoti Djinn", 84, Rarity.RARE, mage.cards.m.MahamotiDjinn.class, RETRO_ART));
         cards.add(new SetCardInfo("Mana Clash", 210, Rarity.RARE, mage.cards.m.ManaClash.class, RETRO_ART));
@@ -287,6 +289,7 @@ public final class FourthEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Radjan Spirit", 266, Rarity.UNCOMMON, mage.cards.r.RadjanSpirit.class, RETRO_ART));
         cards.add(new SetCardInfo("Rag Man", 155, Rarity.RARE, mage.cards.r.RagMan.class, RETRO_ART));
         cards.add(new SetCardInfo("Raise Dead", 156, Rarity.COMMON, mage.cards.r.RaiseDead.class, RETRO_ART));
+        cards.add(new SetCardInfo("Rebirth", 267, Rarity.RARE, mage.cards.r.Rebirth.class, RETRO_ART));
         cards.add(new SetCardInfo("Red Elemental Blast", 218, Rarity.COMMON, mage.cards.r.RedElementalBlast.class, RETRO_ART));
         cards.add(new SetCardInfo("Red Mana Battery", 343, Rarity.RARE, mage.cards.r.RedManaBattery.class, RETRO_ART));
         cards.add(new SetCardInfo("Red Ward", 44, Rarity.UNCOMMON, mage.cards.r.RedWard.class, RETRO_ART));
@@ -315,6 +318,7 @@ public final class FourthEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Sindbad", 100, Rarity.UNCOMMON, mage.cards.s.Sindbad.class, RETRO_ART));
         cards.add(new SetCardInfo("Siren's Call", 101, Rarity.UNCOMMON, mage.cards.s.SirensCall.class, RETRO_ART));
         cards.add(new SetCardInfo("Sisters of the Flame", 221, Rarity.COMMON, mage.cards.s.SistersOfTheFlame.class, RETRO_ART));
+        cards.add(new SetCardInfo("Sleight of Mind", 102, Rarity.RARE, mage.cards.s.SleightOfMind.class, RETRO_ART));
         cards.add(new SetCardInfo("Smoke", 222, Rarity.RARE, mage.cards.s.Smoke.class, RETRO_ART));
         cards.add(new SetCardInfo("Sorceress Queen", 162, Rarity.RARE, mage.cards.s.SorceressQueen.class, RETRO_ART));
         cards.add(new SetCardInfo("Soul Net", 346, Rarity.UNCOMMON, mage.cards.s.SoulNet.class, RETRO_ART));
@@ -336,6 +340,7 @@ public final class FourthEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Sylvan Library", 273, Rarity.RARE, mage.cards.s.SylvanLibrary.class, RETRO_ART));
         cards.add(new SetCardInfo("Tawnos's Wand", 348, Rarity.UNCOMMON, mage.cards.t.TawnossWand.class, RETRO_ART));
         cards.add(new SetCardInfo("Tawnos's Weaponry", 349, Rarity.UNCOMMON, mage.cards.t.TawnossWeaponry.class, RETRO_ART));
+        cards.add(new SetCardInfo("Tempest Efreet", 225, Rarity.RARE, mage.cards.t.TempestEfreet.class, RETRO_ART));
         cards.add(new SetCardInfo("Terror", 164, Rarity.COMMON, mage.cards.t.Terror.class, RETRO_ART));
         cards.add(new SetCardInfo("Tetravus", 350, Rarity.RARE, mage.cards.t.Tetravus.class, RETRO_ART));
         cards.add(new SetCardInfo("The Brute", 226, Rarity.COMMON, mage.cards.t.TheBrute.class, RETRO_ART));

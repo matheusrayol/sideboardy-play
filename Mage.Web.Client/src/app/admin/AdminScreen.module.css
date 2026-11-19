@@ -168,10 +168,10 @@
 .select { display: grid; gap: 4px; font-size: var(--text-sm); color: var(--ink-dim); }
 
 .select select, .table select {
-  padding: 8px 10px;
+  padding: 8px 36px 8px 12px;
   border: 1px solid var(--ink-faint);
   border-radius: var(--radius-control);
-  background: var(--mat-800);
+  background-color: var(--mat-800);
   color: var(--ink);
   font: inherit;
 }

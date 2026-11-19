@@ -30,7 +30,12 @@ export function Piles({ player, sleeve, isMe, commanders = [], clickable, onCast
   const graveyard = Object.values(player.graveyard ?? {});
   const exile = Object.values(player.exile ?? {});
   const { waiting, dungeon, others } = splitCommand(player, commanders);
-  const name = isMe ? 'Your' : `${player.name}'s`;
+  const owner = player.name ?? '';
+  const libraryTitle = isMe ? t('match.zone.yourLibrary') : t('match.zone.theirLibrary', { name: owner });
+  const libraryTopTitle = isMe ? t('match.zone.yourLibraryTop') : t('match.zone.theirLibraryTop', { name: owner });
+  const graveyardTitle = isMe ? t('match.zone.yourGraveyard') : t('match.zone.theirGraveyard', { name: owner });
+  const exileTitle = isMe ? t('match.zone.yourExile') : t('match.zone.theirExile', { name: owner });
+  const commandTitle = isMe ? t('match.zone.yourCommand') : t('match.zone.theirCommand', { name: owner });
   const libraryZoom = usePileZoom(player.topCard, sleeve);
 
   return (
@@ -39,27 +44,27 @@ export function Piles({ player, sleeve, isMe, commanders = [], clickable, onCast
         ref={libraryRef}
         type="button"
         className={styles.pile}
-        aria-label={t('match.cards', { label: `${name} library`, count: player.libraryCount ?? 0 })}
-        onClick={() => player.topCard && openViewer({ title: `${name} library (top card)`, cards: [player.topCard] })}
+        aria-label={t('match.cards', { label: libraryTitle, count: player.libraryCount ?? 0 })}
+        onClick={() => player.topCard && openViewer({ title: libraryTopTitle, cards: [player.topCard] })}
         {...libraryZoom}
       >
-        <div className={styles.stack} style={{ ['--depth' as string]: Math.min(6, Math.ceil((player.libraryCount ?? 0) / 10)) }}>
+        <div className={styles.stack} style={{ ['--depth' as string]: Math.min(10, Math.ceil((player.libraryCount ?? 0) / 10)) }}>
           <CardFace card={player.topCard ?? {}} hidden={!player.topCard} sleeve={sleeve} size="small" />
         </div>
         <span className={styles.count}>{player.libraryCount ?? 0}</span>
-        <span className={styles.label}>Library</span>
+        <span className={styles.label}>{t('match.zone.library')}</span>
       </button>
 
-      <PileOfCards title={`${name} graveyard`} label="Graveyard" cards={graveyard} sleeve={sleeve} inHand={inHand} onOpen={() => openViewer({ title: `${name} graveyard`, cards: [...graveyard].reverse() })} />
+      <PileOfCards title={graveyardTitle} label={t('match.zone.graveyard')} cards={graveyard} sleeve={sleeve} inHand={inHand} onOpen={() => openViewer({ title: graveyardTitle, cards: [...graveyard].reverse() })} />
       {exile.length > 0 && (
-        <PileOfCards title={`${name} exile`} label="Exile" cards={exile} sleeve={sleeve} inHand={inHand} onOpen={() => openViewer({ title: `${name} exile`, cards: exile })} />
+        <PileOfCards title={exileTitle} label={t('match.zone.exile')} cards={exile} sleeve={sleeve} inHand={inHand} onOpen={() => openViewer({ title: exileTitle, cards: exile })} />
       )}
       {waiting.map((commander) => (
-        <CommanderPile key={commander.id} commander={commander} sleeve={sleeve} castable={!!clickable?.has(commander.id)} onCast={onCast} owner={name} />
+        <CommanderPile key={commander.id} commander={commander} sleeve={sleeve} castable={!!clickable?.has(commander.id)} onCast={onCast} isMe={isMe} owner={owner} commandTitle={commandTitle} />
       ))}
-      {dungeon && <DungeonPile dungeon={dungeon} owner={name} playerId={player.playerId!} />}
+      {dungeon && <DungeonPile dungeon={dungeon} isMe={isMe} owner={owner} playerId={player.playerId!} />}
       {others.length > 0 && (
-        <PileOfCards title={`${name} command zone`} label="Command" cards={others} sleeve={sleeve} onOpen={() => openViewer({ title: `${name} command zone`, cards: others })} />
+        <PileOfCards title={commandTitle} label={t('match.zone.command')} cards={others} sleeve={sleeve} onOpen={() => openViewer({ title: commandTitle, cards: others })} />
       )}
     </div>
   );
@@ -76,47 +81,58 @@ function splitCommand(player: PlayerView, commanders: readonly CommanderStatus[]
 }
 
 /** The dungeon a player ventures into, face up with the room its marker is in; it opens room by room (#385). */
-function DungeonPile({ dungeon, owner, playerId }: { dungeon: Dungeon; owner: string; playerId: string }) {
+function DungeonPile({ dungeon, isMe, owner, playerId }: { dungeon: Dungeon; isMe: boolean; owner: string; playerId: string }) {
+  const t = useT();
   const openDungeon = useMatchUi((state) => state.openDungeon);
   const zoom = usePileZoom(dungeon.card, '');
-  const room = dungeon.currentRoom ?? 'Not entered';
+  const room = dungeon.currentRoom ?? t('match.zone.notEntered');
+  const label = isMe
+    ? t('match.zone.yourDungeonAria', { name: dungeon.name, room })
+    : t('match.zone.theirDungeonAria', { owner, name: dungeon.name, room });
   return (
-    <button type="button" className={styles.pile} aria-label={`${owner} dungeon, ${dungeon.name}: ${room}. Show its rooms`} onClick={() => openDungeon(playerId)} {...zoom}>
+    <button type="button" className={styles.pile} aria-label={label} onClick={() => openDungeon(playerId)} {...zoom}>
       <div className={styles.stack}>
         <CardFace card={dungeon.card} size="small" />
       </div>
       <span className={styles.room} title={room}>{room}</span>
-      <span className={styles.label}><Castle size={16} aria-hidden="true" /> Dungeon</span>
+      <span className={styles.label}><Castle size={16} aria-hidden="true" /> {t('match.zone.dungeon')}</span>
     </button>
   );
 }
 
 /** A commander in the command zone, face up: it glows when it can be cast, and says what casting it costs extra. */
-function CommanderPile({ commander, sleeve, castable, onCast, owner }: {
+function CommanderPile({ commander, sleeve, castable, onCast, isMe, owner, commandTitle }: {
   commander: CommanderStatus;
   sleeve: string;
   castable: boolean;
   onCast?(id: string): void;
+  isMe: boolean;
   owner: string;
+  commandTitle: string;
 }) {
+  const t = useT();
   const setZoom = useMatchUi((state) => state.setZoom);
   const openViewer = useMatchUi((state) => state.openViewer);
-  const label = `${owner} commander, ${commander.name}${commander.tax > 0 ? `, costs ${commander.tax} more` : ''}${castable ? '. Cast it' : ''}`;
+  const tax = commander.tax > 0 ? t('match.zone.commanderTaxMore', { tax: commander.tax }) : '';
+  const castText = castable ? t('match.zone.commanderCastIt') : '';
+  const label = isMe
+    ? t('match.zone.yourCommanderAria', { name: commander.name, tax, castable: castText })
+    : t('match.zone.theirCommanderAria', { owner, name: commander.name, tax, castable: castText });
   return (
     <button
       type="button"
       className={[styles.pile, castable ? styles.castable : ''].join(' ')}
       aria-label={label}
       data-object-id={commander.id}
-      onClick={() => (castable && onCast ? onCast(commander.id) : openViewer({ title: `${owner} command zone`, cards: [commander.card] }))}
+      onClick={() => (castable && onCast ? onCast(commander.id) : openViewer({ title: commandTitle, cards: [commander.card] }))}
       onPointerEnter={(event) => setZoom({ card: commander.card, x: event.clientX, y: event.clientY, sleeve })}
       onPointerLeave={() => setZoom(null)}
     >
       <div className={styles.stack}>
         <CardFace card={commander.card} sleeve={sleeve} size="small" />
       </div>
-      {commander.tax > 0 && <span className={styles.tax} title={`Cast ${commander.casts} ${commander.casts === 1 ? 'time' : 'times'} from the command zone`}>+{commander.tax}</span>}
-      <span className={styles.label}><Crown size={16} aria-hidden="true" /> Commander</span>
+      {commander.tax > 0 && <span className={styles.tax} title={t('match.zone.commanderCasts', { count: commander.casts })}>+{commander.tax}</span>}
+      <span className={styles.label}><Crown size={16} aria-hidden="true" /> {t('match.zone.commander')}</span>
     </button>
   );
 }
@@ -170,24 +186,28 @@ export function MiniPiles({ player, commanders = [] }: { player: PlayerView } & 
   const exile = Object.values(player.exile ?? {});
   const openDungeon = useMatchUi((state) => state.openDungeon);
   const { waiting, dungeon, others } = splitCommand(player, commanders);
-  const name = `${player.name}'s`;
+  const owner = player.name ?? '';
+  const libraryTitle = t('match.zone.theirLibrary', { name: owner });
+  const graveyardTitle = t('match.zone.theirGraveyard', { name: owner });
+  const exileTitle = t('match.zone.theirExile', { name: owner });
+  const commandTitle = t('match.zone.theirCommand', { name: owner });
   const libraryRef = useRef<HTMLSpanElement>(null);
   useFlipOrigin(`library:${player.playerId}`, libraryRef);
   return (
     <div className={styles.mini}>
-      <span ref={libraryRef} className={styles.chip} aria-label={t('match.cards', { label: `${name} library`, count: player.libraryCount ?? 0 })} title="Library">
+      <span ref={libraryRef} className={styles.chip} aria-label={t('match.cards', { label: libraryTitle, count: player.libraryCount ?? 0 })} title={t('match.zone.library')}>
         <BookOpen size={16} aria-hidden="true" /> {player.libraryCount ?? 0}
       </span>
-      <MiniButton icon={<Skull size={16} aria-hidden="true" />} count={graveyard.length} label={`${name} graveyard`} onOpen={() => openViewer({ title: `${name} graveyard`, cards: [...graveyard].reverse() })} />
+      <MiniButton icon={<Skull size={16} aria-hidden="true" />} count={graveyard.length} label={graveyardTitle} onOpen={() => openViewer({ title: graveyardTitle, cards: [...graveyard].reverse() })} />
       {exile.length > 0 && (
-        <MiniButton icon={<Ban size={16} aria-hidden="true" />} count={exile.length} label={`${name} exile`} onOpen={() => openViewer({ title: `${name} exile`, cards: exile })} />
+        <MiniButton icon={<Ban size={16} aria-hidden="true" />} count={exile.length} label={exileTitle} onOpen={() => openViewer({ title: exileTitle, cards: exile })} />
       )}
       {dungeon && (
         <button
           type="button"
           className={styles.chip}
-          aria-label={`${name} dungeon, ${dungeon.name}: ${dungeon.currentRoom ?? 'not entered'}. Show its rooms`}
-          title={`${dungeon.name}: ${dungeon.currentRoom ?? 'not entered'}`}
+          aria-label={t('match.zone.theirDungeonAria', { owner, name: dungeon.name, room: dungeon.currentRoom ?? t('match.zone.notEntered').toLowerCase() })}
+          title={`${dungeon.name}: ${dungeon.currentRoom ?? t('match.zone.notEntered').toLowerCase()}`}
           onClick={() => openDungeon(player.playerId!)}
         >
           <Castle size={16} aria-hidden="true" />
@@ -195,16 +215,16 @@ export function MiniPiles({ player, commanders = [] }: { player: PlayerView } & 
         </button>
       )}
       {others.length > 0 && (
-        <MiniButton icon={<Sparkles size={16} aria-hidden="true" />} count={others.length} label={`${name} command zone`} onOpen={() => openViewer({ title: `${name} command zone`, cards: others })} />
+        <MiniButton icon={<Sparkles size={16} aria-hidden="true" />} count={others.length} label={commandTitle} onOpen={() => openViewer({ title: commandTitle, cards: others })} />
       )}
       {waiting.map((commander) => (
         <button
           key={commander.id}
           type="button"
           className={[styles.chip, styles.chipCommander].join(' ')}
-          aria-label={`${name} commander ${commander.name} is in the command zone${commander.tax > 0 ? `, costs ${commander.tax} more` : ''}`}
+          aria-label={t('match.zone.theirCommanderMiniAria', { owner, name: commander.name, tax: commander.tax > 0 ? t('match.zone.commanderTaxMore', { tax: commander.tax }) : '' })}
           title={commander.name}
-          onClick={() => openViewer({ title: `${name} command zone`, cards: [commander.card] })}
+          onClick={() => openViewer({ title: commandTitle, cards: [commander.card] })}
         >
           <Crown size={16} aria-hidden="true" />
           <span className={styles.chipName}>{commander.name.split(',')[0]}</span>

@@ -295,6 +295,7 @@ public final class ChampionsOfKamigawa extends ExpansionSet {
         cards.add(new SetCardInfo("Swamp", 296, Rarity.LAND, mage.cards.basiclands.Swamp.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Swamp", 297, Rarity.LAND, mage.cards.basiclands.Swamp.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Swamp", 298, Rarity.LAND, mage.cards.basiclands.Swamp.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Swirl the Mists", 94, Rarity.RARE, mage.cards.s.SwirlTheMists.class));
         cards.add(new SetCardInfo("Takeno, Samurai General", 46, Rarity.RARE, mage.cards.t.TakenoSamuraiGeneral.class));
         cards.add(new SetCardInfo("Tatsumasa, the Dragon's Fang", 270, Rarity.RARE, mage.cards.t.TatsumasaTheDragonsFang.class));
         cards.add(new SetCardInfo("Teller of Tales", 95, Rarity.COMMON, mage.cards.t.TellerOfTales.class));

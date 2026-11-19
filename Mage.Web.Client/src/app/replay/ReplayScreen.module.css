@@ -54,15 +54,11 @@
   font-size: var(--text-xs);
 }
 
-.speed select {
+.speed button {
   height: 32px;
-  padding: 0 6px;
-  border: 0;
-  border-radius: var(--radius-control);
-  background: var(--mat-600);
+  padding: 0 10px;
+  background-color: var(--mat-600);
   box-shadow: inset 0 0 0 1px var(--ink-faint);
-  color: var(--ink-strong);
-  font: inherit;
   font-size: var(--text-sm);
 }
 

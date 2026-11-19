@@ -69,6 +69,7 @@ public final class UnlimitedEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Cockatrice", 190, Rarity.RARE, mage.cards.c.Cockatrice.class, RETRO_ART));
         cards.add(new SetCardInfo("Consecrate Land", 15, Rarity.UNCOMMON, mage.cards.c.ConsecrateLand.class, RETRO_ART));
         cards.add(new SetCardInfo("Conservator", 238, Rarity.UNCOMMON, mage.cards.c.Conservator.class, RETRO_ART));
+        cards.add(new SetCardInfo("Contract from Below", 97, Rarity.RARE, mage.cards.c.ContractFromBelow.class, RETRO_ART));
         cards.add(new SetCardInfo("Control Magic", 53, Rarity.UNCOMMON, mage.cards.c.ControlMagic.class, RETRO_ART));
         cards.add(new SetCardInfo("Conversion", 16, Rarity.UNCOMMON, mage.cards.c.Conversion.class, RETRO_ART));
         cards.add(new SetCardInfo("Copper Tablet", 239, Rarity.UNCOMMON, mage.cards.c.CopperTablet.class, RETRO_ART));
@@ -81,9 +82,11 @@ public final class UnlimitedEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Cursed Land", 98, Rarity.UNCOMMON, mage.cards.c.CursedLand.class, RETRO_ART));
         cards.add(new SetCardInfo("Cyclopean Tomb", 241, Rarity.RARE, mage.cards.c.CyclopeanTomb.class, RETRO_ART));
         cards.add(new SetCardInfo("Dark Ritual", 99, Rarity.COMMON, mage.cards.d.DarkRitual.class, RETRO_ART));
+        cards.add(new SetCardInfo("Darkpact", 100, Rarity.RARE, mage.cards.d.Darkpact.class, RETRO_ART));
         cards.add(new SetCardInfo("Death Ward", 18, Rarity.COMMON, mage.cards.d.DeathWard.class, RETRO_ART));
         cards.add(new SetCardInfo("Deathgrip", 101, Rarity.UNCOMMON, mage.cards.d.Deathgrip.class, RETRO_ART));
         cards.add(new SetCardInfo("Deathlace", 102, Rarity.RARE, mage.cards.d.Deathlace.class, RETRO_ART));
+        cards.add(new SetCardInfo("Demonic Attorney", 103, Rarity.RARE, mage.cards.d.DemonicAttorney.class, RETRO_ART));
         cards.add(new SetCardInfo("Demonic Hordes", 104, Rarity.RARE, mage.cards.d.DemonicHordes.class, RETRO_ART));
         cards.add(new SetCardInfo("Demonic Tutor", 105, Rarity.UNCOMMON, mage.cards.d.DemonicTutor.class, RETRO_ART));
         cards.add(new SetCardInfo("Dingus Egg", 242, Rarity.RARE, mage.cards.d.DingusEgg.class, RETRO_ART));

@@ -28,6 +28,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.repository == 'arcanite24/playmat'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

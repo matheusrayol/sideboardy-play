@@ -37,7 +37,7 @@ export function VfxGallery() {
   };
   const card = SIGNATURES.get(name);
   return (
-    <main style={{ padding: 16, background: '#101512', color: '#eee', minHeight: '100vh', fontFamily: 'system-ui' }}>
+    <main style={{ padding: 16, background: 'var(--mat-950, #0c101e)', color: 'var(--ink, #f7f5f0)', minHeight: '100vh', fontFamily: 'system-ui' }}>
       <h1 style={{ fontSize: 20, margin: '0 0 8px' }}>Signature effects</h1>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
         <label>Ink <select value={ink} onChange={(event) => setInk(event.target.value as Ink | '')}>
@@ -51,7 +51,7 @@ export function VfxGallery() {
         <datalist id="vfx-cards">{[...SIGNATURES.keys()].map((key) => <option key={key} value={key} />)}</datalist>
         <button type="button" disabled={!card} onClick={() => card && play(card.fx, ink || card.ink, !!card.big)}>Cast {card ? `(${card.fx}, ${card.ink}${card.big ? ', big' : ''})` : '(not listed)'}</button>
       </div>
-      <div data-testid="vfx-table" style={{ position: 'relative', width: WIDTH, height: HEIGHT, background: 'radial-gradient(#24403f, #0d1716)', borderRadius: 12, overflow: 'hidden' }}>
+      <div data-testid="vfx-table" style={{ position: 'relative', width: WIDTH, height: HEIGHT, background: 'radial-gradient(var(--mat-600, #252c45), var(--mat-950, #0c101e))', borderRadius: 12, overflow: 'hidden' }}>
         {[THEM, ME].map((plate, index) => <span key={index} style={{ position: 'absolute', left: plate.x - 60, top: plate.y - 40, width: 120, height: 80, borderRadius: 40, background: '#3e3a2a' }} />)}
         {CARDS.map((point, index) => <span key={index} style={{ position: 'absolute', left: point.x - 63, top: point.y - 88, width: 126, height: 176, borderRadius: 8, background: '#5a4a3a', border: '2px solid #2a2015' }} />)}
         <span style={{ position: 'absolute', left: STACK.x - 63, top: STACK.y - 88, width: 126, height: 176, borderRadius: 8, background: '#2a3a5a' }} />

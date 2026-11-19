@@ -23,7 +23,7 @@ export default {
   'about.source.text': "The rules engine, card implementations and server are {xmage}, by its many contributors, under the MIT licence. {app}'s own code is in {repository}, under the same licence.",
   'about.source.repository': 'its repository',
   'about.type': 'Type and symbols',
-  'about.type.barlow': 'Barlow and Barlow Condensed by Jeremy Tribby, SIL Open Font License.',
+  'about.type.barlow': 'Bricolage Grotesque by Mathieu Triay, Inter by Rasmus Andersson, and Barlow by Jeremy Tribby, SIL Open Font License.',
   'about.type.mana': 'Mana by Andrew Gioia: font under the SIL Open Font License, code under MIT.',
   'about.type.ui': 'Lucide icons, ISC licence. Radix UI primitives, MIT licence.',
   'about.data': 'What this server keeps',

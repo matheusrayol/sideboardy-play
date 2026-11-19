@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties, type F
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { APP_NAME } from '../brand';
 import { api, rpc } from '../connection';
+import { syncSideboardySso } from '../../core/deckImport/sideboardy';
 import { useT, type MessageKey } from '../i18n';
 import { RichText } from '../i18n/RichText';
 import type { InviteCheck, ServerInfo } from '../../protocol/generated/views';
@@ -74,7 +75,11 @@ export function LoginScreen() {
   const [editServer, setEditServer] = useState(false);
   const [dealing, setDealing] = useState(false);
   const [refused, setRefused] = useState(0);
-  const { status, info } = useServerStatus(serverUrl);
+  const [ssoNonce, setSsoNonce] = useState(0);
+  const [ssoChecked, setSsoChecked] = useState(false);
+  const [ssoUser, setSsoUser] = useState<string | null>(null);
+  const ssoReconnected = useRef(false);
+  const { status, info } = useServerStatus(serverUrl, ssoNonce);
   const accounts = !!info?.accounts;
   const contributors = info?.access === 'allowlist';
   const inviteOnly = info?.registration === 'invite';
@@ -101,10 +106,35 @@ export function LoginScreen() {
   const elsewhere = (session.signedInElsewhere || takingBack) && !invite && !backFromGithub && !backFromOidc;
 
   useEffect(() => {
+    let cancelled = false;
+    void syncSideboardySso().then((sso) => {
+      if (cancelled) return;
+      setSsoUser(sso.authenticated ? sso.playUsername : null);
+      setSsoChecked(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!ssoChecked || !ssoUser || status !== 'online' || info?.signOn || ssoReconnected.current) return;
+    ssoReconnected.current = true;
+    rpc.disconnect();
+    setSsoNonce((n) => n + 1);
+  }, [ssoChecked, ssoUser, status, info?.signOn]);
+
+  useEffect(() => {
     if (resumed.current || invite || backFromGithub || backFromOidc) return;
+    if (!ssoChecked || status === 'checking') return;
+    if (ssoUser && status === 'online' && !info?.signOn && !ssoReconnected.current) return;
+    if (info?.signOn) {
+      resumed.current = true;
+      return;
+    }
     resumed.current = true;
     void session.resume().then((ok) => ok && navigate(destination, { replace: true }));
-  }, [session, navigate, destination, invite, backFromGithub, backFromOidc]);
+  }, [ssoChecked, ssoUser, ssoNonce, status, info?.signOn, session, navigate, destination, invite, backFromGithub, backFromOidc]);
 
   // the invite seeded registration, but the server signs in with the provider only: the sign-in screen says so
   useEffect(() => {
@@ -633,8 +663,8 @@ function describeServer(url: string): string | null {
  * Whether the server answers, and whether it has accounts; checked on load and when the address changes (the connection
  * is kept for sign-in).
  */
-function useServerStatus(url: string): { status: ServerStatus; info: ServerInfo | null } {
-  const [result, setResult] = useState<{ url: string; status: ServerStatus; info: ServerInfo | null } | null>(null);
+function useServerStatus(url: string, refreshKey = 0): { status: ServerStatus; info: ServerInfo | null } {
+  const [result, setResult] = useState<{ url: string; refreshKey: number; status: ServerStatus; info: ServerInfo | null } | null>(null);
   // the installed app opens offline too (its shell is cached): check again when the network comes back
   const [backOnline, setBackOnline] = useState(0);
   useEffect(() => {
@@ -654,17 +684,19 @@ function useServerStatus(url: string): { status: ServerStatus; info: ServerInfo 
         await api.getServerState();
         // older servers don't know serverInfo: they have no accounts as far as the web client is concerned
         const info = await api.serverInfo().catch(() => null);
-        if (!cancelled) setResult({ url, status: 'online', info });
+        if (!cancelled) setResult({ url, refreshKey, status: 'online', info });
       } catch {
-        if (!cancelled) setResult({ url, status: 'offline', info: null });
+        if (!cancelled) setResult({ url, refreshKey, status: 'offline', info: null });
       }
-    }, 400);
+    }, refreshKey > 0 ? 50 : 400);
     return () => {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [url, backOnline]);
-  return result?.url === url ? { status: result.status, info: result.info } : { status: 'checking', info: null };
+  }, [url, refreshKey, backOnline]);
+  return result?.url === url && result?.refreshKey === refreshKey
+    ? { status: result.status, info: result.info }
+    : { status: 'checking', info: null };
 }
 
 /** Whether the invite link still works: null while it is being checked (or the server isn't reached yet). */

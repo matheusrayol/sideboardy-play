@@ -1,5 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStore } from 'zustand';
+import { useT } from '../i18n';
+import '../match/matchMessages';
 import { useEvents } from '../stores/events';
 import { useGames } from '../stores/games';
 import { usePlay } from '../stores/play';
@@ -12,6 +14,7 @@ import styles from './GameScreen.module.css';
 
 /** A running game: the match stage, full screen. */
 export function GameScreen() {
+  const t = useT();
   const { gameId = '' } = useParams();
   const navigate = useNavigate();
   const session = useGames((state) => state.sessions[gameId]);
@@ -19,13 +22,13 @@ export function GameScreen() {
   const eventId = useEvents((events) => events.currentTournamentId);
   // Career matches lead back to Career (a mode's game to that mode's screen)
   const returnPath = usePlay((play) => play.returnPath) ?? '/';
-  const backLabel = eventId ? 'Back to the event' : returnPath.startsWith('/career') ? 'Back to Career' : 'Back to Play';
+  const backLabel = t(eventId ? 'match.overlay.backToEvent' : returnPath.startsWith('/career') ? 'match.overlay.backToCareer' : 'match.overlay.backToPlay');
 
   if (!session) {
     return (
       <div className={styles.missing}>
-        <h1>This game isn't open here</h1>
-        <p>It may have ended, or it was started in another tab.</p>
+        <h1>{t('match.missing.title')}</h1>
+        <p>{t('match.missing.body')}</p>
         <Button variant="print" onClick={() => navigate(returnPath)}>{backLabel}</Button>
       </div>
     );

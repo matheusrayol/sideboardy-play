@@ -16,7 +16,7 @@ export function DefenderPicker({ attacker, options, onPick }: {
 }) {
   const t = useT();
   return (
-    <section className={styles.picker} aria-label="Choose what to attack">
+    <section className={styles.picker} aria-label={t('match.attack.chooseTitle')}>
       <h2 className={styles.title}><Swords size={20} aria-hidden="true" /> {attacker ? t('match.attack.named', { name: attacker }) : t('match.attack')}</h2>
       <ul className={styles.options}>
         {options.map((option) => (
@@ -25,10 +25,14 @@ export function DefenderPicker({ attacker, options, onPick }: {
               {option.kind === 'player' ? <UserRound size={18} aria-hidden="true" /> : <Shield size={18} aria-hidden="true" />}
               <span className={styles.name}>
                 {option.name}
-                {option.controllerName && <small>{option.controllerName}’s {option.kind}</small>}
+                {option.controllerName && (
+                  <small>
+                    {t(option.kind === 'player' ? 'match.attack.ownerPlayer' : option.kind === 'battle' ? 'match.attack.ownerBattle' : 'match.attack.ownerPlaneswalker', { owner: option.controllerName })}
+                  </small>
+                )}
               </span>
               {option.value !== null && (
-                <span className={styles.value} aria-label={option.kind === 'player' ? `${option.value} life` : `${option.value} ${option.kind === 'battle' ? 'defense' : 'loyalty'}`}>
+                <span className={styles.value} aria-label={option.kind === 'player' ? t('match.attack.lifeValue', { value: option.value }) : t(option.kind === 'battle' ? 'match.attack.defenseValue' : 'match.attack.loyaltyValue', { value: option.value })}>
                   {option.value}
                 </span>
               )}

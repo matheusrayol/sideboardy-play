@@ -28,6 +28,7 @@ import { useT } from '../i18n';
 import { useEvents } from '../stores/events';
 import { useGames } from '../stores/games';
 import { usePlay } from '../stores/play';
+import { usePlaygroup } from '../stores/playgroup';
 import { useAutomation, useSettings } from '../stores/settings';
 import { useManaPaymentSettings } from './useManaPaymentSettings';
 import { progressionShown } from '../career/progressionEvents';
@@ -62,7 +63,7 @@ import { setCardMotion, useFlipOrigin } from './flip';
 import { GameLog } from './GameLog';
 import { useMatchZoomKeys } from './matchZoomKeys';
 import { Hand } from './Hand';
-import './matchMessages';
+import { translateInteractionHeadline } from './matchMessages';
 import { useMatchUi } from './matchUi';
 import { promptSourceId } from '../../core/game/promptSource';
 import { useGameCues } from './useGameCues';
@@ -315,9 +316,9 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
   const onResend = useCallback(() => void session.resend().catch(() => undefined), [session]);
   const onResync = useCallback(() => {
     void session.resync().then((resent) => {
-      if (!resent) notify('Nothing to answer', "The game isn't waiting for you. It goes on as soon as the server is ready.");
+      if (!resent) notify(t('match.resync.title'), t('match.resync.body'));
     });
-  }, [session]);
+  }, [session, t]);
   // The ability/color prompt has no source id; keep the card through consecutive choices.
   const [choiceSource, setChoiceSource] = useState<string | null>(null);
   useEffect(() => session.store.subscribe((next) => {
@@ -421,6 +422,9 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
   // the rewards beat shows on the game-over screen itself (B277): leaving goes straight back, Details opens the screen
   const leave = useCallback(() => exit(false), [exit]);
   const deckId = usePlay((play) => play.deckId);
+  const pgRecord = usePlaygroup((pg) => pg.matchRecords[state.gameId] ?? null);
+  const pgTable = useGames((games) => games.tables[state.gameId]);
+  const pgTableId = pgTable?.parentTableId ?? pgTable?.tableId ?? null;
   // players see who is watching them too
   const watchers = useWatchers(state.gameId, mode === 'play' && !state.gameOver);
   // between games of a match the server deals the next game by itself: show the score, not a way out
@@ -453,16 +457,22 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
   const cornerInteraction = useMemo(() => {
     if (damageSplit) return damageCorner(interaction, damageSplit);
     if (payment?.cost && !(prompt?.kind === 'playMana' && prompt.isX)) {
-      return { ...interaction, headline: payment.sourceName ? `Pay ${payment.cost} for ${payment.sourceName}` : `Pay ${payment.cost}` };
+      return {
+        ...interaction,
+        headline: payment.sourceName ? t('match.pay.for', { cost: payment.cost, name: payment.sourceName }) : t('match.pay.cost', { cost: payment.cost }),
+      };
     }
     // attackers go at the player on a click, so say how to send one at a planeswalker or battle instead
     if (interaction.mode === 'declareAttackers' && automation.attackPlayerByDefault && attackDrop.targets.size > 0) {
-      return { ...interaction, headline: `${interaction.headline}. Drag one onto a planeswalker or battle to attack it` };
+      return {
+        ...interaction,
+        headline: t('match.attack.dragHint', { headline: translateInteractionHeadline(interaction.headline, t) }),
+      };
     }
     if (interaction.mode !== 'target' || !/attacker to block/i.test(prompt?.text ?? '') || !lastBlocker) return interaction;
     const blocker = board.me?.front.flatMap((group) => group.members).find((card) => card.id === lastBlocker);
-    return blocker ? { ...interaction, headline: `Which attacker does ${blocker.name} block?` } : interaction;
-  }, [interaction, prompt, board.me, lastBlocker, damageSplit, payment, automation.attackPlayerByDefault, attackDrop.targets]);
+    return blocker ? { ...interaction, headline: t('match.block.whichAttacker', { name: blocker.name ?? '' }) } : interaction;
+  }, [interaction, prompt, board.me, lastBlocker, damageSplit, payment, automation.attackPlayerByDefault, attackDrop.targets, t]);
   const pregame = !view?.step;
   const handIds = useMemo(() => new Set(hand.map((card) => card.id!)), [hand]);
   // the server names the pre-game choices (who starts, the London mulligan's bottom cards); older servers are recognized
@@ -578,35 +588,76 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
         const layout = matchLayout(stage, matchSize);
         return (
           <div className={styles.layout} style={{ ['--seam' as string]: `${layout.seam}px`, ['--hand-raise' as string]: `${layout.handRaise}px` }}>
-            {/* an opponent's own cloth dyes their half of the table (B295); several opponents dye their columns */}
-            {theirCloths.map((cloth, index) => cloth && (
-              <div
-                key={board.opponents[index]?.player.playerId ?? index}
-                className={theirCloths.length === 1 ? styles.theirCloth : styles.theirClothColumn}
-                style={theirClothBox(cloth, theirCloths.length === 1 ? null : layout.them(index, theirCloths.length))}
-                aria-hidden="true"
-              />
-            ))}
-            <div className={styles.mat} aria-hidden="true" />
-            {/* each half carries its player's deck art, printed faintly into the mat (in their cloth's dye) */}
-            {board.opponents.map((opponent, index) => {
-              const column = layout.them(index, board.opponents.length);
-              return (
-                <div key={opponent.player.playerId} className={styles.printTheirs} style={{
-                  ...(theirCloths[index] ? clothStyle(theirCloths[index]) : {}),
-                  ...(board.opponents.length > 1 ? { left: column.left, width: column.width, right: 'auto' } : {}),
-                }}>
-                  <MatPrint cloth={theirCloths[index]} card={opponentArt[index]} enabled={matArt !== 'none'} />
+            <div className={styles.tableSurface}>
+              <div className={styles.tableBoard} aria-hidden="true">
+                <div className={styles.tableBoardInner}>
+                  {/* an opponent's own cloth dyes their half of the table (B295); several opponents dye their columns */}
+                  {theirCloths.map((cloth, index) => cloth && (
+                    <div
+                      key={board.opponents[index]?.player.playerId ?? index}
+                      className={theirCloths.length === 1 ? styles.theirCloth : styles.theirClothColumn}
+                      style={theirClothBox(cloth, theirCloths.length === 1 ? null : layout.them(index, theirCloths.length))}
+                    />
+                  ))}
+                  <div className={styles.mat} />
+                  {/* each half carries its player's deck art, printed faintly into the mat (in their cloth's dye) */}
+                  {board.opponents.map((opponent, index) => {
+                    const column = layout.them(index, board.opponents.length);
+                    return (
+                      <div key={opponent.player.playerId} className={styles.printTheirs} style={{
+                        ...(theirCloths[index] ? clothStyle(theirCloths[index]) : {}),
+                        ...(board.opponents.length > 1 ? { left: column.left, width: column.width, right: 'auto' } : {}),
+                      }}>
+                        <MatPrint cloth={theirCloths[index]} card={opponentArt[index]} enabled={matArt !== 'none'} />
+                      </div>
+                    );
+                  })}
+                  <div className={styles.printMine}><MatPrint cloth={myCloth} card={myArt} enabled={matArt !== 'none'} chosenCard={matArt === 'card'} /></div>
+                  <div className={styles.seam} />
                 </div>
-              );
-            })}
-            <div className={styles.printMine}><MatPrint cloth={myCloth} card={myArt} enabled={matArt !== 'none'} chosenCard={matArt === 'card'} /></div>
-            <div className={styles.seam} aria-hidden="true" />
-            {/* under the hand and the controls, over the mat */}
-            <Stitch inset={10} radius={22} zIndex={2} />
+                {/* stitched edge inside the playmat slab */}
+                <Stitch inset={10} radius={22} zIndex={2} />
+              </div>
+
+              {board.opponents.map((opponent, index) => (
+                <OpponentBoard
+                  key={opponent.player.playerId}
+                  board={opponent}
+                  index={index}
+                  count={board.opponents.length}
+                  sleeve={theirSleeves.get(opponent.player.playerId!) ?? sleeves.theirs}
+                  clickable={clickable}
+                  selected={interaction.selected}
+                  attacking={attacking}
+                  targeting={targeting}
+                  blocking={blocking}
+                  onClick={onClick}
+                  pending={pending}
+                  layout={layout}
+                  commanders={commanders.get(opponent.player.playerId!) ?? NO_COMMANDERS}
+                />
+              ))}
+
+              {board.me && (
+                <>
+                  <Battlefield board={board.me} sleeve={sleeves.mine} clickable={clickable} selected={chosen} attacking={attacking} blocking={blocking} targeting={targeting} onClick={onClick} pending={pending} onBlockDrop={interaction.mode === 'declareBlockers' && canAct ? onBlockDrop : interaction.mode === 'declareAttackers' && canAct ? attackDrop.onDrop : undefined} dropTargets={interaction.mode === 'declareAttackers' ? attackDrop.targets : undefined} place={layout.me} />
+                  <div className={styles.myPiles} style={layout.myPiles}>
+                    <Piles
+                      player={board.me.player}
+                      sleeve={sleeves.mine}
+                      isMe={board.me.isMe}
+                      commanders={myId ? commanders.get(myId) : undefined}
+                      clickable={canAct ? clickable : undefined}
+                      onCast={onClick}
+                      inHand={offZoneInHand}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
 
             {board.opponents.map((opponent, index) => (
-              <OpponentSide
+              <OpponentSeat
                 key={opponent.player.playerId}
                 board={opponent}
                 index={index}
@@ -617,11 +668,7 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
                 revealed={revealedInHand(revealedHands, opponent.player.playerId)}
                 clickable={clickable}
                 selected={interaction.selected}
-                attacking={attacking}
-                targeting={targeting}
-                blocking={blocking}
                 onClick={onClick}
-                pending={pending}
                 deciding={!!opponent.player.hasPriority && interaction.mode === 'waiting'}
                 layout={layout}
                 commanders={commanders.get(opponent.player.playerId!) ?? NO_COMMANDERS}
@@ -631,42 +678,28 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
             ))}
 
             {board.me && (
-              <>
-                <Battlefield board={board.me} sleeve={sleeves.mine} clickable={clickable} selected={chosen} attacking={attacking} blocking={blocking} targeting={targeting} onClick={onClick} pending={pending} onBlockDrop={interaction.mode === 'declareBlockers' && canAct ? onBlockDrop : interaction.mode === 'declareAttackers' && canAct ? attackDrop.onDrop : undefined} dropTargets={interaction.mode === 'declareAttackers' ? attackDrop.targets : undefined} place={layout.me} />
-                <div ref={plateRef} className={styles.myPlate} style={layout.myPlate}>
-                  <PlayerPlate
-                    player={board.me.player}
-                    isMe={board.me.isMe}
-                    sleeve={sleeves.mine}
-                    look={lookOf(board.me.player)}
-                    targetable={clickable.has(board.me.player.playerId!)}
-                    selected={interaction.selected.has(board.me.player.playerId!)}
-                    deciding={canAct && interaction.mode !== 'waiting'}
-                    onClick={() => onClick(board.me!.player.playerId!)}
-                    toPay={canAct && !awaitingServer ? payment?.cost : null}
-                    payable={canAct ? clickable : undefined}
-                    onPay={onClick}
-                    commanderDamage={damageTaken(board.me.player)}
-                  />
-                  {lookOf(board.me.player)?.pet && (
-                    <div className={styles.myPet}>
-                      <PetSpot pet={lookOf(board.me.player)?.pet} owner={board.me.player.name ?? ''} isMe={board.me.isMe} />
-                    </div>
-                  )}
-                  {emotes && <EmoteButton gameId={state.gameId} />}
-                </div>
-                <div className={styles.myPiles} style={layout.myPiles}>
-                  <Piles
-                    player={board.me.player}
-                    sleeve={sleeves.mine}
-                    isMe={board.me.isMe}
-                    commanders={myId ? commanders.get(myId) : undefined}
-                    clickable={canAct ? clickable : undefined}
-                    onCast={onClick}
-                    inHand={offZoneInHand}
-                  />
-                </div>
-              </>
+              <div ref={plateRef} className={styles.myPlate} style={layout.myPlate}>
+                <PlayerPlate
+                  player={board.me.player}
+                  isMe={board.me.isMe}
+                  sleeve={sleeves.mine}
+                  look={lookOf(board.me.player)}
+                  targetable={clickable.has(board.me.player.playerId!)}
+                  selected={interaction.selected.has(board.me.player.playerId!)}
+                  deciding={canAct && interaction.mode !== 'waiting'}
+                  onClick={() => onClick(board.me!.player.playerId!)}
+                  toPay={canAct && !awaitingServer ? payment?.cost : null}
+                  payable={canAct ? clickable : undefined}
+                  onPay={onClick}
+                  commanderDamage={damageTaken(board.me.player)}
+                />
+                {lookOf(board.me.player)?.pet && (
+                  <div className={styles.myPet}>
+                    <PetSpot pet={lookOf(board.me.player)?.pet} owner={board.me.player.name ?? ''} isMe={board.me.isMe} />
+                  </div>
+                )}
+                {emotes && <EmoteButton gameId={state.gameId} />}
+              </div>
             )}
 
             <Reveals groups={reveals} myPlayerId={myId} opponentIds={opponentIds} autoDismiss={autoDismissReveals} />
@@ -683,7 +716,7 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
               <Hand
                 cards={seatHand.cards}
                 faceDown={seatHand.faceDown}
-                label={`${board.me.player.name ?? 'Player'}'s hand`}
+                label={t('match.hand.playerLabel', { name: board.me.player.name ?? t('match.playerFallback') })}
                 clickable={EMPTY}
                 selected={EMPTY}
                 sleeve={sleeves.mine}
@@ -753,7 +786,7 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
             <GameLog gameId={state.gameId} notices={state.notices} canChat={mode !== 'replay'} view={view} replayLog={replayLog} delayMs={state.broadcastDelayMs} />
             {mode === 'watch' && !view && state.broadcastDelayMs > 0 && (
               <p className={styles.delayNote} role="status">
-                The table appears in {delayLabel(Math.round(state.broadcastDelayMs / 1000))}: the broadcast delay holds the game back.
+                {t('match.watch.delayNote', { delay: delayLabel(Math.round(state.broadcastDelayMs / 1000)) })}
               </p>
             )}
             {mode === 'play' && <WatcherCount watchers={watchers} className={styles.watchers} />}
@@ -779,14 +812,14 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
             )}
             {choosingStarter && board.me && !awaitingServer && (
               <StartingPlayerOverlay
-                me={{ id: board.me.player.playerId!, name: board.me.player.name ?? 'You' }}
-                opponents={board.opponents.map((opponent) => ({ id: opponent.player.playerId!, name: opponent.player.name ?? 'Opponent' }))}
+                me={{ id: board.me.player.playerId!, name: board.me.player.name ?? t('match.youFallback') }}
+                opponents={board.opponents.map((opponent) => ({ id: opponent.player.playerId!, name: opponent.player.name ?? t('match.opponentFallback') }))}
                 onChoose={onClick}
               />
             )}
             {pickerCards && !awaitingServer && (
               <CardPicker
-                title={choosingFromHand ? 'Put cards on the bottom' : 'Choose cards'}
+                title={choosingFromHand ? t('match.overlay.putBottom') : t('match.overlay.chooseCards')}
                 cards={pickerCards}
                 interaction={interaction}
                 sleeve={sleeves.mine}
@@ -798,7 +831,9 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
             {viewer && <ZoneViewer title={viewer.title} cards={viewer.cards} onClose={() => openViewer(null)} />}
             {shownDungeon && shownDungeonPlayer && (
               <DungeonViewer
-                title={shownDungeonPlayer.playerId === board.me?.player.playerId ? `Your dungeon: ${shownDungeon.name}` : `${shownDungeonPlayer.name}'s dungeon: ${shownDungeon.name}`}
+                title={shownDungeonPlayer.playerId === board.me?.player.playerId
+                  ? t('match.dungeon.yourTitle', { name: shownDungeon.name })
+                  : t('match.dungeon.theirTitle', { owner: shownDungeonPlayer.name ?? '', name: shownDungeon.name })}
                 dungeon={shownDungeon}
                 onClose={() => openDungeon(null)}
               />
@@ -808,7 +843,7 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
                 progress={betweenGames}
                 won={state.endInfo?.won ? true : /\bdraw\b/i.test(state.endInfo?.gameInfo ?? '') ? null : false}
                 onLeave={leave}
-                leaveLabel={eventId ? 'Back to the event' : 'Leave match'}
+                leaveLabel={eventId ? t('match.overlay.backToEvent') : t('match.confirm.leave.action')}
                 concedes={!eventId}
               />
             )}
@@ -818,16 +853,18 @@ export function MatchStage({ session, state, replayLog, onLeave }: MatchStagePro
                 endInfo={state.endInfo}
                 myName={board.me?.player.name ?? null}
                 onLeave={leave}
-                leaveLabel={eventId ? 'Back to the event' : career ? 'Back to Career' : vsPeople ? t('match.end.backToTables') : 'Back to Play'}
+                leaveLabel={eventId ? t('match.overlay.backToEvent') : career ? t('match.overlay.backToCareer') : vsPeople ? t('match.end.backToTables') : t('match.overlay.backToPlay')}
                 // a rematch is only dealt against the computer; people go back to Tables
                 onPlayAgain={mode === 'play' && deckId && !eventId && vsAi ? playAgain : undefined}
                 onReview={mode === 'play' && vsAi && board.me ? () => setReviewing(true) : undefined}
                 rewards={rewardsAfter ? <Suspense fallback={null}><RewardsBeat gameId={state.gameId} onDetails={() => exit(true)} /></Suspense> : undefined}
                 stamps={stamps}
+                playgroupRecord={mode === 'play' && !career && !vsAi ? pgRecord : null}
+                playgroupTableId={pgTableId}
               />
             )}
             {reviewing && (
-              <Dialog open onOpenChange={(open) => !open && setReviewing(false)} title="Game review" width="lg">
+              <Dialog open onOpenChange={(open) => !open && setReviewing(false)} title={t('match.review.title')} width="lg">
                 <GameReview gameId={state.gameId} me={board.me?.player.name ?? null} onNavigate={() => setReviewing(false)} />
               </Dialog>
             )}
@@ -861,12 +898,13 @@ const Battlefield = memo(function Battlefield({ board, place, ...row }: RowProps
   board: PlayerBoard;
   place: RowsPlacement;
 }) {
+  const t = useT();
   const forward = board.isMe ? -1 : 1;
   const { left, width } = place;
   return (
     <>
-      <Row groups={board.front} left={left} width={width} top={place.frontTop} ideal={place.frontIdeal} min={58} forward={forward} label="Creatures" flip={!board.isMe} {...row} />
-      <Row groups={board.back} left={left} width={width} top={place.backTop} ideal={place.backIdeal} min={50} forward={forward} label="Lands & permanents" flip={!board.isMe} {...row} />
+      <Row groups={board.front} left={left} width={width} top={place.frontTop} ideal={place.frontIdeal} min={58} forward={forward} label={t('match.zone.creatures')} flip={!board.isMe} {...row} />
+      <Row groups={board.back} left={left} width={width} top={place.backTop} ideal={place.backIdeal} min={50} forward={forward} label={t('match.zone.lands')} flip={!board.isMe} {...row} />
     </>
   );
 });
@@ -908,35 +946,60 @@ function Row({ groups, left, width, top, ideal, min, forward, label, flip, ...re
   );
 }
 
-/** An opponent's half: their rows mirrored above the seam, their seat, piles and hidden hand. */
-function OpponentSide({ board, index, count, sleeve, handCount, revealed, deciding, layout, commanders, commanderDamage, outOfRange, look, ...row }: RowProps & {
+/** An opponent's permanents, piles and seat label resting on the tilted tabletop surface. */
+function OpponentBoard({ board, index, count, sleeve, layout, commanders, ...row }: RowProps & {
   layout: MatchLayout;
-  look: PlayerLook | undefined;
   board: PlayerBoard;
   index: number;
   count: number;
-  handCount: number;
-  /** cards revealed from this hand and still in it */
-  revealed: CardView[];
-  deciding: boolean;
   commanders: readonly CommanderStatus[];
-  commanderDamage: readonly { name: string; amount: number }[];
-  outOfRange: boolean;
 }) {
   const place = layout.them(index, count);
   const player = board.player;
   return (
     <>
       <Battlefield board={board} sleeve={sleeve} place={place} {...row} />
+      {count === 1 && (
+        <div className={styles.theirPiles} style={layout.theirPiles}>
+          <Piles player={player} sleeve={sleeve} isMe={false} commanders={commanders} />
+        </div>
+      )}
+      {count > 1 && !layout.tall && <span className={styles.seatName} style={{ left: place.left + 16 }} aria-hidden="true">{player.name}</span>}
+    </>
+  );
+}
+
+/** An opponent's 2D HUD plate and top-edge hand fan. */
+function OpponentSeat({ board, index, count, sleeve, handCount, revealed, clickable, selected, onClick, deciding, layout, commanders, commanderDamage, outOfRange, look }: {
+  layout: MatchLayout;
+  look: PlayerLook | undefined;
+  board: PlayerBoard;
+  index: number;
+  count: number;
+  sleeve: string;
+  handCount: number;
+  /** cards revealed from this hand and still in it */
+  revealed: CardView[];
+  clickable: ReadonlySet<string>;
+  selected: ReadonlySet<string>;
+  onClick(id: string): void;
+  deciding: boolean;
+  commanders: readonly CommanderStatus[];
+  commanderDamage: readonly { name: string; amount: number }[];
+  outOfRange: boolean;
+}) {
+  const player = board.player;
+  return (
+    <>
       <div className={[styles.theirPlate, count > 1 ? styles.seat : '', look?.pet && count === 1 ? styles.withPet : ''].join(' ')} style={layout.theirPlate(index, count)}>
         <PlayerPlate
           player={player}
           isMe={false}
           sleeve={sleeve}
-          targetable={row.clickable.has(player.playerId!)}
-          selected={row.selected.has(player.playerId!)}
+          targetable={clickable.has(player.playerId!)}
+          selected={selected.has(player.playerId!)}
           deciding={deciding}
-          onClick={() => row.onClick(player.playerId!)}
+          onClick={() => onClick(player.playerId!)}
           commanderDamage={commanderDamage}
           outOfRange={outOfRange}
           look={look}
@@ -952,12 +1015,6 @@ function OpponentSide({ board, index, count, sleeve, handCount, revealed, decidi
           </div>
         )}
       </div>
-      {count === 1 && (
-        <div className={styles.theirPiles} style={layout.theirPiles}>
-          <Piles player={player} sleeve={sleeve} isMe={false} commanders={commanders} />
-        </div>
-      )}
-      {count > 1 && !layout.tall && <span className={styles.seatName} style={{ left: place.left + 16 }} aria-hidden="true">{player.name}</span>}
       <HiddenHand playerId={player.playerId!} count={handCount} revealed={revealed} sleeve={sleeve} left={layout.hiddenHandX(index, count)} />
     </>
   );
@@ -972,7 +1029,7 @@ function HiddenHand({ playerId, count, revealed, sleeve, left }: { playerId: str
   const shown = Math.min(count, 10);
   // cards revealed from this hand show face up, marked, in place of as many backs
   const faceUp = revealed.slice(0, shown);
-  const label = `${count} cards in hand` + (faceUp.length > 0 ? `, revealed: ${faceUp.map((card) => card.displayName ?? card.name).join(', ')}` : '');
+  const label = t('match.hand.hiddenLabel', { count }) + (faceUp.length > 0 ? t('match.hand.hiddenRevealed', { names: faceUp.map((card) => card.displayName ?? card.name).join(', ') }) : '');
   return (
     <div ref={ref} className={styles.hiddenHand} style={{ left }} aria-label={label} role="img">
       {Array.from({ length: shown }, (_, i) => {
@@ -1007,39 +1064,39 @@ interface RollbackOption {
 
 const CONFIRM = {
   concede: {
-    title: 'Concede this game?',
-    description: 'Your opponent wins this game. You can\'t undo it.',
-    action: 'Concede',
+    title: 'match.confirm.concede.title',
+    description: 'match.confirm.concede.desc',
+    action: 'match.menu.concede',
   },
   leave: {
-    title: 'Leave this match?',
-    description: 'You concede this game and the rest of the match. You can\'t undo it.',
-    action: 'Leave match',
+    title: 'match.confirm.leave.title',
+    description: 'match.confirm.leave.desc',
+    action: 'match.confirm.leave.action',
   },
   fork: {
-    title: 'Try this turn again?',
-    description: 'A new game starts from the start of this turn, with the same cards in the same places and the same draws to come. You leave this one.',
-    action: 'Start the turn again',
+    title: 'match.confirm.fork.title',
+    description: 'match.confirm.fork.desc',
+    action: 'match.confirm.fork.action',
   },
   save: {
-    title: 'Save and leave?',
-    description: 'The game is kept as it was at the start of this turn. Resume it from Home whenever you like.',
-    action: 'Save and leave',
+    title: 'match.confirm.save.title',
+    description: 'match.confirm.save.desc',
+    action: 'match.confirm.save.action',
   },
   rollback: {
-    title: 'Go back to the start of this turn?',
-    description: 'Every other player must agree; a game against the computer goes back at once.',
-    action: 'Ask to go back',
+    title: 'match.confirm.rollback.title',
+    description: 'match.confirm.rollback.desc',
+    action: 'match.confirm.rollback.action',
   },
   rollbackAi: {
-    title: 'Take back this turn?',
-    description: 'The game goes back to the start of this turn at once. Against the computer you can take back as often as you like.',
-    action: 'Take it back',
+    title: 'match.confirm.rollbackAi.title',
+    description: 'match.confirm.rollbackAi.desc',
+    action: 'match.confirm.rollbackAi.action',
   },
   takeBack: {
-    title: 'Take back this turn?',
-    description: 'A new game starts from the start of this turn, with the same cards and the same draws to come. You get one take-back a Career game, and the game then pays half and counts for no quests.',
-    action: 'Take it back',
+    title: 'match.confirm.takeBack.title',
+    description: 'match.confirm.takeBack.desc',
+    action: 'match.confirm.takeBack.action',
   },
 } as const;
 
@@ -1076,68 +1133,68 @@ function GameMenu({ gameId, quests, practice, solo, careerAssists, vsAi, onSaved
     try {
       if (choice === 'takeBack') {
         await tryTurnAgain(gameId, true);
-        notify('Take back', 'A new game starts from the start of this turn.');
+        notify(t('match.solo.takeBackTitle'), t('match.solo.restartedBody'));
       } else if (choice === 'fork') {
         await tryTurnAgain(gameId);
-        notify('Try again', 'A new game starts from the start of this turn.');
+        notify(t('match.solo.tryAgainTitle'), t('match.solo.restartedBody'));
       } else {
         await saveAndLeave(gameId);
-        notify('Saved', 'Resume the game from Home.');
+        notify(t('match.solo.savedTitle'), t('match.solo.savedBody'));
         onSaved();
       }
     } catch (failure) {
-      notify(choice === 'fork' ? 'Try again' : choice === 'takeBack' ? 'Take back' : 'Save', failure instanceof Error ? failure.message : String(failure));
+      notify(t(choice === 'fork' ? 'match.solo.tryAgainTitle' : choice === 'takeBack' ? 'match.solo.takeBackTitle' : 'match.solo.saveTitle'), failure instanceof Error ? failure.message : String(failure));
     }
   }
   return (
     <div className={styles.menu}>
       <DropdownMenu.Root open={menuOpen} onOpenChange={setMenuOpen}>
-        <DropdownMenu.Trigger className={styles.menuButton} aria-label="Game menu">
+        <DropdownMenu.Trigger className={styles.menuButton} aria-label={t('match.menu.label')}>
           <Menu size={24} />
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content className={styles.menuContent} align="end" sideOffset={8}>
             {quests && <QuestTracker gameId={gameId} open={menuOpen} />}
-            <DropdownMenu.Item className={styles.menuItem} onSelect={() => setSettingsOpen(true)}>Settings</DropdownMenu.Item>
+            <DropdownMenu.Item className={styles.menuItem} onSelect={() => setSettingsOpen(true)}>{t('match.menu.settings')}</DropdownMenu.Item>
             <DropdownMenu.Item className={styles.menuItem} onSelect={() => setShortcutsOpen(true)}>{t('match.shortcuts.title')}</DropdownMenu.Item>
             {practice && (
-              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setPracticeOpen(true)}>Practice tools</DropdownMenu.Item>
+              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setPracticeOpen(true)}>{t('match.menu.practice')}</DropdownMenu.Item>
             )}
             {practice && (
-              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setAdviceOpen(true)}>Ask the AI</DropdownMenu.Item>
+              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setAdviceOpen(true)}>{t('match.menu.askAi')}</DropdownMenu.Item>
             )}
             {careerAssists && assists?.hints && (
               <DropdownMenu.Item className={styles.menuItem} onSelect={() => setAdviceOpen(true)}>
-                Ask for a hint ({assists.hintsLeft ?? 0} left)
+                {t('match.menu.askHint', { count: assists.hintsLeft ?? 0 })}
               </DropdownMenu.Item>
             )}
             {careerAssists && assists?.takeBack && (
-              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setConfirming('takeBack')}>Take back this turn</DropdownMenu.Item>
+              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setConfirming('takeBack')}>{t('match.menu.takeBack')}</DropdownMenu.Item>
             )}
             {solo && (
-              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setConfirming('fork')}>Try this turn again</DropdownMenu.Item>
+              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setConfirming('fork')}>{t('match.menu.tryAgain')}</DropdownMenu.Item>
             )}
             {solo && (
-              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setWhatIfOpen(true)}>Play an earlier turn…</DropdownMenu.Item>
+              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setWhatIfOpen(true)}>{t('match.menu.earlierTurn')}</DropdownMenu.Item>
             )}
             {solo && (
-              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setConfirming('save')}>Save and leave</DropdownMenu.Item>
+              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setConfirming('save')}>{t('match.menu.saveLeave')}</DropdownMenu.Item>
             )}
             {rollback && (
               <DropdownMenu.Item
                 className={styles.menuItem}
                 disabled={!rollback.ready}
-                title={rollback.ready ? undefined : 'Available while you have priority'}
+                title={rollback.ready ? undefined : t('match.menu.rollbackHint')}
                 onSelect={() => setConfirming(vsAi ? 'rollbackAi' : 'rollback')}
               >
-                {vsAi ? 'Take back this turn' : 'Request rollback to start of turn'}
+                {t(vsAi ? 'match.menu.takeBack' : 'match.menu.requestRollback')}
               </DropdownMenu.Item>
             )}
             {canConcede && (
-              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setConfirming('concede')}>Concede</DropdownMenu.Item>
+              <DropdownMenu.Item className={styles.menuItem} onSelect={() => setConfirming('concede')}>{t('match.menu.concede')}</DropdownMenu.Item>
             )}
             <DropdownMenu.Item className={styles.menuItem} onSelect={() => (canConcede ? setConfirming('leave') : onLeave())}>
-              Leave the game
+              {t('match.menu.leave')}
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
@@ -1159,12 +1216,12 @@ function GameMenu({ gameId, quests, practice, solo, careerAssists, vsAi, onSaved
       <Dialog
         open={confirming !== null}
         onOpenChange={(open) => !open && setConfirming(null)}
-        title={copy?.title ?? ''}
-        description={copy?.description}
+        title={copy ? t(copy.title) : ''}
+        description={copy ? t(copy.description) : undefined}
         width="sm"
         footer={(
           <>
-            <Button variant="quiet" onClick={() => setConfirming(null)}>Keep playing</Button>
+            <Button variant="quiet" onClick={() => setConfirming(null)}>{t('match.menu.keepPlaying')}</Button>
             <Button
               variant={confirming === 'concede' || confirming === 'leave' ? 'danger' : 'decision'}
               onClick={() => {
@@ -1176,7 +1233,7 @@ function GameMenu({ gameId, quests, practice, solo, careerAssists, vsAi, onSaved
                 else if (choice === 'fork' || choice === 'save' || choice === 'takeBack') void soloAction(choice);
               }}
             >
-              {copy?.action}
+              {copy && t(copy.action)}
             </Button>
           </>
         )}

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerE
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { PlayableZone } from '../../core/game/offZonePlayables';
 import type { CardView } from '../../protocol/generated/views';
-import { useT } from '../i18n';
+import { useT, type MessageKey } from '../i18n';
 import './matchMessages';
 import { CardFace } from '../ui/CardFace';
 import { zoneKeys } from './boardModel';
@@ -41,7 +41,11 @@ export interface HandProps {
   cardWidth?: number;
 }
 
-const ZONE_TAG: Record<PlayableZone, string> = { exile: 'From exile', graveyard: 'From graveyard', library: 'From library' };
+const ZONE_TAG_KEY: Record<PlayableZone, MessageKey> = {
+  exile: 'match.fromZone.exile',
+  graveyard: 'match.fromZone.graveyard',
+  library: 'match.fromZone.library',
+};
 
 const DRAG_THRESHOLD = 12;
 /** how far the fan's outermost cards sit below its middle, at most: a big hand stays a shallow arc instead of sinking off the stage */
@@ -52,8 +56,9 @@ const REVEAL_MARGIN = 24;
 const WHEEL_LINE = 40;
 
 /** The player's hand, fanned along the bottom edge. Hover lifts a card; drag it up (or click it) to play it. */
-export function Hand({ cards, choosing = false, clickable, selected, pending = null, sleeve, onPlay, playLine, libraryOrigin, faceDown = false, label = 'Your hand', fromZone, clearLeft = 0, clearRight = 0, cardWidth = HAND_CARD_WIDTH }: HandProps) {
+export function Hand({ cards, choosing = false, clickable, selected, pending = null, sleeve, onPlay, playLine, libraryOrigin, faceDown = false, label, fromZone, clearLeft = 0, clearRight = 0, cardWidth = HAND_CARD_WIDTH }: HandProps) {
   const t = useT();
+  const handLabel = label ?? t('match.hand.defaultLabel');
   const stage = useStage();
   const hints = useKeyboardHints();
   useEffect(() => {
@@ -167,7 +172,7 @@ export function Hand({ cards, choosing = false, clickable, selected, pending = n
       onPointerCancel={endSweep}
       onPointerLeave={onPointerLeave}
     >
-      <div className={styles.fan} style={{ width, transform: scroll ? `translateX(${-scroll}px)` : undefined }} role="list" aria-label={t('match.cards', { label, count })}>
+      <div className={styles.fan} style={{ width, transform: scroll ? `translateX(${-scroll}px)` : undefined }} role="list" aria-label={t('match.cards', { label: handLabel, count })}>
       {cards.map((card, index) => {
         const offset = index - edge;
         return (
@@ -245,6 +250,8 @@ interface HandCardProps {
 }
 
 function HandCard({ card, choosing, index, hints, left, rotate, drop, lifted, clickable, selected, pending, sleeve, onPlay, playLine, libraryOrigin, faceDown, fromZone, shift, sweeps, onFocus }: HandCardProps) {
+  const t = useT();
+  const zoneTag = fromZone ? t(ZONE_TAG_KEY[fromZone]) : null;
   const ref = useRef<HTMLDivElement>(null);
   const stage = useStage();
   const setZoom = useMatchUi((state) => state.setZoom);
@@ -305,7 +312,7 @@ function HandCard({ card, choosing, index, hints, left, rotate, drop, lifted, cl
       tabIndex={clickable ? 0 : -1}
       onMouseDown={preventMatchObjectMouseFocus}
       onFocus={() => onFocus(index)}
-      aria-label={`${faceDown ? 'Hidden card' : card.name ?? 'Card'}${fromZone ? `, ${ZONE_TAG[fromZone].toLowerCase()}` : ''}${clickable ? ', playable' : ''}${selected ? ', chosen' : ''}`}
+      aria-label={`${faceDown ? t('match.hand.hiddenCard') : card.name ?? t('match.hand.cardFallback')}${zoneTag ? `, ${zoneTag.toLowerCase()}` : ''}${clickable ? t('match.hand.playableAria') : ''}${selected ? t('match.overlay.chosenAria') : ''}`}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -328,7 +335,7 @@ function HandCard({ card, choosing, index, hints, left, rotate, drop, lifted, cl
     >
       <CardFace card={card} sleeve={sleeve} hidden={faceDown} />
       {!faceDown && clickable && index < 10 && <kbd className={[styles.keyHint, hints ? styles.keyHintShown : ''].join(' ')} aria-hidden="true">{(index + 1) % 10}</kbd>}
-      {fromZone && <span className={styles.fromZone} aria-hidden="true">{ZONE_TAG[fromZone]}</span>}
+      {zoneTag && <span className={styles.fromZone} aria-hidden="true">{zoneTag}</span>}
     </div>
   );
 }

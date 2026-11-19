@@ -32,10 +32,12 @@ public final class IceAge extends ExpansionSet {
         cards.add(new SetCardInfo("Aegis of the Meek", 307, Rarity.RARE, mage.cards.a.AegisOfTheMeek.class, RETRO_ART));
         cards.add(new SetCardInfo("Aggression", 169, Rarity.UNCOMMON, mage.cards.a.Aggression.class, RETRO_ART));
         cards.add(new SetCardInfo("Altar of Bone", 281, Rarity.RARE, mage.cards.a.AltarOfBone.class, RETRO_ART));
+        cards.add(new SetCardInfo("Amulet of Quoz", 308, Rarity.RARE, mage.cards.a.AmuletOfQuoz.class, RETRO_ART));
         cards.add(new SetCardInfo("Anarchy", 170, Rarity.UNCOMMON, mage.cards.a.Anarchy.class, RETRO_ART));
         cards.add(new SetCardInfo("Arctic Foxes", 2, Rarity.COMMON, mage.cards.a.ArcticFoxes.class, RETRO_ART));
         cards.add(new SetCardInfo("Arcum's Sleigh", 309, Rarity.UNCOMMON, mage.cards.a.ArcumsSleigh.class, RETRO_ART));
         cards.add(new SetCardInfo("Arcum's Weathervane", 310, Rarity.UNCOMMON, mage.cards.a.ArcumsWeathervane.class));
+        cards.add(new SetCardInfo("Arcum's Whistle", 311, Rarity.UNCOMMON, mage.cards.a.ArcumsWhistle.class, RETRO_ART));
         cards.add(new SetCardInfo("Arenson's Aura", 3, Rarity.COMMON, mage.cards.a.ArensonsAura.class, RETRO_ART));
         cards.add(new SetCardInfo("Armor of Faith", 4, Rarity.COMMON, mage.cards.a.ArmorOfFaith.class, RETRO_ART));
         cards.add(new SetCardInfo("Arnjlot's Ascent", 57, Rarity.COMMON, mage.cards.a.ArnjlotsAscent.class, RETRO_ART));
@@ -46,6 +48,8 @@ public final class IceAge extends ExpansionSet {
         cards.add(new SetCardInfo("Balduvian Bears", 226, Rarity.COMMON, mage.cards.b.BalduvianBears.class, RETRO_ART));
         cards.add(new SetCardInfo("Balduvian Conjurer", 58, Rarity.UNCOMMON, mage.cards.b.BalduvianConjurer.class, RETRO_ART));
         cards.add(new SetCardInfo("Balduvian Hydra", 173, Rarity.RARE, mage.cards.b.BalduvianHydra.class, RETRO_ART));
+        cards.add(new SetCardInfo("Balduvian Shaman", 59, Rarity.COMMON, mage.cards.b.BalduvianShaman.class, RETRO_ART));
+        cards.add(new SetCardInfo("Barbarian Guides", 174, Rarity.COMMON, mage.cards.b.BarbarianGuides.class, RETRO_ART));
         cards.add(new SetCardInfo("Barbed Sextant", 312, Rarity.COMMON, mage.cards.b.BarbedSextant.class, RETRO_ART));
         cards.add(new SetCardInfo("Baton of Morale", 313, Rarity.UNCOMMON, mage.cards.b.BatonOfMorale.class, RETRO_ART));
         cards.add(new SetCardInfo("Battle Cry", 5, Rarity.UNCOMMON, mage.cards.b.BattleCry.class, RETRO_ART));
@@ -70,6 +74,7 @@ public final class IceAge extends ExpansionSet {
         cards.add(new SetCardInfo("Centaur Archer", 282, Rarity.UNCOMMON, mage.cards.c.CentaurArcher.class, RETRO_ART));
         cards.add(new SetCardInfo("Chaos Lord", 178, Rarity.RARE, mage.cards.c.ChaosLord.class, RETRO_ART));
         cards.add(new SetCardInfo("Chaos Moon", 179, Rarity.RARE, mage.cards.c.ChaosMoon.class, RETRO_ART));
+        cards.add(new SetCardInfo("Chromatic Armor", 283, Rarity.RARE, mage.cards.c.ChromaticArmor.class, RETRO_ART));
         cards.add(new SetCardInfo("Chub Toad", 229, Rarity.COMMON, mage.cards.c.ChubToad.class, RETRO_ART));
         cards.add(new SetCardInfo("Circle of Protection: Black", 12, Rarity.COMMON, mage.cards.c.CircleOfProtectionBlack.class, RETRO_ART));
         cards.add(new SetCardInfo("Circle of Protection: Blue", 13, Rarity.COMMON, mage.cards.c.CircleOfProtectionBlue.class, RETRO_ART));
@@ -145,6 +150,7 @@ public final class IceAge extends ExpansionSet {
         cards.add(new SetCardInfo("Gangrenous Zombies", 127, Rarity.COMMON, mage.cards.g.GangrenousZombies.class, RETRO_ART));
         cards.add(new SetCardInfo("Gaze of Pain", 128, Rarity.COMMON, mage.cards.g.GazeOfPain.class, RETRO_ART));
         cards.add(new SetCardInfo("General Jarkeld", 27, Rarity.RARE, mage.cards.g.GeneralJarkeld.class, RETRO_ART));
+        cards.add(new SetCardInfo("Ghostly Flame", 292, Rarity.RARE, mage.cards.g.GhostlyFlame.class, RETRO_ART));
         cards.add(new SetCardInfo("Giant Growth", 246, Rarity.COMMON, mage.cards.g.GiantGrowth.class, RETRO_ART));
         cards.add(new SetCardInfo("Giant Trap Door Spider", 293, Rarity.UNCOMMON, mage.cards.g.GiantTrapDoorSpider.class, RETRO_ART));
         cards.add(new SetCardInfo("Glacial Chasm", 353, Rarity.UNCOMMON, mage.cards.g.GlacialChasm.class, RETRO_ART));
@@ -320,6 +326,7 @@ public final class IceAge extends ExpansionSet {
         cards.add(new SetCardInfo("Silver Erne", 98, Rarity.UNCOMMON, mage.cards.s.SilverErne.class, RETRO_ART));
         cards.add(new SetCardInfo("Skeleton Ship", 301, Rarity.RARE, mage.cards.s.SkeletonShip.class, RETRO_ART));
         cards.add(new SetCardInfo("Skull Catapult", 336, Rarity.UNCOMMON, mage.cards.s.SkullCatapult.class, RETRO_ART));
+        cards.add(new SetCardInfo("Sleight of Mind", 99, Rarity.UNCOMMON, mage.cards.s.SleightOfMind.class, RETRO_ART));
         cards.add(new SetCardInfo("Snow Devil", 100, Rarity.COMMON, mage.cards.s.SnowDevil.class, RETRO_ART));
         cards.add(new SetCardInfo("Snow Fortress", 337, Rarity.RARE, mage.cards.s.SnowFortress.class, RETRO_ART));
         cards.add(new SetCardInfo("Snow Hound", 53, Rarity.UNCOMMON, mage.cards.s.SnowHound.class, RETRO_ART));
@@ -339,6 +346,7 @@ public final class IceAge extends ExpansionSet {
         cards.add(new SetCardInfo("Soul Kiss", 162, Rarity.COMMON, mage.cards.s.SoulKiss.class, RETRO_ART));
         cards.add(new SetCardInfo("Spectral Shield", 302, Rarity.UNCOMMON, mage.cards.s.SpectralShield.class, RETRO_ART));
         cards.add(new SetCardInfo("Spoils of Evil", 163, Rarity.RARE, mage.cards.s.SpoilsOfEvil.class, RETRO_ART));
+        cards.add(new SetCardInfo("Spoils of War", 164, Rarity.RARE, mage.cards.s.SpoilsOfWar.class, RETRO_ART));
         cards.add(new SetCardInfo("Staff of the Ages", 340, Rarity.RARE, mage.cards.s.StaffOfTheAges.class, RETRO_ART));
         cards.add(new SetCardInfo("Stampede", 265, Rarity.RARE, mage.cards.s.Stampede.class, RETRO_ART));
         cards.add(new SetCardInfo("Stench of Evil", 165, Rarity.UNCOMMON, mage.cards.s.StenchOfEvil.class, RETRO_ART));
@@ -388,6 +396,7 @@ public final class IceAge extends ExpansionSet {
         cards.add(new SetCardInfo("Wild Growth", 277, Rarity.COMMON, mage.cards.w.WildGrowth.class, RETRO_ART));
         cards.add(new SetCardInfo("Wind Spirit", 106, Rarity.UNCOMMON, mage.cards.w.WindSpirit.class, RETRO_ART));
         cards.add(new SetCardInfo("Wings of Aesthir", 305, Rarity.UNCOMMON, mage.cards.w.WingsOfAesthir.class, RETRO_ART));
+        cards.add(new SetCardInfo("Winter's Chill", 107, Rarity.RARE, mage.cards.w.WintersChill.class, RETRO_ART));
         cards.add(new SetCardInfo("Withering Wisps", 168, Rarity.UNCOMMON, mage.cards.w.WitheringWisps.class, RETRO_ART));
         cards.add(new SetCardInfo("Woolly Mammoths", 278, Rarity.COMMON, mage.cards.w.WoollyMammoths.class, RETRO_ART));
         cards.add(new SetCardInfo("Woolly Spider", 279, Rarity.COMMON, mage.cards.w.WoollySpider.class, RETRO_ART));

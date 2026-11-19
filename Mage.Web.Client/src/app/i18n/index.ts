@@ -13,6 +13,7 @@ const english: Messages = { ...core };
 
 /** Translations load on demand, one chunk per language. */
 const LOADERS: Record<Exclude<Locale, 'en'>, () => Promise<{ default: Catalog }>> = {
+  pt: () => import('./pt'),
   es: () => import('./es'),
 };
 

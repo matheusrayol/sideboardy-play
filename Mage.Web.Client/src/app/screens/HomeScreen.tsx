@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { META_PREFIX, RANDOM_META_PREFIX, sleeveFor, useDecks } from '../stores/decks';
 import { useDeckRoster } from '../stores/useDeckRoster';
 import { formatRules } from '../../core/decks/formats';
+import { searchShelf } from '../../core/decks/tags';
 import { metaDecksFor } from '../../core/decks/metaDecks';
+import { ShelfFilterBar } from '../decks/ShelfFilterBar';
 import { readJson } from '../stores/persist';
 import { useCoach } from '../stores/coach';
 import { usePlay } from '../stores/play';
@@ -62,6 +64,9 @@ export function HomeScreen() {
   const emailStatus = useEmailStatus().data;
   const emailUnconfirmed = !!emailStatus?.email && !emailStatus.verified && !!emailStatus.mail;
   const roster = useDeckRoster();
+  const [query, setQuery] = useState('');
+  const shelfFilter = useDecks((state) => state.shelfFilter);
+  const visibleRoster = useMemo(() => searchShelf(roster, shelfFilter, query), [roster, shelfFilter, query]);
   // a meta, ghost or mirror opponent, or adaptive skill, is described with the solo messages
   const soloReady = useCareerMessages(mode === 'meta' || play.aiOptions.adaptive || opponentSource(play.aiOptions.opponentDeckId).kind !== 'roster');
   const selected = roster.find((deck) => deck.id === decks.selectedId) ?? roster[0] ?? null;
@@ -129,8 +134,9 @@ export function HomeScreen() {
             <Button variant="quiet" size="sm" onClick={() => navigate('/decks')}>{t('home.manage')}</Button>
           </span>
         </header>
+        <ShelfFilterBar decks={roster} query={query} onQueryChange={setQuery} compact />
         <div className={[styles.rosterList, dragging ? styles.dropping : ''].join(' ')} role="list" {...dropProps}>
-          {roster.map((deck) => (
+          {visibleRoster.map((deck) => (
             <div role="listitem" key={deck.id}>
               <DeckBox
                 deck={deck}
@@ -147,6 +153,9 @@ export function HomeScreen() {
           ))}
           {decks.loaded && roster.length === 0 && (
             <p className={styles.empty}>{t('home.empty')}</p>
+          )}
+          {decks.loaded && roster.length > 0 && visibleRoster.length === 0 && (
+            <p className={styles.empty}>{t('decks.filter.none')}</p>
           )}
         </div>
       </aside>

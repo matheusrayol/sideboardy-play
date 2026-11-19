@@ -148,7 +148,7 @@ export function PlayerPlate({ player, isMe, targetable, selected, deciding, slee
       onMouseDown={preventMatchObjectMouseFocus}
       aria-label={out
         ? t('match.plate.aria.lost', { name: player.name ?? '' })
-        : `${player.name}, ${life} life${disconnected ? `, ${t('match.plate.aria.disconnected')}` : ''}${outOfRange ? ', out of range' : ''}${targetable ? ', can be targeted' : ''}`}
+        : `${t('match.plate.lifeAria', { name: player.name ?? '', life })}${disconnected ? `, ${t('match.plate.aria.disconnected')}` : ''}${outOfRange ? t('match.plate.outOfRangeAria') : ''}${targetable ? t('match.plate.targetableAria') : ''}`}
       onClick={() => targetable && onClick()}
       onKeyDown={(event) => {
         if (targetable && isMatchObjectKey(event.nativeEvent)) {
@@ -166,7 +166,7 @@ export function PlayerPlate({ player, isMe, targetable, selected, deciding, slee
         >
           {avatar?.id ? <Art kind="avatar" id={avatar.id} size={72} className={styles.avatarArt} fallback={drawnAvatar} /> : drawnAvatar}
           {ticking && (
-            <svg className={styles.rope} viewBox="0 0 100 100" role="img" aria-label={`${Math.ceil(timeLeft)} seconds left`}>
+            <svg className={styles.rope} viewBox="0 0 100 100" role="img" aria-label={t('match.plate.secondsLeft', { seconds: Math.ceil(timeLeft) })}>
               <circle cx="50" cy="50" r="47" pathLength={ROPE_SECONDS} strokeDasharray={`${timeLeft} ${ROPE_SECONDS}`} />
             </svg>
           )}
@@ -183,7 +183,7 @@ export function PlayerPlate({ player, isMe, targetable, selected, deciding, slee
               {t('match.plate.disconnected', { time: elapsed(disconnected.since, disconnected.now) })}
             </span>
           )}
-          {outOfRange && !out && <span className={styles.range} title="Outside your range of influence">Out of range</span>}
+          {outOfRange && !out && <span className={styles.range} title={t('match.plate.outOfRangeTitle')}>{t('match.plate.outOfRange')}</span>}
         </div>
         {(look?.title || !!look?.badges?.length) && (
           // the title in its rarity's colour (B299), then the badges the player shows off
@@ -198,7 +198,7 @@ export function PlayerPlate({ player, isMe, targetable, selected, deciding, slee
           ) : (
             <>
               <span key={delta?.key} className={[styles.life, delta ? (delta.value < 0 ? styles.hurt : styles.healed) : ''].join(' ')}>{shownLife}</span>
-              <span className={styles.unit} aria-hidden="true">life</span>
+              <span className={styles.unit} aria-hidden="true">{t('match.plate.lifeUnit')}</span>
             </>
           )}
           {delta && !out && (
@@ -213,12 +213,12 @@ export function PlayerPlate({ player, isMe, targetable, selected, deciding, slee
         <div className={styles.extras}>
           {toPay && (
             <div className={styles.toPay}>
-              <span className={styles.toPayLabel}>To pay</span>
+              <span className={styles.toPayLabel}>{t('match.plate.toPay')}</span>
               <ManaCost cost={toPay} size="lg" />
             </div>
           )}
           {pool.length > 0 && (
-            <div className={styles.pool} aria-label="Mana pool">
+            <div className={styles.pool} aria-label={t('match.plate.manaPool')}>
               {pool.map(({ key, symbol, manaType }) => {
                 const id = poolId(manaType);
                 const content = (
@@ -237,7 +237,7 @@ export function PlayerPlate({ player, isMe, targetable, selected, deciding, slee
                       event.stopPropagation();
                       onPay(id);
                     }}
-                    aria-label={`Pay with ${key} mana from your pool, ${player.manaPool?.[key]} floating`}
+                    aria-label={t('match.plate.payFloatingAria', { key, amount: player.manaPool?.[key] ?? 0 })}
                   >
                     {content}
                   </button>
@@ -249,12 +249,12 @@ export function PlayerPlate({ player, isMe, targetable, selected, deciding, slee
           )}
           {commanderDamage.length > 0 && (
             // each hit is its own chip in the columns; the group only names them
-            <div className={styles.commanderDamage} role="group" aria-label="Commander damage taken">
+            <div className={styles.commanderDamage} role="group" aria-label={t('match.plate.commanderDamageGroup')}>
               {commanderDamage.map((hit) => (
                 <span
                   key={hit.name}
                   className={[styles.counter, styles.hit, hit.amount >= COMMANDER_DAMAGE_LETHAL - 6 ? styles.hitDanger : ''].join(' ')}
-                  title={`${hit.amount} combat damage from ${hit.name}; ${COMMANDER_DAMAGE_LETHAL} loses the game`}
+                  title={t('match.plate.commanderDamageTitle', { amount: hit.amount, name: hit.name, lethal: COMMANDER_DAMAGE_LETHAL })}
                 >
                   <Swords size={15} aria-hidden="true" /> <span className={styles.hitName}>{hit.name.split(',')[0]}</span> <b>{hit.amount}</b>
                 </span>
@@ -266,8 +266,8 @@ export function PlayerPlate({ player, isMe, targetable, selected, deciding, slee
               {counter.count} {counter.name}
             </span>
           ))}
-          {player.monarch && <span className={styles.counter}>Monarch</span>}
-          {player.initiative && <span className={styles.counter}>Initiative</span>}
+          {player.monarch && <span className={styles.counter}>{t('match.plate.monarch')}</span>}
+          {player.initiative && <span className={styles.counter}>{t('match.plate.initiative')}</span>}
         </div>
       )}
     </div>

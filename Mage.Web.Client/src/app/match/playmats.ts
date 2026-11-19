@@ -15,7 +15,10 @@ export interface MatCloth {
 
 /** The free cloths everyone has. */
 const FREE_CLOTHS: MatCloth[] = [
+  { id: 'sideboardy', shades: ['#0c101e', '#111629', '#141a2e', '#1a2138', '#252c45', '#373f5a', '#565c72'], dye: '#3b5284' },
   { id: 'green', shades: ['#070c0a', '#0b120f', '#0f1714', '#142019', '#1c2d27', '#27403a', '#3a5a51'], dye: '#2f6b58' },
+  { id: 'obsidian', shades: ['#060709', '#0a0c10', '#10131a', '#161b24', '#1f2633', '#2c3648', '#404e66'], dye: '#6aa3e3' },
+  { id: 'walnut', shades: ['#0e0906', '#160f0a', '#1f150e', '#291c13', '#38271b', '#4d3625', '#684a34'], dye: '#c88a4b' },
   { id: 'navy', shades: ['#070a10', '#0b1018', '#0f1520', '#141c2b', '#1c273a', '#28364f', '#3a4c6b'], dye: '#2f4c7a' },
   { id: 'plum', shades: ['#0d080d', '#140c14', '#1a101a', '#231523', '#301d30', '#432943', '#5c3b5c'], dye: '#6b3566' },
   { id: 'oxblood', shades: ['#0e0707', '#160b0b', '#1d0f0e', '#271413', '#361c1a', '#4b2724', '#663934'], dye: '#7a302a' },

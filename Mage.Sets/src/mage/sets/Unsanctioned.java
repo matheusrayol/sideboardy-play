@@ -101,7 +101,7 @@ public class Unsanctioned extends ExpansionSet {
         //cards.add(new SetCardInfo("Stinging Scorpion", 46, Rarity.COMMON, mage.cards.s.StingingScorpion.class));
         cards.add(new SetCardInfo("Strategy, Schmategy", 58, Rarity.RARE, mage.cards.s.StrategySchmategy.class));
         //cards.add(new SetCardInfo("Strutting Turkey", 14, Rarity.UNCOMMON, mage.cards.s.StruttingTurkey.class));
-        //cards.add(new SetCardInfo("Super-Duper Death Ray", 59, Rarity.UNCOMMON, mage.cards.s.SuperDuperDeathRay.class));
+        cards.add(new SetCardInfo("Super-Duper Death Ray", 59, Rarity.UNCOMMON, mage.cards.s.SuperDuperDeathRay.class));
         //cards.add(new SetCardInfo("Surgeon General Commander", 72, Rarity.MYTHIC, mage.cards.s.SurgeonGeneralCommander.class));
         cards.add(new SetCardInfo("Swamp", 91, Rarity.LAND, mage.cards.basiclands.Swamp.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Swamp", 92, Rarity.LAND, mage.cards.basiclands.Swamp.class, FULL_ART_BFZ_VARIOUS));

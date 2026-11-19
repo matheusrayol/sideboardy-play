@@ -3,9 +3,10 @@
   inset: 0;
   /* clip, not hidden: a focused card near the edge must never scroll the table */
   overflow: clip;
+  /* ambient room / outer table backdrop framing the 3D tabletop slab */
   background:
-    radial-gradient(120% 90% at 50% 50%, var(--mat-700), var(--mat-950) 85%),
-    var(--mat-900);
+    radial-gradient(120% 90% at 50% 48%, color-mix(in srgb, var(--mat-900) 78%, #04060c), #05070e 88%),
+    #05070e;
   /* the table is a game surface, not a page: no panning or double-tap zoom (lists that scroll still scroll) */
   touch-action: none;
   -webkit-tap-highlight-color: transparent;

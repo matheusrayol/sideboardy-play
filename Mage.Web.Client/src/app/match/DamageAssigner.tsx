@@ -1,6 +1,8 @@
 import { Minus, Plus, Skull } from 'lucide-react';
 import { useMemo } from 'react';
 import { lethalFirst } from '../../core/game/damageAssignment';
+import { useT } from '../i18n';
+import './matchMessages';
 import { Button } from '../ui/Button';
 import { useObjectBoxes } from './boardAnchors';
 import type { DamageSplit } from './useDamageSplit';
@@ -8,6 +10,7 @@ import styles from './DamageAssigner.module.css';
 
 /** Damage marked on each creature it is assigned to, with steppers; clicking the creature adds a point. */
 export function DamageAssigner({ split }: { split: DamageSplit }) {
+  const t = useT();
   const { assignment, values, check } = split;
   const ids = useMemo(() => [...assignment.recipients.map((recipient) => recipient.id), ...(assignment.sourceId ? [assignment.sourceId] : [])], [assignment]);
   const boxes = useObjectBoxes(ids);
@@ -27,7 +30,7 @@ export function DamageAssigner({ split }: { split: DamageSplit }) {
             className={[styles.chip, lethal ? styles.lethal : ''].join(' ')}
             style={{ left: box.x + box.width / 2, top: box.y + box.height / 2 }}
             role="group"
-            aria-label={`${recipient.name}: ${value} damage${lethal ? ', lethal' : ''}`}
+            aria-label={t(lethal ? 'match.damage.recipientLethalAria' : 'match.damage.recipientAria', { name: recipient.name, value })}
           >
             <span className={styles.order} aria-hidden="true">{index + 1}</span>
             <button
@@ -35,20 +38,20 @@ export function DamageAssigner({ split }: { split: DamageSplit }) {
               className={styles.step}
               onClick={() => split.remove(index)}
               disabled={value <= recipient.min}
-              aria-label={`One less damage to ${recipient.name}`}
+              aria-label={t('match.damage.lessAria', { name: recipient.name })}
             >
               <Minus size={20} strokeWidth={3} />
             </button>
             <span className={styles.amount}>
               <b>{value}</b>
-              <small>{recipient.lethal > 0 ? `of ${recipient.lethal}` : 'dead'}</small>
+              <small>{recipient.lethal > 0 ? t('match.damage.ofLethal', { lethal: recipient.lethal }) : t('match.damage.dead')}</small>
             </span>
             <button
               type="button"
               className={styles.step}
               onClick={() => split.add(index)}
               disabled={value >= recipient.max}
-              aria-label={`One more damage to ${recipient.name}`}
+              aria-label={t('match.damage.moreAria', { name: recipient.name })}
             >
               <Plus size={20} strokeWidth={3} />
             </button>
@@ -59,10 +62,10 @@ export function DamageAssigner({ split }: { split: DamageSplit }) {
       {sourceBox && (
         <div className={styles.source} style={{ left: sourceBox.x + sourceBox.width / 2, top: sourceBox.y + sourceBox.height + 8 }}>
           <span className={styles.total}>
-            {check.assigned}/{assignment.totalMax} assigned
-            {assignment.trample && check.unassigned > 0 && <> · {check.unassigned} trample</>}
+            {t('match.damage.assigned', { assigned: check.assigned, max: assignment.totalMax })}
+            {assignment.trample && check.unassigned > 0 && <> · {t('match.damage.trample', { count: check.unassigned })}</>}
           </span>
-          {changed && <Button variant="quiet" size="sm" onClick={split.reset}>Lethal first</Button>}
+          {changed && <Button variant="quiet" size="sm" onClick={split.reset}>{t('match.damage.lethalFirst')}</Button>}
         </div>
       )}
     </div>

@@ -5,11 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import type { MatchView, ReplayInfo } from '../../protocol/generated/views';
 import { formatRules } from '../../core/decks/formats';
 import { matchPlayers, matchWinner } from '../../core/history/matchRecord';
-import { describeResult, replayWinner } from '../../core/replay/timeline';
+import { appendEvents, EMPTY_TIMELINE, describeResult, replayWinner } from '../../core/replay/timeline';
+import { recordFromReplayFrames, type PlaygroupMatchRecord } from '../../core/playgroup/playgroup';
 import { api } from '../connection';
+import { useT } from '../i18n';
+import '../match/matchMessages';
+import { PlaygroupSyncBox } from '../playgroup/PlaygroupSyncBox';
 import { NameLevel } from '../social/LevelBadge';
+import { usePlaygroup } from '../stores/playgroup';
 import { useSession } from '../stores/session';
+import { notify } from '../stores/toasts';
 import { Button } from '../ui/Button';
+import { Dialog } from '../ui/Dialog';
 import { Zone } from '../ui/Zone';
 import styles from './HistoryScreen.module.css';
 
@@ -35,11 +42,45 @@ function when(time: number | undefined): string {
 
 /** Finished matches on this server, with their replays, and every saved replay. */
 export function HistoryScreen() {
+  const t = useT();
   const navigate = useNavigate();
   const roomId = useSession((state) => state.roomId);
   const me = useSession((state) => state.userName);
   const connected = useSession((state) => state.connection === 'open');
+  const pgUser = usePlaygroup((state) => state.user);
+  const syncedGames = usePlaygroup((state) => state.syncedGames);
   const [mineOnly, setMineOnly] = useState(true);
+  const [loadingSyncId, setLoadingSyncId] = useState<string | null>(null);
+  const [syncTarget, setSyncTarget] = useState<{ record: PlaygroupMatchRecord; tableId: string | null } | null>(null);
+
+  async function openPlaygroupSync(replay: ReplayInfo) {
+    const gameId = replay.gameId;
+    if (!gameId) return;
+    setLoadingSyncId(gameId);
+    try {
+      let current = EMPTY_TIMELINE;
+      let info = replay;
+      for (;;) {
+        const page = await api.replayPage(gameId, current.read, 40);
+        if (!page) break;
+        info = page.info ?? info;
+        current = appendEvents(current, page.events ?? []);
+        if ((page.events ?? []).length === 0 || current.read >= page.total) break;
+      }
+      if (current.frames.length === 0) {
+        notify(t('match.playgroup.title'), t('match.playgroup.historyNoFrames'));
+        return;
+      }
+      setSyncTarget({
+        record: recordFromReplayFrames(gameId, current.frames, info),
+        tableId: info.tableId ?? replay.tableId ?? null,
+      });
+    } catch (failure) {
+      notify(t('match.playgroup.title'), failure instanceof Error ? failure.message : String(failure), 'error');
+    } finally {
+      setLoadingSyncId(null);
+    }
+  }
 
   const matches = useQuery({
     queryKey: ['finishedMatches', roomId],
@@ -99,11 +140,29 @@ export function HistoryScreen() {
           )}
           <ul className={styles.list}>
             {shownReplays.map((replay) => (
-              <ReplayRow key={replay.gameId} replay={replay} me={me} onWatch={() => navigate(`/replay/${replay.gameId}`)} onReview={() => navigate(`/review/${replay.gameId}`)} />
+              <ReplayRow
+                key={replay.gameId}
+                replay={replay}
+                me={me}
+                showPlaygroup={Boolean(pgUser)}
+                syncedGameId={replay.gameId ? syncedGames[replay.gameId]?.playgroupGameId ?? null : null}
+                syncing={loadingSyncId === replay.gameId}
+                onWatch={() => navigate(`/replay/${replay.gameId}`)}
+                onReview={() => navigate(`/review/${replay.gameId}`)}
+                onPlaygroupSync={() => void openPlaygroupSync(replay)}
+              />
             ))}
           </ul>
         </Zone>
       </div>
+      <Dialog
+        open={syncTarget !== null}
+        onOpenChange={(open) => !open && setSyncTarget(null)}
+        title={t('match.playgroup.historyDialogTitle')}
+        width="md"
+      >
+        {syncTarget && <PlaygroupSyncBox record={syncTarget.record} tableId={syncTarget.tableId} />}
+      </Dialog>
     </div>
   );
 }
@@ -137,8 +196,28 @@ function MatchRow({ match, me, replayIds, onReplay }: { match: MatchView; me: st
   );
 }
 
-function ReplayRow({ replay, me, onWatch, onReview }: { replay: ReplayInfo; me: string; onWatch(): void; onReview(): void }) {
+function ReplayRow({
+  replay,
+  me,
+  showPlaygroup,
+  syncedGameId,
+  syncing,
+  onWatch,
+  onReview,
+  onPlaygroupSync,
+}: {
+  replay: ReplayInfo;
+  me: string;
+  showPlaygroup: boolean;
+  syncedGameId: number | null;
+  syncing: boolean;
+  onWatch(): void;
+  onReview(): void;
+  onPlaygroupSync(): void;
+}) {
+  const t = useT();
   const played = (replay.players ?? []).some((player) => player.name === me);
+  const humanPlayers = (replay.players ?? []).filter((player) => player.human !== false).length;
   const names = (replay.players ?? []).map((player) => player.name ?? '').filter(Boolean);
   const minutes = replay.startedAt && replay.endedAt ? Math.max(1, Math.round((replay.endedAt - replay.startedAt) / 60_000)) : null;
   return (
@@ -159,6 +238,16 @@ function ReplayRow({ replay, me, onWatch, onReview }: { replay: ReplayInfo; me: 
         <p className={styles.result}>{describeResult(replay.result)}</p>
       </div>
       <div className={styles.actions}>
+        {showPlaygroup && humanPlayers >= 2 && replay.gameId && (
+          <Button
+            size="sm"
+            variant={syncedGameId ? 'quiet' : 'print'}
+            busy={syncing}
+            onClick={onPlaygroupSync}
+          >
+            {syncedGameId ? t('match.playgroup.historySyncedBadge', { id: syncedGameId }) : t('match.playgroup.title')}
+          </Button>
+        )}
         {played && <Button size="sm" variant="quiet" onClick={onReview}>Review</Button>}
         <Button size="sm" icon={<Clapperboard size={15} />} onClick={onWatch}>Watch</Button>
       </div>

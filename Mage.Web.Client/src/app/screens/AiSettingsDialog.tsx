@@ -249,7 +249,11 @@ function DeckGroups({ roster, metaDecks, shared = [], commanderOnly = false }: {
       )}
       {starters.some((deck) => isCommanderFormat(deck.starter?.format)) && (
         <optgroup label={t('ai.deck.commanderStarters')}>
-          {starters.filter((deck) => isCommanderFormat(deck.starter?.format)).map((deck) => <option key={deck.id} value={deck.id}>{deck.name}</option>)}
+          {starters.filter((deck) => isCommanderFormat(deck.starter?.format)).map((deck) => (
+            <option key={deck.id} value={deck.id}>
+              {deck.starter?.set ? `${deck.name} (${deck.starter.set})` : deck.name}
+            </option>
+          ))}
         </optgroup>
       )}
       {metaFormats.map((format) => (

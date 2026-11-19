@@ -158,7 +158,7 @@ public final class Bloomburrow extends ExpansionSet {
         cards.add(new SetCardInfo("Heartfire Hero", 138, Rarity.UNCOMMON, mage.cards.h.HeartfireHero.class));
         cards.add(new SetCardInfo("Hearthborn Battler", 139, Rarity.RARE, mage.cards.h.HearthbornBattler.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Hearthborn Battler", 361, Rarity.RARE, mage.cards.h.HearthbornBattler.class, NON_FULL_USE_VARIOUS));
-        //cards.add(new SetCardInfo("Heirloom Epic", 246, Rarity.UNCOMMON, mage.cards.h.HeirloomEpic.class));
+        cards.add(new SetCardInfo("Heirloom Epic", 246, Rarity.UNCOMMON, mage.cards.h.HeirloomEpic.class));
         cards.add(new SetCardInfo("Helga, Skittish Seer", 217, Rarity.MYTHIC, mage.cards.h.HelgaSkittishSeer.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Helga, Skittish Seer", 332, Rarity.MYTHIC, mage.cards.h.HelgaSkittishSeer.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Hidden Grotto", 254, Rarity.COMMON, mage.cards.h.HiddenGrotto.class));

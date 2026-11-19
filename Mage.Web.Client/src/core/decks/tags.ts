@@ -69,3 +69,22 @@ export const NO_SHELF_FILTER: ShelfFilter = { tag: null, hideDrafts: false };
 export function filterShelf<T extends TaggedDeck>(decks: readonly T[], filter: ShelfFilter): T[] {
   return decks.filter((deck) => (!filter.hideDrafts || !deck.draft) && (filter.tag === null || hasTag(deck, filter.tag)));
 }
+
+export interface SearchableDeck extends TaggedDeck {
+  name: string;
+  note?: string;
+  cover?: { name?: string } | null;
+  starter?: { set?: string } | null;
+}
+
+/** Filters decks by shelf tags/drafts (ignoring unknown tags) and an optional text query. */
+export function searchShelf<T extends SearchableDeck>(decks: readonly T[], filter: ShelfFilter, query = ''): T[] {
+  const activeTag = filter.tag && decks.some((deck) => hasTag(deck, filter.tag!)) ? filter.tag : null;
+  const tagged = filterShelf(decks, { ...filter, tag: activeTag });
+  const needle = query.trim().toLowerCase();
+  if (!needle) return tagged;
+  return tagged.filter((deck) =>
+    [deck.name, deck.note, deck.cover?.name, deck.starter?.set, ...(deck.tags ?? [])]
+      .some((value) => (value ?? '').toLowerCase().includes(needle)),
+  );
+}

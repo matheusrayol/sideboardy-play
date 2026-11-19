@@ -281,6 +281,7 @@ public final class FifthEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Lord of the Pit", 174, Rarity.RARE, mage.cards.l.LordOfThePit.class, RETRO_ART));
         cards.add(new SetCardInfo("Lost Soul", 175, Rarity.COMMON, mage.cards.l.LostSoul.class, RETRO_ART));
         cards.add(new SetCardInfo("Lure", 314, Rarity.UNCOMMON, mage.cards.l.Lure.class, RETRO_ART));
+        cards.add(new SetCardInfo("Magical Hack", 101, Rarity.RARE, mage.cards.m.MagicalHack.class, RETRO_ART));
         cards.add(new SetCardInfo("Magus of the Unseen", 102, Rarity.RARE, mage.cards.m.MagusOfTheUnseen.class, RETRO_ART));
         cards.add(new SetCardInfo("Mana Clash", 248, Rarity.RARE, mage.cards.m.ManaClash.class, RETRO_ART));
         cards.add(new SetCardInfo("Mana Flare", 249, Rarity.RARE, mage.cards.m.ManaFlare.class, RETRO_ART));
@@ -397,6 +398,7 @@ public final class FifthEdition extends ExpansionSet {
         cards.add(new SetCardInfo("Shrink", 326, Rarity.COMMON, mage.cards.s.Shrink.class, RETRO_ART));
         cards.add(new SetCardInfo("Sibilant Spirit", 123, Rarity.RARE, mage.cards.s.SibilantSpirit.class, RETRO_ART));
         cards.add(new SetCardInfo("Skull Catapult", 399, Rarity.UNCOMMON, mage.cards.s.SkullCatapult.class, RETRO_ART));
+        cards.add(new SetCardInfo("Sleight of Mind", 124, Rarity.RARE, mage.cards.s.SleightOfMind.class, RETRO_ART));
         cards.add(new SetCardInfo("Smoke", 268, Rarity.RARE, mage.cards.s.Smoke.class, RETRO_ART));
         cards.add(new SetCardInfo("Sorceress Queen", 194, Rarity.RARE, mage.cards.s.SorceressQueen.class, RETRO_ART));
         cards.add(new SetCardInfo("Soul Barrier", 125, Rarity.COMMON, mage.cards.s.SoulBarrier.class, RETRO_ART));

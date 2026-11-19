@@ -130,6 +130,7 @@ public final class Starter1999 extends ExpansionSet {
         cards.add(new SetCardInfo("Owl Familiar", 43, Rarity.UNCOMMON, mage.cards.o.OwlFamiliar.class, RETRO_ART));
         cards.add(new SetCardInfo("Path of Peace", 21, Rarity.COMMON, mage.cards.p.PathOfPeace.class, RETRO_ART));
         cards.add(new SetCardInfo("Phantom Warrior", 44, Rarity.RARE, mage.cards.p.PhantomWarrior.class, RETRO_ART));
+        cards.add(new SetCardInfo("Piracy", 45, Rarity.RARE, mage.cards.p.Piracy.class, RETRO_ART));
         cards.add(new SetCardInfo("Plains", 154, Rarity.LAND, mage.cards.basiclands.Plains.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Plains", 155, Rarity.LAND, mage.cards.basiclands.Plains.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Plains", 156, Rarity.LAND, mage.cards.basiclands.Plains.class, RETRO_ART_USE_VARIOUS));

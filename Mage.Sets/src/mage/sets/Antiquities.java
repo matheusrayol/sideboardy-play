@@ -40,6 +40,7 @@ public final class Antiquities extends ExpansionSet {
         cards.add(new SetCardInfo("Atog", "23+", Rarity.COMMON, mage.cards.a.Atog.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Atog", 23, Rarity.COMMON, mage.cards.a.Atog.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Battering Ram", 41, Rarity.COMMON, mage.cards.b.BatteringRam.class, RETRO_ART));
+        cards.add(new SetCardInfo("Bronze Tablet", 42, Rarity.RARE, mage.cards.b.BronzeTablet.class, RETRO_ART));
         cards.add(new SetCardInfo("Candelabra of Tawnos", 43, Rarity.RARE, mage.cards.c.CandelabraOfTawnos.class, RETRO_ART));
         cards.add(new SetCardInfo("Circle of Protection: Artifacts", 4, Rarity.UNCOMMON, mage.cards.c.CircleOfProtectionArtifacts.class, RETRO_ART));
         cards.add(new SetCardInfo("Citanul Druid", 31, Rarity.UNCOMMON, mage.cards.c.CitanulDruid.class, RETRO_ART));

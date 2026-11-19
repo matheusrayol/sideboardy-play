@@ -10,6 +10,7 @@ import whatsNew from './en/whatsNew';
 import support from './en/support';
 import social from './en/social';
 import es from './es';
+import pt from './pt';
 import { createTranslator, type Message } from './translate';
 
 const english: Record<string, Message> = { ...core, ...settings, ...events, ...about, ...career, ...match, ...legal, ...whatsNew, ...support, ...social };
@@ -23,20 +24,26 @@ describe('catalogs', () => {
     expect(Object.keys(english)).toHaveLength(count);
   });
 
-  test('Spanish has every English key, and nothing else', () => {
-    expect(Object.keys(es).sort()).toEqual(Object.keys(english).sort());
+  test.each([
+    ['Spanish', es],
+    ['Portuguese', pt],
+  ] as const)('%s has every English key, and nothing else', (_label, catalog) => {
+    expect(Object.keys(catalog).sort()).toEqual(Object.keys(english).sort());
   });
 
-  test('Spanish keeps every placeholder English uses', () => {
+  test.each([
+    ['Spanish', es],
+    ['Portuguese', pt],
+  ] as const)('%s keeps every placeholder English uses', (_label, catalog) => {
     const lost = Object.entries(english).flatMap(([key, message]) => {
-      const translated = placeholders((es as Record<string, Message>)[key]);
+      const translated = placeholders((catalog as Record<string, Message>)[key]);
       return [...placeholders(message)].filter((name) => !translated.has(name)).map((name) => `${key}: {${name}}`);
     });
     expect(lost).toEqual([]);
   });
 
   test('plural messages have an "other" form', () => {
-    for (const message of [...Object.values(english), ...Object.values(es)]) {
+    for (const message of [...Object.values(english), ...Object.values(es), ...Object.values(pt)]) {
       if (typeof message !== 'string') expect(message.other).toBeTruthy();
     }
   });
@@ -44,6 +51,7 @@ describe('catalogs', () => {
   test.each([
     ['en', english, '1 star on try 2', '3 stars on try 2'],
     ['es', es, '1 estrella en el intento 2', '3 estrellas en el intento 2'],
+    ['pt', pt, '1 estrela na tentativa 2', '3 estrelas na tentativa 2'],
   ] as const)('puzzle results use words and plural forms in %s', (locale, messages, one, other) => {
     const t = createTranslator({ locale, messages, fallback: english });
     expect(t('career.puzzle.boardResult', { count: 1, tries: 2 })).toBe(one);

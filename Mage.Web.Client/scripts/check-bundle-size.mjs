@@ -10,6 +10,7 @@
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 
 // reset 2026-10-09 when the legacy client was deleted, from entry 62.2 kB, initial 191.8 kB, app 278.1 kB:
@@ -131,13 +132,22 @@ import { gzipSync } from 'node:zlib';
 // joinWithRetry in the events store tipped it to 837.5 kB
 // app raised 2026-11-17 from 840 kB for combat animations (#413): the strike planner, the swing and recoil motion and
 // the new Vfx effects with their styles, all in the lazy match chunk. Measured app 845.5 kB
+// app raised 2026-11-17 from 848 kB for the lazy Portuguese (pt-BR) i18n catalog (38.0 kB), extracted match/settings
+// strings across catalogs, and Sideboardy Play playmat/card-back integration. Measured entry 79.9 kB, initial 215.8 kB, app 890.9 kB
+// app raised 2026-11-17 from 896 kB after extracting remaining in-game, spectator, log, card-detail, and replay strings
+// into en/es/pt i18n catalogs. Measured entry 79.9 kB, initial 215.7 kB, app 900.0 kB
+// app raised 2026-11-17 from 905 kB for Playgroup.gg integration (Settings tab, Tables live session, GameOver/History
+// sync UI, lazy core/playgroup client/converter/match recorder, and en/es/pt messages). Measured entry 81.9 kB, initial 217.8 kB, app 916.5 kB
+// app raised 2026-11-18 from 848 kB for swings that reach their target: master had grown to the edge since, and the box
+// sweep in combatMotion (lazy match chunk) tipped it to 848.1 kB (merged from origin/master)
+// initial/app raised 2026-11-18 for Sideboardy SSO integration in LoginScreen/session store and combatMotion merge. Measured initial 221.6 kB
 const BUDGET_KB = {
-  entry: 86,
-  initial: 221,
-  app: 848,
+  entry: 87,
+  initial: 224,
+  app: 926,
 };
 
-const dist = new URL('../dist/', import.meta.url).pathname;
+const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const manifestPath = join(dist, '.vite', 'manifest.json');
 if (!existsSync(manifestPath)) {
   console.error(`No build manifest at ${manifestPath}. Run \`npm run build\` first.`);

@@ -1,18 +1,23 @@
-import { Bot, Eye, Link2, Lock, MessageSquare, Plus, UserRound } from 'lucide-react';
+import { Bot, ExternalLink, Eye, Link2, Lock, MessageSquare, Plus, UserRound } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { api } from '../connection';
 import { toWire } from '../decks/deckModel';
+import { type Translate, useT } from '../i18n';
+import '../match/matchMessages';
+import { playgroupErrorText } from '../playgroup/playgroupUi';
 import { refreshTables, useServerState, useTables } from '../queries';
-import { useDecks } from '../stores/decks';
+import { useDecks, type RosterDeck } from '../stores/decks';
 import { useDeckRoster } from '../stores/useDeckRoster';
+import { usePlaygroup } from '../stores/playgroup';
 import { useSession } from '../stores/session';
 import { notify } from '../stores/toasts';
 import type { TableView } from '../../protocol/generated/views';
-import { Button, IconButton } from '../ui/Button';
+import { Button, ButtonLink, IconButton } from '../ui/Button';
 import { Dialog } from '../ui/Dialog';
 import { Field } from '../ui/Field';
 import { warmDeck } from '../ui/imageCache';
+import { Select } from '../ui/Select';
 import { Zone } from '../ui/Zone';
 import { formatMenu, formatRules, gameTypesFor, isCommanderFormat } from '../../core/decks/formats';
 import { DEFAULT_ADVANCED, matchOptions, type TableAdvanced } from '../../core/game/tableSetup';
@@ -41,6 +46,7 @@ const STATE_LABEL: Record<string, string> = {
 
 /** Every table on the server: join one with your selected deck, watch a game, or host your own. */
 export function TablesScreen() {
+  const t = useT();
   const location = useLocation();
   const { data: tables = [], isLoading } = useTables();
   const userName = useSession((state) => state.userName);
@@ -127,9 +133,19 @@ export function TablesScreen() {
           ))}
         </Zone>
       </div>
-      <p className={styles.deckNote}>
-        Joining with <strong>{selectedDeck?.name ?? 'no deck'}</strong>. Change it on the Play screen.
-      </p>
+      <div className={styles.deckBar}>
+        <span className={styles.deckBarLabel}>{t('home.chooseDeck')}</span>
+        <Select
+          value={selectedDeck?.id ?? ''}
+          aria-label={t('home.chooseDeck')}
+          className={styles.deckSelect}
+          side="top"
+          disabled={roster.length === 0}
+          onChange={(event) => decks.select(event.target.value)}
+        >
+          {rosterSelectOptions(roster, t)}
+        </Select>
+      </div>
       <Dialog
         open={!!locked}
         onOpenChange={(open) => !open && setLocked(null)}
@@ -198,8 +214,10 @@ function TableRow({ table, children }: { table: TableView; children?: React.Reac
 }
 
 function MyTable({ table }: { table: TableView }) {
+  const t = useT();
   const roomId = useSession((state) => state.roomId);
   const userName = useSession((state) => state.userName);
+  const tableConfig = usePlaygroup((state) => (table.tableId ? state.tableConfigs[table.tableId] : undefined));
   const [chatOpen, setChatOpen] = useState(false);
   // the server lists the controller first, then the other seated players: "host, guest"
   const isOwner = (table.controllerName ?? '').split(', ')[0] === userName;
@@ -214,6 +232,11 @@ function MyTable({ table }: { table: TableView }) {
   return (
     <>
       <TableRow table={table}>
+        {tableConfig?.liveUrl && (
+          <ButtonLink href={tableConfig.liveUrl} target="_blank" rel="noreferrer" size="sm" variant="quiet" icon={<ExternalLink size={15} />}>
+            {t('match.playgroup.liveButton')}
+          </ButtonLink>
+        )}
         {table.tableState === 'WAITING' && (
           <Button size="sm" variant="quiet" icon={<Link2 size={16} />} onClick={copyInvite}>Invite</Button>
         )}
@@ -245,12 +268,54 @@ function TableChat({ tableId }: { tableId: string }) {
   );
 }
 
+function rosterSelectOptions(roster: readonly RosterDeck[], t: Translate) {
+  const saved = roster.filter((deck) => !deck.starter);
+  const commanders = roster.filter((deck) => deck.starter && isCommanderFormat(deck.starter.format));
+  const starters = roster.filter((deck) => deck.starter && !isCommanderFormat(deck.starter.format));
+  return (
+    <>
+      {saved.length > 0 && (
+        <optgroup label={t('decks.filter.yours')}>
+          {saved.map((deck) => (
+            <option key={deck.id} value={deck.id}>{deck.name}</option>
+          ))}
+        </optgroup>
+      )}
+      {commanders.length > 0 && (
+        <optgroup label={t('decks.filter.commanderPrecons')}>
+          {commanders.map((deck) => (
+            <option key={deck.id} value={deck.id}>
+              {deck.starter?.set ? `${deck.name} (${deck.starter.set})` : deck.name}
+            </option>
+          ))}
+        </optgroup>
+      )}
+      {starters.length > 0 && (
+        <optgroup label={t('decks.filter.starters')}>
+          {starters.map((deck) => (
+            <option key={deck.id} value={deck.id}>{deck.name}</option>
+          ))}
+        </optgroup>
+      )}
+    </>
+  );
+}
+
 function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChange(open: boolean): void; deckId: string | null }) {
+  const t = useT();
   const { data: serverState } = useServerState();
   const roomId = useSession((state) => state.roomId);
   const userName = useSession((state) => state.userName);
+  const roster = useDeckRoster();
+  const selectDeck = useDecks((state) => state.select);
   const loadForPlay = useDecks((state) => state.loadForPlay);
   const loadList = useDecks((state) => state.loadList);
+  const pgUser = usePlaygroup((state) => state.user);
+  const pgGroups = usePlaygroup((state) => state.playgroups);
+  const defaultPgId = usePlaygroup((state) => state.defaultPlaygroupId);
+  const defaultLeagueId = usePlaygroup((state) => state.defaultLeagueId);
+  const startTableLiveSession = usePlaygroup((state) => state.startTableLiveSession);
+
   const [name, setName] = useState('');
   const [deckType, setDeckType] = useState(FREEFORM);
   const [gameType, setGameType] = useState('Two Player Duel');
@@ -258,6 +323,8 @@ function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChang
   const [wins, setWins] = useState(2);
   const [aiSeats, setAiSeats] = useState(0);
   const [password, setPassword] = useState('');
+  const [playgroupId, setPlaygroupId] = useState<number | null>(defaultPgId);
+  const [leagueId, setLeagueId] = useState<number | null>(defaultLeagueId);
   const [advanced, setAdvanced] = useState<TableAdvanced>(DEFAULT_ADVANCED);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -281,9 +348,22 @@ function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChang
   const minSeats = type?.minPlayers ?? 2;
   const maxSeats = Math.min(type?.maxPlayers ?? 2, 6);
   const seatCount = Math.min(maxSeats, Math.max(minSeats, seats));
+  const clampedAi = Math.min(aiSeats, seatCount - 1);
+  const allAiOpponents = clampedAi >= seatCount - 1;
   const commander = isCommanderFormat(deckType);
   const menu = formatMenu(serverState?.deckTypes ?? []);
   const listed = menu.some((group) => group.types.includes(deckType));
+
+  useEffect(() => {
+    if (!open) return;
+    setPlaygroupId(allAiOpponents ? null : defaultPgId);
+    setLeagueId(allAiOpponents ? null : defaultLeagueId);
+  }, [open, allAiOpponents, defaultPgId, defaultLeagueId]);
+
+  const chosenGroup = !allAiOpponents && playgroupId
+    ? pgGroups.find((group) => group.id === playgroupId) ?? null
+    : null;
+  const activeLeagues = (chosenGroup?.leagues ?? []).filter((league) => league.active !== false);
 
   async function host() {
     if (!roomId || !deckId) return;
@@ -312,13 +392,32 @@ function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChang
         throw new Error(`Your deck is not legal in ${formatRules(deckType).label}.`);
       }
       if (aiSeats > 0) {
-        // the AI brings the format's own decks, or starter decks of the right kind; a deck that doesn't fit gets a copy of yours
-        const rivals = await (await import('../stores/aiDecks')).aiDecks([], aiSeats, commander, { format: deckType }).catch(() => []);
+        // the AI brings the format's own decks, or starter decks / precons of the right kind; a deck that doesn't fit gets a copy of yours
+        const rivals = await (await import('../stores/aiDecks')).aiDecks([], aiSeats, commander, { format: deckType, pool: 'every', own: deckId }).catch(() => []);
         rivals.forEach(warmDeck);
         for (let seat = 1; seat <= aiSeats; seat++) {
           const rival = rivals[seat - 1] ? toWire(rivals[seat - 1]) : wire;
           const joined = await api.roomJoinTable(roomId, table.tableId, `AI ${seat}`, 'COMPUTER_MAD', 4, rival, password);
           if (!joined && rival !== wire) await api.roomJoinTable(roomId, table.tableId, `AI ${seat}`, 'COMPUTER_MAD', 4, wire, password);
+        }
+      }
+      if (pgUser && chosenGroup) {
+        try {
+          const liveUrl = await startTableLiveSession(table.tableId, {
+            playerAmount: seatCount,
+            lifeAmount: commander ? 40 : 20,
+            playgroupId: chosenGroup.id,
+            playgroupName: chosenGroup.name,
+            leagueId: activeLeagues.some((league) => league.id === leagueId) ? leagueId : null,
+          });
+          if (liveUrl) {
+            const tableChatId = await api.chatFindByTable(table.tableId).catch(() => null);
+            if (tableChatId) {
+              await api.chatSendMessage(tableChatId, userName, t('match.playgroup.liveChatMessage', { group: chosenGroup.name, url: liveUrl })).catch(() => undefined);
+            }
+          }
+        } catch (pgError) {
+          notify(t('match.playgroup.liveErrorTitle'), playgroupErrorText(t, pgError), 'error');
         }
       }
       refreshTables();
@@ -345,6 +444,18 @@ function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChang
       }
     >
       <div className={styles.form}>
+        {roster.length > 0 && (
+          <div className={styles.selectField}>
+            <span>{t('home.chooseDeck')}</span>
+            <Select
+              value={deckId ?? ''}
+              aria-label={t('home.chooseDeck')}
+              onChange={(event) => selectDeck(event.target.value)}
+            >
+              {rosterSelectOptions(roster, t)}
+            </Select>
+          </div>
+        )}
         <Field label="Table name" value={name} placeholder={`${userName}'s table`} onChange={(event) => setName(event.target.value)} />
         <div className={styles.pair}>
           <label className={styles.selectField}>
@@ -391,6 +502,42 @@ function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChang
           </label>
         </div>
         <Field label="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} hint="Leave empty for an open table." />
+        {pgUser && !allAiOpponents && pgGroups.length > 0 && (
+          <div className={styles.pair}>
+            <div className={styles.selectField}>
+              <span>{t('match.playgroup.hostGroup')}</span>
+              <Select
+                value={playgroupId ?? ''}
+                aria-label={t('match.playgroup.hostGroup')}
+                onChange={(event) => {
+                  const next = event.target.value ? Number(event.target.value) : null;
+                  setPlaygroupId(next);
+                  setLeagueId(null);
+                }}
+              >
+                <option value="">{t('match.playgroup.hostNone')}</option>
+                {pgGroups.map((group) => (
+                  <option key={group.id} value={group.id}>{group.name}</option>
+                ))}
+              </Select>
+            </div>
+            {chosenGroup && activeLeagues.length > 0 && (
+              <div className={styles.selectField}>
+                <span>{t('match.playgroup.hostLeague')}</span>
+                <Select
+                  value={leagueId ?? ''}
+                  aria-label={t('match.playgroup.hostLeague')}
+                  onChange={(event) => setLeagueId(event.target.value ? Number(event.target.value) : null)}
+                >
+                  <option value="">{t('match.playgroup.hostNoLeague')}</option>
+                  {activeLeagues.map((league) => (
+                    <option key={league.id} value={league.id}>{league.name}</option>
+                  ))}
+                </Select>
+              </div>
+            )}
+          </div>
+        )}
         <TableAdvancedFields
           value={advanced}
           onChange={(patch) => setAdvanced((current) => ({ ...current, ...patch }))}

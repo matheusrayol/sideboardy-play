@@ -156,6 +156,7 @@ public final class DoubleMasters2022 extends ExpansionSet {
         cards.add(new SetCardInfo("Crucible of Worlds", 303, Rarity.MYTHIC, mage.cards.c.CrucibleOfWorlds.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Crucible of Worlds", 393, Rarity.MYTHIC, mage.cards.c.CrucibleOfWorlds.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Crucible of Worlds", 558, Rarity.MYTHIC, mage.cards.c.CrucibleOfWorlds.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Cryptic Spires", 332, Rarity.COMMON, mage.cards.c.CrypticSpires.class));
         cards.add(new SetCardInfo("Dack's Duplicate", 198, Rarity.RARE, mage.cards.d.DacksDuplicate.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Dack's Duplicate", 483, Rarity.RARE, mage.cards.d.DacksDuplicate.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Damnation", 353, Rarity.RARE, mage.cards.d.Damnation.class, NON_FULL_USE_VARIOUS));

@@ -3,6 +3,7 @@ import { applyUpdate, diffDecks, type DeckDiffRow } from '../../../core/deckImpo
 import { issuesOf, startDraft, toDeck } from '../../../core/deckImport/draft';
 import { describeFailure, readingFromServer } from '../../../core/deckImport/remote';
 import { browserFixStore } from '../../../core/deckImport/resolve';
+import { fetchSideboardyDeckReading } from '../../../core/deckImport/sideboardy';
 import { siteById, type DeckSiteId } from '../../../core/deckImport/sites';
 import type { CardView } from '../../../protocol/generated/views';
 import { deckStorage } from '../../../core/decks/DeckStorageService';
@@ -38,9 +39,22 @@ export function UpdateDialog({ deckId, onClose }: { deckId: string | null; onClo
       const site = source.site as DeckSiteId;
       let reading;
       try {
-        reading = readingFromServer(await api.deckImportFromUrl(source.url), site, source.url);
+        if (site === 'sideboardy') {
+          try {
+            reading = await fetchSideboardyDeckReading(source.remoteId, source.url);
+          } catch {
+            reading = readingFromServer(await api.deckImportFromUrl(source.url), site, source.url);
+          }
+        } else {
+          reading = readingFromServer(await api.deckImportFromUrl(source.url), site, source.url);
+        }
       } catch (error) {
-        if (!cancelled) setState({ kind: 'failed', message: describeFailure(error, site).message });
+        if (!cancelled) {
+          setState({
+            kind: 'failed',
+            message: site === 'sideboardy' && error instanceof Error ? error.message : describeFailure(error, site).message,
+          });
+        }
         return;
       }
       const draft = await startDraft(reading, cardLookup, { fixes: browserFixStore() });

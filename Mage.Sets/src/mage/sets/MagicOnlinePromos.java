@@ -358,8 +358,8 @@ public class MagicOnlinePromos extends ExpansionSet {
         cards.add(new SetCardInfo("Bring to Light", 102309, Rarity.RARE, mage.cards.b.BringToLight.class));
         cards.add(new SetCardInfo("Brion Stoutarm", 36096, Rarity.RARE, mage.cards.b.BrionStoutarm.class));
         cards.add(new SetCardInfo("Brokers Confluence", 99951, Rarity.RARE, mage.cards.b.BrokersConfluence.class));
-        //cards.add(new SetCardInfo("Brokkos, Apex of Forever", 80909, Rarity.MYTHIC, mage.cards.b.BrokkosApexOfForever.class, NON_FULL_USE_VARIOUS));
-        //cards.add(new SetCardInfo("Brokkos, Apex of Forever", 80987, Rarity.MYTHIC, mage.cards.b.BrokkosApexOfForever.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Brokkos, Apex of Forever", 80909, Rarity.MYTHIC, mage.cards.b.BrokkosApexOfForever.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Brokkos, Apex of Forever", 80987, Rarity.MYTHIC, mage.cards.b.BrokkosApexOfForever.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Bronze Guardian", 90004, Rarity.RARE, mage.cards.b.BronzeGuardian.class));
         cards.add(new SetCardInfo("Bronzehide Lion", 79973, Rarity.RARE, mage.cards.b.BronzehideLion.class));
         cards.add(new SetCardInfo("Broodmate Dragon", 36148, Rarity.RARE, mage.cards.b.BroodmateDragon.class));

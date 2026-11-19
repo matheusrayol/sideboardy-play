@@ -141,6 +141,7 @@ public final class Judgment extends ExpansionSet {
         cards.add(new SetCardInfo("Seedtime", 130, Rarity.RARE, mage.cards.s.Seedtime.class, RETRO_ART));
         cards.add(new SetCardInfo("Selfless Exorcist", 21, Rarity.RARE, mage.cards.s.SelflessExorcist.class, RETRO_ART));
         cards.add(new SetCardInfo("Serene Sunset", 131, Rarity.UNCOMMON, mage.cards.s.SereneSunset.class, RETRO_ART));
+        cards.add(new SetCardInfo("Shaman's Trance", 98, Rarity.RARE, mage.cards.s.ShamansTrance.class, RETRO_ART));
         cards.add(new SetCardInfo("Shieldmage Advocate", 22, Rarity.COMMON, mage.cards.s.ShieldmageAdvocate.class, RETRO_ART));
         cards.add(new SetCardInfo("Silver Seraph", 23, Rarity.RARE, mage.cards.s.SilverSeraph.class, RETRO_ART));
         cards.add(new SetCardInfo("Solitary Confinement", 24, Rarity.RARE, mage.cards.s.SolitaryConfinement.class, RETRO_ART));
@@ -192,8 +193,7 @@ class JudgmentCollator implements BoosterCollator {
     private final CardRun commonA = new CardRun(true, "22", "59", "118", "100", "4", "76", "126", "59", "95", "17", "57", "120", "28", "63", "106", "4", "91", "129", "42", "22", "89", "125", "47", "63", "57", "123", "86", "43", "5", "106", "33", "89", "30", "104", "43", "17", "34", "6", "123", "79", "76", "125", "42", "95", "126", "33", "100", "129", "28", "79", "120", "30", "86", "47", "118", "6", "91", "5", "104", "34");
     private final CardRun commonB = new CardRun(true, "121", "102", "108", "45", "71", "132", "14", "87", "41", "109", "13", "115", "39", "78", "18", "74", "20", "65", "46", "10", "121", "38", "20", "80", "132", "10", "87", "71", "41", "102", "136", "74", "7", "80", "109", "39", "13", "136", "46", "108", "7", "94", "18", "45", "115", "78", "65", "38", "94", "14");
     private final CardRun uncommon = new CardRun(false, "1", "77", "105", "2", "3", "107", "82", "62", "36", "8", "85", "111", "114", "66", "88", "40", "116", "67", "119", "92", "122", "141", "44", "142", "127", "16", "97", "49", "143", "131", "25", "99", "26", "27", "72", "101", "75", "135", "31", "32", "53", "54", "56", "60");
-    // Shaman's Trance (rare, #98) not implemented, so has been omitted
-    private final CardRun rare = new CardRun(false, "137", "61", "81", "83", "35", "9", "110", "37", "64", "84", "112", "113", "90", "117", "11", "12", "68", "138", "93", "96", "124", "69", "139", "48", "70", "15", "128", "140", "19", "50", "130", "21", "23", "24", "51", "73", "133", "52", "29", "134", "103", "55", "58");
+    private final CardRun rare = new CardRun(false, "137", "61", "81", "83", "35", "9", "110", "37", "64", "84", "112", "113", "90", "117", "11", "12", "68", "138", "93", "96", "98", "124", "69", "139", "48", "70", "15", "128", "140", "19", "50", "130", "21", "23", "24", "51", "73", "133", "52", "29", "134", "103", "55", "58");
 
     private final BoosterStructure AAAAAABBBBB = new BoosterStructure(
             commonA, commonA, commonA, commonA, commonA, commonA,

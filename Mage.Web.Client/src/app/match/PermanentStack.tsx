@@ -6,7 +6,7 @@ import { memo, useMemo, useRef, type CSSProperties, type PointerEvent as ReactPo
 import { roomDoors } from '../../core/game/rooms';
 import { keywordEffects, keywordMarks, type KeywordEffect, type MarkedKeyword } from '../../core/game/keywords';
 import type { PermanentView } from '../../protocol/generated/views';
-import { useT } from '../i18n';
+import { useT, type Translate } from '../i18n';
 import { useSettings } from '../stores/settings';
 import { CardFace } from '../ui/CardFace';
 import { CounterBadges } from './CounterBadges';
@@ -230,7 +230,7 @@ function PlacedCard({ permanent, width, sleeve, clickable, selected, attacking, 
       role={isClickable ? 'button' : undefined}
       tabIndex={isClickable ? 0 : undefined}
       onMouseDown={preventMatchObjectMouseFocus}
-      aria-label={describe(permanent, { tapped, asleep, isAttacking, isBlocking, isSelected, keywords: keywords.map((mark) => (mark.gained ? `${mark.name.toLowerCase()} (gained)` : mark.name.toLowerCase())) }) + (isClickable && targeting && !isSelected ? ', can be targeted' : '') + (isSource ? ', source of the ability' : '')}
+      aria-label={describe(t, permanent, { tapped, asleep, isAttacking, isBlocking, isSelected, keywords: keywords.map((mark) => (mark.gained ? t('match.permanent.gainedSuffix', { keyword: mark.name.toLowerCase() }) : mark.name.toLowerCase())) }) + (isClickable && targeting && !isSelected ? t('match.plate.targetableAria') : '') + (isSource ? t('match.permanent.sourceOfAbility') : '')}
       aria-pressed={isClickable ? isSelected : undefined}
       onClick={() => {
         if (suppressClick.current) {
@@ -260,12 +260,12 @@ function PlacedCard({ permanent, width, sleeve, clickable, selected, attacking, 
       </div>
 
       <div className={styles.marks} style={{ transform: tapped ? 'rotate(-90deg)' : undefined }}>
-        {isAttacking && <span className={[styles.mark, styles.markAttack].join(' ')} title="Attacking"><Swords size={13} aria-hidden="true" /></span>}
-        {isBlocking && <span className={styles.mark} title="Blocking"><Shield size={13} aria-hidden="true" /></span>}
+        {isAttacking && <span className={[styles.mark, styles.markAttack].join(' ')} title={t('match.detail.attacking')}><Swords size={13} aria-hidden="true" /></span>}
+        {isBlocking && <span className={styles.mark} title={t('match.detail.blocking')}><Shield size={13} aria-hidden="true" /></span>}
       </div>
 
       {asleep && (
-        <span className={styles.sleep} style={{ transform: tapped ? 'rotate(-90deg)' : undefined }} data-still={motion ? undefined : ''} title="Summoning sick: it can't attack or tap until your next turn" aria-hidden="true">
+        <span className={styles.sleep} style={{ transform: tapped ? 'rotate(-90deg)' : undefined }} data-still={motion ? undefined : ''} title={t('match.detail.summoningSickHint')} aria-hidden="true">
           <span>z</span><span>z</span><span>Z</span>
         </span>
       )}
@@ -276,7 +276,7 @@ function PlacedCard({ permanent, width, sleeve, clickable, selected, attacking, 
           {keywords.map((mark) => {
             const Icon = KEYWORD_ICONS[mark.name as MarkedKeyword];
             return (
-              <span key={mark.name} className={mark.gained ? styles.keywordGained : styles.keyword} title={mark.gained ? `${mark.name} (gained from an effect)` : mark.name}>
+              <span key={mark.name} className={mark.gained ? styles.keywordGained : styles.keyword} title={mark.gained ? t('match.permanent.gainedHint', { keyword: mark.name }) : mark.name}>
                 <Icon size={15} strokeWidth={2.4} />
               </span>
             );
@@ -324,15 +324,15 @@ function ptTone(permanent: PermanentView): string {
   return '';
 }
 
-function describe(permanent: PermanentView, state: { tapped: boolean; asleep: boolean; isAttacking: boolean; isBlocking: boolean; isSelected: boolean; keywords: string[] }): string {
-  const parts = [permanent.name ?? 'Permanent'];
+function describe(t: Translate, permanent: PermanentView, state: { tapped: boolean; asleep: boolean; isAttacking: boolean; isBlocking: boolean; isSelected: boolean; keywords: string[] }): string {
+  const parts = [permanent.name ?? t('match.permanent.fallback')];
   if (permanent.power !== undefined && (permanent.cardTypes ?? []).includes('CREATURE')) parts.push(`${permanent.power}/${permanent.toughness}`);
   parts.push(...state.keywords);
-  for (const door of roomDoors(permanent) ?? []) parts.push(`${door.name} ${door.unlocked ? 'unlocked' : 'locked'}`);
-  if (state.tapped) parts.push('tapped');
-  if (state.asleep) parts.push('summoning sick');
-  if (state.isAttacking) parts.push('attacking');
-  if (state.isBlocking) parts.push('blocking');
-  if (state.isSelected) parts.push('chosen');
+  for (const door of roomDoors(permanent) ?? []) parts.push(t(door.unlocked ? 'match.permanent.doorUnlocked' : 'match.permanent.doorLocked', { name: door.name }));
+  if (state.tapped) parts.push(t('match.permanent.tapped'));
+  if (state.asleep) parts.push(t('match.permanent.summoningSick'));
+  if (state.isAttacking) parts.push(t('match.permanent.attacking'));
+  if (state.isBlocking) parts.push(t('match.permanent.blocking'));
+  if (state.isSelected) parts.push(t('match.permanent.chosen'));
   return parts.join(', ');
 }

@@ -24,6 +24,6 @@ describe('cardBackOf', () => {
   });
 
   test('an unknown saved id shows the default design', () => {
-    expect(cardBackImage('gone' as never)).toBe('/card-back/stitch-hand.webp');
+    expect(cardBackImage('gone' as never)).toBe('/card-back/sideboardy.svg');
   });
 });

@@ -45,7 +45,7 @@ public final class Renaissance extends ExpansionSet {
         cards.add(new SetCardInfo("Blue Mana Battery", 112, Rarity.UNCOMMON, mage.cards.b.BlueManaBattery.class, RETRO_ART));
         cards.add(new SetCardInfo("Bog Imp", 49, Rarity.COMMON, mage.cards.b.BogImp.class, RETRO_ART));
         cards.add(new SetCardInfo("Brainwash", 6, Rarity.COMMON, mage.cards.b.Brainwash.class, RETRO_ART));
-        //cards.add(new SetCardInfo("Bronze Tablet", 115, Rarity.UNCOMMON, mage.cards.b.BronzeTablet.class, RETRO_ART));
+        cards.add(new SetCardInfo("Bronze Tablet", 115, Rarity.UNCOMMON, mage.cards.b.BronzeTablet.class, RETRO_ART));
         cards.add(new SetCardInfo("Brothers of Fire", 76, Rarity.UNCOMMON, mage.cards.b.BrothersOfFire.class, RETRO_ART));
         cards.add(new SetCardInfo("Carnivorous Plant", 117, Rarity.COMMON, mage.cards.c.CarnivorousPlant.class, RETRO_ART));
         cards.add(new SetCardInfo("Carrion Ants", 51, Rarity.UNCOMMON, mage.cards.c.CarrionAnts.class, RETRO_ART));
@@ -109,7 +109,7 @@ public final class Renaissance extends ExpansionSet {
         cards.add(new SetCardInfo("Pyrotechnics", 93, Rarity.COMMON, mage.cards.p.Pyrotechnics.class, RETRO_ART));
         cards.add(new SetCardInfo("Radjan Spirit", 153, Rarity.UNCOMMON, mage.cards.r.RadjanSpirit.class, RETRO_ART));
         cards.add(new SetCardInfo("Rag Man", 64, Rarity.UNCOMMON, mage.cards.r.RagMan.class, RETRO_ART));
-        //cards.add(new SetCardInfo("Rebirth", 154, Rarity.UNCOMMON, mage.cards.r.Rebirth.class, RETRO_ART));
+        cards.add(new SetCardInfo("Rebirth", 154, Rarity.UNCOMMON, mage.cards.r.Rebirth.class, RETRO_ART));
         cards.add(new SetCardInfo("Red Mana Battery", 155, Rarity.UNCOMMON, mage.cards.r.RedManaBattery.class, RETRO_ART));
         cards.add(new SetCardInfo("Relic Bind", 39, Rarity.UNCOMMON, mage.cards.r.RelicBind.class, RETRO_ART));
         cards.add(new SetCardInfo("Sandstorm", 156, Rarity.COMMON, mage.cards.s.Sandstorm.class, RETRO_ART));
@@ -125,7 +125,7 @@ public final class Renaissance extends ExpansionSet {
         cards.add(new SetCardInfo("Sylvan Library", 158, Rarity.UNCOMMON, mage.cards.s.SylvanLibrary.class, RETRO_ART));
         cards.add(new SetCardInfo("Tawnos's Wand", 159, Rarity.UNCOMMON, mage.cards.t.TawnossWand.class, RETRO_ART));
         cards.add(new SetCardInfo("Tawnos's Weaponry", 160, Rarity.UNCOMMON, mage.cards.t.TawnossWeaponry.class, RETRO_ART));
-        //cards.add(new SetCardInfo("Tempest Efreet", 95, Rarity.UNCOMMON, mage.cards.t.TempestEfreet.class, RETRO_ART));
+        cards.add(new SetCardInfo("Tempest Efreet", 95, Rarity.UNCOMMON, mage.cards.t.TempestEfreet.class, RETRO_ART));
         cards.add(new SetCardInfo("Tetravus", 161, Rarity.UNCOMMON, mage.cards.t.Tetravus.class, RETRO_ART));
         cards.add(new SetCardInfo("The Brute", 96, Rarity.COMMON, mage.cards.t.TheBrute.class, RETRO_ART));
         cards.add(new SetCardInfo("Time Elemental", 43, Rarity.UNCOMMON, mage.cards.t.TimeElemental.class, RETRO_ART));

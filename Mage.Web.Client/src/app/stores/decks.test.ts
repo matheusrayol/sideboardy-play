@@ -127,4 +127,33 @@ describe('organising decks (#200)', () => {
     expect(useDecks.getState().shelfFilter).toEqual({ tag: 'Burn', hideDrafts: true });
     expect(JSON.parse(localStorage.getItem('playmat.deckShelfFilter')!)).toEqual({ tag: 'Burn', hideDrafts: true });
   });
+
+  test('precon starter metadata populates colors, set note, and preserves tags when loaded to play', async () => {
+    const precon = {
+      file: 'precon-test.dck',
+      name: 'Test Precon',
+      cards: 100,
+      format: 'Variant Magic - Commander',
+      set: 'Tarkir Dragonstorm (2025)',
+      colors: ['W', 'B', 'R'],
+      tags: ['Commander', 'Precon'],
+      cover: { name: 'Zurgo', setCode: 'TDC', cardNumber: '10' },
+    };
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+      if (url.endsWith('starter-decks/index.json')) return new Response(JSON.stringify([precon]), { status: 200 });
+      if (url.endsWith('meta-decks/index.json')) return new Response(JSON.stringify({ updated: '2026-10-20', source: '', decks: [] }), { status: 200 });
+      if (url.endsWith('precon-test.dck')) return new Response('99 [TDC:1] Swamp\nSB: 1 [TDC:10] Zurgo\n', { status: 200 });
+      return new Response(null, { status: 404 });
+    }));
+    await useDecks.getState().refresh();
+    const roster = rosterOf(useDecks.getState());
+    expect(roster[0]).toMatchObject({
+      name: 'Test Precon',
+      note: 'Tarkir Dragonstorm (2025) · 100 cards',
+      colors: ['W', 'B', 'R'],
+      tags: ['Commander', 'Precon'],
+    });
+    const { id } = await useDecks.getState().loadForPlay(STARTER_PREFIX + precon.file);
+    expect((await deckStorage.loadDeck(id))?.tags).toEqual(['Commander', 'Precon']);
+  });
 });

@@ -19,6 +19,8 @@ public final class NauctisTheSunkenRealmCommander extends ExpansionSet {
         super("Nauctis: The Sunken Realm Commander", "NAC", ExpansionSet.buildDate(2027, 2, 5), SetType.SUPPLEMENTAL);
         this.hasBasicLands = false;
 
+        cards.add(new SetCardInfo("\"The Ignoble Serpent\"", 6, Rarity.MYTHIC, mage.cards.t.TheIgnobleSerpent.class));
+        cards.add(new SetCardInfo("\"Zekes, Acid Rock Fan\"", 8, Rarity.MYTHIC, mage.cards.z.ZekesAcidRockFan.class));
         cards.add(new SetCardInfo("Crucible of Worlds", 345, Rarity.MYTHIC, mage.cards.c.CrucibleOfWorlds.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Crucible of Worlds", 365, Rarity.MYTHIC, mage.cards.c.CrucibleOfWorlds.class, NON_FULL_USE_VARIOUS));
     }

@@ -1563,7 +1563,7 @@ public class MysteryBooster extends ExpansionSet {
         addCardInfoToList(boosterList, "Skyscanner", "M19", "245");
         addCardInfoToList(boosterList, "Sol Ring", "C18", "222");
         addCardInfoToList(boosterList, "Sorcerer's Broom", "ELD", "232");
-        //addCardInfoToList(boosterList, "Spy Kit", "CN2", "79"); // not yet implemented
+        addCardInfoToList(boosterList, "Spy Kit", "CN2", "79");
         addCardInfoToList(boosterList, "Sunset Pyramid", "HOU", "166");
         addCardInfoToList(boosterList, "Suspicious Bookcase", "M19", "246");
         addCardInfoToList(boosterList, "Swiftwater Cliffs", "C18", "284");

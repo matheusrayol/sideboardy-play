@@ -1,2 +1,5 @@
 # the Rust build output (gigabytes); the image builds the gateway itself
 rust/target
+Mage.Web.Client/node_modules
+Mage.Web.Client/dist
+Utils/data

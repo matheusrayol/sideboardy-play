@@ -1,8 +1,8 @@
 /**
- * Product name shown in the UI (see PRODUCT.md). It is a build setting: VITE_APP_NAME, "Playmat" when unset. The page
+ * Product name shown in the UI (see PRODUCT.md). It is a build setting: VITE_APP_NAME, "Sideboardy Play" when unset. The page
  * title in index.html reads the same variable.
  */
-export const APP_NAME = (import.meta.env.VITE_APP_NAME as string | undefined)?.trim() || 'Playmat';
+export const APP_NAME = (import.meta.env.VITE_APP_NAME as string | undefined)?.trim() || 'Sideboardy Play';
 
 /**
  * The version players see (About, the Settings footer, "What's new"): VITE_APP_VERSION, the release tag (v1.2.3) or

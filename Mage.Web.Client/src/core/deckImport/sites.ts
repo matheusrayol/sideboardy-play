@@ -8,6 +8,7 @@
  */
 
 export type DeckSiteId =
+  | 'sideboardy'
   | 'archidekt' | 'tcgplayer' | 'mtgtop8' | 'scryfall' | 'manabox'
   | 'moxfield' | 'mtggoldfish' | 'aetherhub' | 'tappedout' | 'deckstats';
 
@@ -33,6 +34,15 @@ export interface DeckSite {
 const segment = (url: URL, pattern: RegExp) => pattern.exec(url.pathname)?.[1] ?? null;
 
 export const DECK_SITES: DeckSite[] = [
+  {
+    id: 'sideboardy',
+    name: 'Sideboardy',
+    monogram: 'Sb',
+    tier: 'direct',
+    hosts: ['sideboardy.app', 'www.sideboardy.app'],
+    deckId: (url) => segment(url, /^\/(?:api\/)?(?:decks|colecoes)\/(\d+)(?:[/?#]|$)/),
+    exportHint: 'Escolha um dos seus decks do Sideboardy ou cole o link do deck.',
+  },
   {
     id: 'archidekt',
     name: 'Archidekt',

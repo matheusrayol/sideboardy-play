@@ -58,16 +58,48 @@ function iconsOfEntry(graph: ModuleGraph): Set<string> {
 }
 
 // the product name is a build setting (src/app/brand.ts); index.html's title reads it too
-const appName = process.env.VITE_APP_NAME?.trim() || 'Playmat'
+const appName = process.env.VITE_APP_NAME?.trim() || 'Sideboardy Play'
 process.env.VITE_APP_NAME = appName
 // so is the version (the image workflow passes the release tag or sha-<7>); index.html's app-version meta reads it,
 // and the deploy's smoke test checks it. Empty: a development build, "dev" in the app.
 const appVersion = process.env.VITE_APP_VERSION?.trim() || ''
 process.env.VITE_APP_VERSION = appVersion
 
+// the proxy target used when Vite forwards /ws and /img in local dev (for instance, the Docker stack)
+const devProxyTarget = process.env.VITE_DEV_PROXY_TARGET?.trim() || 'https://localhost:8443'
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), pwa(appName), releaseNotes(appVersion)],
+  server: {
+    proxy: {
+      '/ws': {
+        target: devProxyTarget,
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+        headers: { Origin: devProxyTarget },
+        configure(proxy) {
+          proxy.on('proxyReqWs', (proxyReq) => {
+            proxyReq.setHeader('Origin', devProxyTarget)
+          })
+        },
+      },
+      '/img': {
+        target: devProxyTarget,
+        changeOrigin: true,
+        secure: false,
+      },
+      '/playgroup-api': {
+        target: 'https://playgroup.gg/api/public/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/playgroup-api/, ''),
+        headers: {
+          'User-Agent': 'SideboardyPlay/1.0 (+https://sideboardy.app; contato@sideboardy.app)',
+        },
+      },
+    },
+  },
   build: {
     // scripts/check-bundle-size.mjs reads the manifest to find each page's chunks
     manifest: true,

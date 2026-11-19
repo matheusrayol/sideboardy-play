@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
 import type { Advice } from '../../protocol/generated/views';
 import { api } from '../connection';
+import { useT, type MessageKey } from '../i18n';
+import './matchMessages';
 import { Button } from '../ui/Button';
 import { Dialog } from '../ui/Dialog';
 import styles from './AdviceDialog.module.css';
 
-const HEADINGS: Record<string, string> = {
-  PLAY: 'The AI would play',
-  PASS: 'The AI would pass',
-  ATTACK: 'The AI would attack',
-  NO_ATTACK: 'The AI wouldn\'t attack',
-  BLOCK: 'The AI would block',
-  NO_BLOCK: 'The AI wouldn\'t block',
-  NONE: 'No advice',
+const HEADING_KEYS: Record<string, MessageKey> = {
+  PLAY: 'match.advice.heading.PLAY',
+  PASS: 'match.advice.heading.PASS',
+  ATTACK: 'match.advice.heading.ATTACK',
+  NO_ATTACK: 'match.advice.heading.NO_ATTACK',
+  BLOCK: 'match.advice.heading.BLOCK',
+  NO_BLOCK: 'match.advice.heading.NO_BLOCK',
+  NONE: 'match.advice.heading.NONE',
 };
 
 /**
@@ -28,6 +30,7 @@ export function AdviceDialog({ gameId, open, onOpenChange, counted, onUsed }: {
   /** a hint was given */
   onUsed?(): void;
 }) {
+  const t = useT();
   const [advice, setAdvice] = useState<Advice | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [thinking, setThinking] = useState(false);
@@ -59,21 +62,20 @@ export function AdviceDialog({ gameId, open, onOpenChange, counted, onUsed }: {
   const steps = advice?.steps ?? [];
   const left = advice?.hintsLeft ?? counted?.hintsLeft;
   const canAsk = !counted || (left ?? 0) > 0;
+  const askKey: MessageKey = counted ? (advice ? 'match.advice.another' : 'match.advice.useHint') : 'match.advice.askAgain';
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title={counted ? 'Ask for a hint' : 'Ask the AI'}
-      description={counted
-        ? 'The computer says what it would do in your seat. A Career game with a hint pays half and counts for no quests.'
-        : 'What the computer would do in your seat right now. Nothing happens until you do it.'}
+      title={t(counted ? 'match.advice.titleCounted' : 'match.advice.title')}
+      description={t(counted ? 'match.advice.descCounted' : 'match.advice.desc')}
       width="sm"
       footer={(
         <>
-          <Button variant="quiet" onClick={() => onOpenChange(false)}>Close</Button>
+          <Button variant="quiet" onClick={() => onOpenChange(false)}>{t('match.advice.close')}</Button>
           {canAsk && (
             <Button variant="print" busy={thinking} onClick={() => void ask()}>
-              {counted ? (advice ? 'Another hint' : 'Use a hint') : 'Ask again'}
+              {t(askKey)}
             </Button>
           )}
         </>
@@ -81,13 +83,18 @@ export function AdviceDialog({ gameId, open, onOpenChange, counted, onUsed }: {
     >
       <div className={styles.body} aria-live="polite">
         {counted && left !== undefined && (
-          <p className={styles.quiet}>{hintsLeftLabel(left)}</p>
+          <p className={styles.quiet}>
+            {left <= 0 ? t('match.advice.noneLeft') : t('match.advice.left', { count: left })}
+          </p>
         )}
-        {thinking && <p className={styles.quiet}>Thinking it over…</p>}
+        {thinking && <p className={styles.quiet}>{t('match.advice.thinking')}</p>}
         {error && <p className={styles.error} role="alert">{error}</p>}
         {advice && (
           <>
-            <p className={styles.heading}>{HEADINGS[advice.kind ?? 'NONE'] ?? 'Advice'}{advice.when ? <small> · {advice.when}</small> : null}</p>
+            <p className={styles.heading}>
+              {t(HEADING_KEYS[advice.kind ?? 'NONE'] ?? 'match.advice.defaultHeading')}
+              {advice.when ? <small> · {advice.when}</small> : null}
+            </p>
             {steps.length > 1 ? (
               <ol className={styles.steps}>
                 {steps.map((step, index) => <li key={`${step.objectId ?? ''}-${index}`}>{step.text}</li>)}
@@ -95,16 +102,11 @@ export function AdviceDialog({ gameId, open, onOpenChange, counted, onUsed }: {
             ) : (
               <p className={styles.text}>{advice.text}</p>
             )}
-            {advice.reason && <p className={styles.reason}>Why: {advice.reason}</p>}
-            {advice.millis !== undefined && <p className={styles.quiet}>Thought for {(advice.millis / 1000).toFixed(1)} s.</p>}
+            {advice.reason && <p className={styles.reason}>{t('match.advice.why', { reason: advice.reason })}</p>}
+            {advice.millis !== undefined && <p className={styles.quiet}>{t('match.advice.thoughtFor', { seconds: (advice.millis / 1000).toFixed(1) })}</p>}
           </>
         )}
       </div>
     </Dialog>
   );
-}
-
-function hintsLeftLabel(left: number): string {
-  if (left <= 0) return 'No hints left in this game.';
-  return left === 1 ? '1 hint left in this game.' : `${left} hints left in this game.`;
 }

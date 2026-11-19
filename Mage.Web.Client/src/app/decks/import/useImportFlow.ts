@@ -8,6 +8,7 @@ import { recognize, type Recognized } from '../../../core/deckImport/recognize';
 import { describeFailure, readingFromServer, type ImportFailure } from '../../../core/deckImport/remote';
 import { browserFixStore, importKey, resolveCards, type CardLookup, type PrintingPolicy } from '../../../core/deckImport/resolve';
 import { scryfallRenamedCard } from '../../../core/deckImport/scryfallNames';
+import { fetchSideboardyDeckReading } from '../../../core/deckImport/sideboardy';
 import { configuredImageProxy, proxiedScryfallUrl } from '../../../core/images/imageProxy';
 import { nameFromLink, siteById, type DeckSiteId } from '../../../core/deckImport/sites';
 import type { CardView } from '../../../protocol/generated/views';
@@ -93,9 +94,21 @@ export function useImportFlow() {
     setStep({ kind: 'loading', site: site.id });
     let reading: DeckReading;
     try {
-      reading = readingFromServer(await api.deckImportFromUrl(found.url), site.id, found.url);
+      if (site.id === 'sideboardy') {
+        try {
+          reading = await fetchSideboardyDeckReading(found.remoteId, found.url);
+        } catch {
+          reading = readingFromServer(await api.deckImportFromUrl(found.url), site.id, found.url);
+        }
+      } else {
+        reading = readingFromServer(await api.deckImportFromUrl(found.url), site.id, found.url);
+      }
     } catch (error) {
       if (ticket !== run.current) return;
+      if (site.id === 'sideboardy') {
+        setStep({ kind: 'input', failure: error instanceof Error ? error.message : 'Não foi possível importar o deck do Sideboardy.' });
+        return;
+      }
       const failure = describeFailure(error, site.id);
       setStep(failure.assisted
         ? { kind: 'assisted', site: site.id, url: found.url, remoteId: found.remoteId, failure }
@@ -105,6 +118,24 @@ export function useImportFlow() {
     if (ticket !== run.current) return;
     await draftFrom(reading, nameFromLink(found.url) ?? `${site.name} deck`);
   }, [text, degraded, draftFrom]);
+
+  const importSideboardyDeck = useCallback(async (deckId: string, deckName?: string) => {
+    const ticket = ++run.current;
+    setStep({ kind: 'loading', site: 'sideboardy' });
+    let reading: DeckReading;
+    try {
+      reading = await fetchSideboardyDeckReading(deckId);
+    } catch (error) {
+      if (ticket !== run.current) return;
+      setStep({
+        kind: 'input',
+        failure: error instanceof Error ? error.message : 'Não foi possível importar o deck do Sideboardy.',
+      });
+      return;
+    }
+    if (ticket !== run.current) return;
+    await draftFrom(reading, deckName || 'Deck do Sideboardy');
+  }, [draftFrom]);
 
   /** The list the player copied from a site that blocks us, joined to the link they gave. */
   const finishAssisted = useCallback(async (pasted: string) => {
@@ -187,7 +218,7 @@ export function useImportFlow() {
 
   return {
     text, setText, step, recognized, degraded,
-    submit, seed, cancel, backToInput, finishAssisted, updateDraft, pick, skip, setPrintings,
+    submit, importSideboardyDeck, seed, cancel, backToInput, finishAssisted, updateDraft, pick, skip, setPrintings,
     issues: step.kind === 'preview' ? issuesOf(step.draft) : [],
   };
 }

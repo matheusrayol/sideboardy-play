@@ -6,6 +6,7 @@ import type { CardView, CombatGroupView, GameEventView, GameView, PermanentView 
 import { api } from '../connection';
 import { MatchStage } from '../match/MatchStage';
 import { useSettings } from '../stores/settings';
+import { Select } from '../ui/Select';
 
 /**
  * Dev builds only (/dev/combat): combat and board effects (#413) on a real match stage, fed scripted views the way a
@@ -242,6 +243,20 @@ const SCENES: Record<string, () => Frame[]> = {
   },
 };
 
+const SCENE_LABEL: Record<string, string> = {
+  'Planeswalker (dies)': 'Planeswalker (morre)',
+  'Planeswalker (survives)': 'Planeswalker (sobrevive)',
+  'Double strike (two steps)': 'Golpe duplo (duas etapas)',
+  'Double strike (one update)': 'Golpe duplo (uma etapa)',
+  'Two blockers + trample': 'Dois bloqueadores + atropelar',
+  'Lifelink + deathtouch': 'Vínculo com a vida + toque mortífero',
+  'Hit weights': 'Peso dos golpes',
+  Lethal: 'Letal',
+  'Indestructible + infect': 'Indestrutível + infectar',
+  'Alpha strike (8)': 'Ataque total (8)',
+  'Board: land, token, counters, walker': 'Mesa: terreno, ficha, marcadores, walker',
+};
+
 export function CombatScene() {
   const session = useMemo(() => new GameSession(api, new EventBus(NO_EVENTS), { gameId: 'dev-combat', playerId: null, mode: 'replay' }), []);
   useEffect(() => () => session.dispose(), [session]);
@@ -272,17 +287,22 @@ export function CombatScene() {
   }, [session]);
 
   return (
-    <div style={{ position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column', background: '#0d1716' }}>
-      <div data-testid="combat-scenes" style={{ position: 'absolute', top: 0, left: 340, right: 340, zIndex: 10000, background: 'rgb(13 23 22 / 0.8)', display: 'flex', flexWrap: 'wrap', gap: 6, padding: 8, color: '#eee', fontFamily: 'system-ui', fontSize: 13 }}>
-        <label>
-          Combat effects{' '}
-          <select value={combatFx} onChange={(event) => update({ combatFx: event.target.value as 'fancy' | 'simple' })}>
-            <option value="fancy">fancy</option>
-            <option value="simple">plain</option>
-          </select>
-        </label>
+    <div style={{ position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column', background: 'var(--mat-950, #0c101e)' }}>
+      <div data-testid="combat-scenes" style={{ position: 'absolute', top: 0, left: 340, right: 340, zIndex: 150, background: 'rgb(12 16 30 / 0.85)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, padding: 8, color: 'var(--ink, #f7f5f0)', fontFamily: 'var(--font-ui)', fontSize: 13 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <span>Efeitos de combate</span>
+          <Select
+            value={combatFx}
+            aria-label="Efeitos de combate"
+            onChange={(event) => update({ combatFx: event.target.value as 'fancy' | 'simple' })}
+            style={{ height: 28, padding: '0 10px', fontSize: 13 }}
+          >
+            <option value="fancy">completos</option>
+            <option value="simple">simples</option>
+          </Select>
+        </div>
         {Object.keys(SCENES).map((name) => (
-          <button key={name} type="button" onClick={() => play(name)} style={{ fontWeight: name === scene ? 700 : 400 }}>{name}</button>
+          <button key={name} type="button" onClick={() => play(name)} style={{ fontWeight: name === scene ? 700 : 400 }}>{SCENE_LABEL[name] ?? name}</button>
         ))}
       </div>
       <div style={{ position: 'relative', flex: 1, minHeight: 0 }}>

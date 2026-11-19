@@ -76,6 +76,7 @@ env:
 
 jobs:
   meta:
+    if: github.repository == 'arcanite24/playmat'
     name: Version and tags
     runs-on: ubuntu-24.04
     outputs:

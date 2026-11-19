@@ -3,9 +3,11 @@ import { Check, Info, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isStackAbility } from '../../core/game/cards';
 import { keywordMarks } from '../../core/game/keywords';
-import { explainCard, LINE_KIND_HELP, LINE_KIND_LABEL, type LineKind, type Term } from '../../core/game/glossary';
+import { explainCard, LINE_KIND_HELP, type LineKind, type Term } from '../../core/game/glossary';
 import { stripMarkup } from '../../core/game/prompt';
 import type { CardView, GameView, PermanentView } from '../../protocol/generated/views';
+import { useT, type MessageKey, type Translate } from '../i18n';
+import './matchMessages';
 import { AbilityCard } from '../ui/AbilityCard';
 import { showsBackFace } from '../../core/images/imageLinks';
 import { CardFace } from '../ui/CardFace';
@@ -39,39 +41,49 @@ function typeLine(card: CardView): string {
   return right ? `${left} — ${right}` : left;
 }
 
+const KIND_KEY: Record<LineKind, MessageKey> = {
+  keyword: 'match.detail.kind.keyword',
+  triggered: 'match.detail.kind.triggered',
+  activated: 'match.detail.kind.activated',
+  loyalty: 'match.detail.kind.loyalty',
+  chapter: 'match.detail.kind.chapter',
+  spell: 'match.detail.kind.spell',
+  static: 'match.detail.kind.static',
+};
+
 /** What the picture can't show: state on the table, changed numbers, who has it, what is attached. */
-function stateOf(card: PermanentView, view: GameView | null, attacking: ReadonlySet<string>, blocking: ReadonlySet<string>) {
+function stateOf(t: Translate, card: PermanentView, view: GameView | null, attacking: ReadonlySet<string>, blocking: ReadonlySet<string>) {
   const chips: { label: string; tone?: 'damage' | 'good' }[] = [];
   const id = card.id ?? '';
-  if (attacking.has(id)) chips.push({ label: 'Attacking', tone: 'damage' });
-  if (blocking.has(id)) chips.push({ label: 'Blocking' });
-  if (card.tapped) chips.push({ label: 'Tapped' });
+  if (attacking.has(id)) chips.push({ label: t('match.detail.attacking'), tone: 'damage' });
+  if (blocking.has(id)) chips.push({ label: t('match.detail.blocking') });
+  if (card.tapped) chips.push({ label: t('match.detail.tapped') });
   const creature = (card.cardTypes ?? []).includes('CREATURE');
-  if (card.summoningSickness && creature && card.zone === 'BATTLEFIELD') chips.push({ label: 'Summoning sick' });
-  if ((card.damage ?? 0) > 0) chips.push({ label: `${card.damage} damage`, tone: 'damage' });
+  if (card.summoningSickness && creature && card.zone === 'BATTLEFIELD') chips.push({ label: t('match.detail.summoningSick') });
+  if ((card.damage ?? 0) > 0) chips.push({ label: t('match.detail.damage', { damage: card.damage ?? 0 }), tone: 'damage' });
   for (const counter of card.counters ?? []) {
     if ((counter.count ?? 0) > 0) chips.push({ label: `${counter.count} × ${counter.name}` });
   }
   for (const mark of keywordMarks(card)) {
-    if (mark.gained) chips.push({ label: `Gained ${mark.name.toLowerCase()}`, tone: 'good' });
+    if (mark.gained) chips.push({ label: t('match.detail.gained', { keyword: mark.name.toLowerCase() }), tone: 'good' });
   }
-  if (card.isToken) chips.push({ label: 'Token' });
-  if (card.copy || card.originalIsCopy) chips.push({ label: 'Copy' });
-  if (card.faceDown) chips.push({ label: 'Face down' });
-  if (card.phasedIn === false) chips.push({ label: 'Phased out' });
+  if (card.isToken) chips.push({ label: t('match.detail.token') });
+  if (card.copy || card.originalIsCopy) chips.push({ label: t('match.detail.copy') });
+  if (card.faceDown) chips.push({ label: t('match.detail.faceDown') });
+  if (card.phasedIn === false) chips.push({ label: t('match.detail.phasedOut') });
 
   const names = (ids: readonly string[] | undefined) => (ids ?? []).map((other) => findCard(view, other, [])?.name).filter(Boolean) as string[];
   const notes: string[] = [];
   if (card.nameController && card.nameOwner && card.nameController !== card.nameOwner) {
-    notes.push(`Controlled by ${card.nameController}, owned by ${card.nameOwner}.`);
+    notes.push(t('match.detail.controlledBy', { controller: card.nameController, owner: card.nameOwner }));
   }
   if (card.attachedTo) {
     const target = findCard(view, card.attachedTo, [])?.name
       ?? view?.players?.find((player) => player.playerId === card.attachedTo)?.name;
-    if (target) notes.push(`Attached to ${target}.`);
+    if (target) notes.push(t('match.detail.attachedTo', { target }));
   }
   const attachments = names(card.attachments);
-  if (attachments.length > 0) notes.push(`With ${attachments.join(', ')} attached.`);
+  if (attachments.length > 0) notes.push(t('match.detail.withAttached', { names: attachments.join(', ') }));
 
   let stats: { label: string; value: string; base?: string } | null = null;
   const printed = (value: string | undefined, original: CardView['originalPower']) => value
@@ -81,11 +93,11 @@ function stateOf(card: PermanentView, view: GameView | null, attacking: Readonly
     const power = printed(card.original?.power, card.originalPower);
     const toughness = printed(card.original?.toughness, card.originalToughness);
     const base = power !== undefined && toughness !== undefined ? `${power}/${toughness}` : undefined;
-    stats = { label: 'Power / Toughness', value, base: base && base !== value ? base : undefined };
+    stats = { label: t('match.detail.pt'), value, base: base && base !== value ? base : undefined };
   } else if ((card.cardTypes ?? []).includes('PLANESWALKER') && card.loyalty) {
-    stats = { label: 'Loyalty', value: card.loyalty, base: card.startingLoyalty && card.startingLoyalty !== card.loyalty ? card.startingLoyalty : undefined };
+    stats = { label: t('match.detail.loyalty'), value: card.loyalty, base: card.startingLoyalty && card.startingLoyalty !== card.loyalty ? card.startingLoyalty : undefined };
   } else if ((card.cardTypes ?? []).includes('BATTLE') && card.defense) {
-    stats = { label: 'Defense', value: card.defense, base: card.startingDefense && card.startingDefense !== card.defense ? card.startingDefense : undefined };
+    stats = { label: t('match.detail.defense'), value: card.defense, base: card.startingDefense && card.startingDefense !== card.defense ? card.startingDefense : undefined };
   }
   return { chips, notes, stats };
 }
@@ -102,6 +114,7 @@ export function CardDetail({ view, extra, sleeveOf, attacking, blocking }: {
   attacking: ReadonlySet<string>;
   blocking: ReadonlySet<string>;
 }) {
+  const t = useT();
   const stage = useStage();
   const detail = useMatchUi((state) => state.detail);
   const openDetail = useMatchUi((state) => state.openDetail);
@@ -162,14 +175,14 @@ export function CardDetail({ view, extra, sleeveOf, attacking, blocking }: {
   const close = () => setTimeout(() => openDetail(null), 0);
   const ability = isStackAbility(live);
   const permanent = live as PermanentView;
-  const { chips, notes, stats } = stateOf(permanent, view, attacking, blocking);
+  const { chips, notes, stats } = stateOf(t, permanent, view, attacking, blocking);
   const kinds = [...new Set(explanation.lines.map((line) => line.kind))]
     .filter((kind): kind is Exclude<LineKind, 'keyword' | 'spell' | 'static'> => !['keyword', 'spell', 'static'].includes(kind));
   const terms: Term[] = [
     ...explanation.terms,
-    ...kinds.map((kind) => ({ name: `${LINE_KIND_LABEL[kind]} ability`, text: LINE_KIND_HELP[kind] })),
+    ...kinds.map((kind) => ({ name: t('match.detail.kindAbility', { kind: t(KIND_KEY[kind]) }), text: LINE_KIND_HELP[kind] })),
   ];
-  const name = ability ? (live as CardView & { sourceCard?: CardView }).sourceCard?.name ?? 'Ability' : card.displayName ?? card.name ?? '';
+  const name = ability ? (live as CardView & { sourceCard?: CardView }).sourceCard?.name ?? t('match.detail.ability') : card.displayName ?? card.name ?? '';
   const sleeve = sleeveOf(live);
   const canTurn = !!live.secondCardFace && !ability;
 
@@ -203,12 +216,12 @@ export function CardDetail({ view, extra, sleeveOf, attacking, blocking }: {
             </div>
             {styled && !backFace && (
               <button type="button" className={styles.turn} aria-pressed={asPrinted} onClick={() => setAsPrinted((value) => !value)}>
-                {asPrinted ? 'Show the card style' : 'Show the printed card'}
+                {t(asPrinted ? 'match.detail.showStyle' : 'match.detail.showPrinted')}
               </button>
             )}
             {canTurn && (
               <button type="button" className={styles.turn} onClick={() => setBackFace((value) => !value)}>
-                {backFace ? 'Show the front face' : 'Show the back face'}
+                {t(backFace ? 'match.detail.showFront' : 'match.detail.showBack')}
               </button>
             )}
           </div>
@@ -219,16 +232,16 @@ export function CardDetail({ view, extra, sleeveOf, attacking, blocking }: {
                 <RadixDialog.Title className={styles.name}>{name}</RadixDialog.Title>
                 {!ability && <ManaCost cost={card.manaCostLeftStr} size="lg" />}
               </div>
-              <p className={styles.type}>{ability ? (card.abilityType?.startsWith('TRIGGERED') ? 'Triggered ability' : 'Activated ability') : typeLine(card)}</p>
+              <p className={styles.type}>{ability ? t(card.abilityType?.startsWith('TRIGGERED') ? 'match.detail.triggered' : 'match.detail.activated') : typeLine(card)}</p>
             </header>
 
             {(stats || chips.length > 0 || notes.length > 0 || explanation.hints.length > 0) && (
-              <section className={styles.state} aria-label="On the table">
+              <section className={styles.state} aria-label={t('match.detail.onTable')}>
                 {stats && (
                   <p className={styles.stats}>
                     <span className={styles.statsLabel}>{stats.label}</span>
                     <span className={styles.statsValue}>{stats.value}</span>
-                    {stats.base && <span className={styles.statsBase}>printed {stats.base}</span>}
+                    {stats.base && <span className={styles.statsBase}>{t('match.detail.printed', { base: stats.base })}</span>}
                   </p>
                 )}
                 {chips.length > 0 && (
@@ -241,7 +254,7 @@ export function CardDetail({ view, extra, sleeveOf, attacking, blocking }: {
                   <ul className={styles.hints}>
                     {explanation.hints.map((hint) => (
                       <li key={hint.text} className={styles[hint.tone]}>
-                        {hint.tone === 'good' ? <Check size={20} aria-label="True now" /> : hint.tone === 'bad' ? <X size={20} aria-label="Not true now" /> : <Info size={20} aria-hidden="true" />}
+                        {hint.tone === 'good' ? <Check size={20} aria-label={t('match.detail.trueNow')} /> : hint.tone === 'bad' ? <X size={20} aria-label={t('match.detail.notTrueNow')} /> : <Info size={20} aria-hidden="true" />}
                         <span><PromptText text={hint.text} /></span>
                       </li>
                     ))}
@@ -252,11 +265,11 @@ export function CardDetail({ view, extra, sleeveOf, attacking, blocking }: {
 
             {explanation.lines.length > 0 && (
               <section className={styles.section}>
-                <h3 className={styles.sectionTitle}>Card text</h3>
+                <h3 className={styles.sectionTitle}>{t('match.detail.cardText')}</h3>
                 <ol className={styles.lines}>
                   {explanation.lines.map((line, index) => (
                     <li key={index} className={styles.line}>
-                      <span className={styles.kind}>{LINE_KIND_LABEL[line.kind]}</span>
+                      <span className={styles.kind}>{t(KIND_KEY[line.kind])}</span>
                       <span className={styles.lineText}><TermText text={stripMarkup(line.text)} card={card} /></span>
                     </li>
                   ))}
@@ -266,7 +279,7 @@ export function CardDetail({ view, extra, sleeveOf, attacking, blocking }: {
 
             {terms.length > 0 && (
               <section className={styles.section}>
-                <h3 className={styles.sectionTitle}>Mechanics</h3>
+                <h3 className={styles.sectionTitle}>{t('match.detail.mechanics')}</h3>
                 <dl className={styles.terms}>
                   {terms.map((term) => (
                     <div key={term.name} className={styles.term}>
@@ -279,7 +292,7 @@ export function CardDetail({ view, extra, sleeveOf, attacking, blocking }: {
             )}
           </div>
 
-          <RadixDialog.Close className={styles.close} aria-label="Close">
+          <RadixDialog.Close className={styles.close} aria-label={t('match.detail.close')}>
             <X size={26} />
           </RadixDialog.Close>
         </RadixDialog.Content>

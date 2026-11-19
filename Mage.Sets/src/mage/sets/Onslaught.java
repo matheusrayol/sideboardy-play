@@ -46,7 +46,7 @@ public final class Onslaught extends ExpansionSet {
         cards.add(new SetCardInfo("Aphetto Grifter", 65, Rarity.UNCOMMON, mage.cards.a.AphettoGrifter.class, RETRO_ART));
         cards.add(new SetCardInfo("Aphetto Vulture", 126, Rarity.UNCOMMON, mage.cards.a.AphettoVulture.class, RETRO_ART));
         cards.add(new SetCardInfo("Arcanis the Omnipotent", 66, Rarity.RARE, mage.cards.a.ArcanisTheOmnipotent.class, RETRO_ART));
-//        cards.add(new SetCardInfo("Artificial Evolution", 67, Rarity.RARE, mage.cards.a.ArtificialEvolution.class, RETRO_ART));
+        cards.add(new SetCardInfo("Artificial Evolution", 67, Rarity.RARE, mage.cards.a.ArtificialEvolution.class, RETRO_ART));
         cards.add(new SetCardInfo("Ascending Aven", 68, Rarity.COMMON, mage.cards.a.AscendingAven.class, RETRO_ART));
         cards.add(new SetCardInfo("Astral Slide", 4, Rarity.UNCOMMON, mage.cards.a.AstralSlide.class, RETRO_ART));
         cards.add(new SetCardInfo("Aura Extraction", 5, Rarity.UNCOMMON, mage.cards.a.AuraExtraction.class, RETRO_ART));

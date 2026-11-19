@@ -24,6 +24,7 @@ import { RichText } from '../i18n/RichText';
 import { Button } from '../ui/Button';
 import { CARD_BACKS, cardBackImage, type CardBackId } from '../ui/cardBack';
 import { Dialog } from '../ui/Dialog';
+import { Select } from '../ui/Select';
 import { TokenArtPicker } from '../ui/TokenArtPicker';
 import { useTokenArt } from '../stores/tokenArt';
 import { useServerInfo } from '../queries';
@@ -31,6 +32,7 @@ import { AccountSettings } from './AccountSettings';
 import { useSupportPerks } from '../support/supportData';
 import { LockedSwatch } from '../support/SupporterPicks';
 import { owns } from '../support/supportModel';
+import { PlaygroupSettings } from '../playgroup/PlaygroupSettings';
 import styles from './SettingsDialog.module.css';
 
 registerMessages(messages);
@@ -102,6 +104,7 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
           <Tabs.Trigger value="tokens" className={styles.trigger}>{t('settings.tab.tokens')}</Tabs.Trigger>
           <Tabs.Trigger value="sound" className={styles.trigger}>{t('settings.tab.sound')}</Tabs.Trigger>
           <Tabs.Trigger value="alerts" className={styles.trigger}>{t('settings.tab.alerts')}</Tabs.Trigger>
+          <Tabs.Trigger value="playgroup" className={styles.trigger}>{t('settings.tab.playgroup')}</Tabs.Trigger>
           <Tabs.Trigger value="import" className={styles.trigger}>{t('settings.tab.import')}</Tabs.Trigger>
           <Tabs.Trigger value="language" className={styles.trigger}>{t('settings.tab.language')}</Tabs.Trigger>
           {accounts && <Tabs.Trigger value="cosmetics" className={styles.trigger}>{t('settings.tab.cosmetics')}</Tabs.Trigger>}
@@ -193,7 +196,7 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
           <Row label={t('settings.hideStarterDecks')} detail={t('settings.hideStarterDecks.detail')}>{toggle('hideStarterDecks')}</Row>
           <Row label={t('settings.motion')} detail={t('settings.motion.detail')}>{toggle('animations')}</Row>
           <Row label={t('settings.cardEffects')} detail={t('settings.cardEffects.detail')}>
-            <select
+            <Select
               className={styles.select}
               value={settings.animations ? settings.cardEffects : 'off'}
               disabled={!settings.animations}
@@ -203,10 +206,10 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
               <option value="signature">{t('settings.cardEffects.signature')}</option>
               <option value="simple">{t('settings.cardEffects.simple')}</option>
               <option value="off">{t('settings.cardEffects.off')}</option>
-            </select>
+            </Select>
           </Row>
           <Row label={t('settings.combatFx')} detail={t('settings.combatFx.detail')}>
-            <select
+            <Select
               className={styles.select}
               value={settings.combatFx}
               disabled={!settings.animations}
@@ -215,12 +218,12 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
             >
               <option value="fancy">{t('settings.combatFx.fancy')}</option>
               <option value="simple">{t('settings.combatFx.simple')}</option>
-            </select>
+            </Select>
           </Row>
           <Row label={t('settings.sortHand')} detail={t('settings.sortHand.detail')}>{toggle('sortHand')}</Row>
           <Row label={t('settings.bigZoom')} detail={t('settings.bigZoom.detail')}>{toggle('bigZoom')}</Row>
           <Row label={t('settings.matchSize')} detail={t('settings.matchSize.detail')}>
-            <select
+            <Select
               className={styles.select}
               value={settings.matchSize}
               aria-label={t('settings.matchSize')}
@@ -229,14 +232,14 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
               <option value="fit">{t('settings.matchSize.fit')}</option>
               <option value="larger">{t('settings.matchSize.larger')}</option>
               <option value="largest">{t('settings.matchSize.largest')}</option>
-            </select>
+            </Select>
           </Row>
           <Row label={t('settings.autoDismissReveals')} detail={t('settings.autoDismissReveals.detail')}>{toggle('autoDismissReveals')}</Row>
           <Row label={t('settings.compactBoard')} detail={t('settings.compactBoard.detail')}>{toggle('compactBoard')}</Row>
           <Row label={t('settings.muteEmotes')} detail={t('settings.muteEmotes.detail')}>{toggle('muteEmotes')}</Row>
           <Row label={t('settings.paintedArt')} detail={t('settings.paintedArt.detail')}>{toggle('paintedArt')}</Row>
           <Row label={t('settings.cardStyles')} detail={t('settings.cardStyles.detail')}>
-            <select
+            <Select
               className={styles.select}
               value={settings.paintedArt ? settings.cardStyles : 'off'}
               disabled={!settings.paintedArt}
@@ -246,7 +249,7 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
               <option value="all">{t('settings.cardStyles.all')}</option>
               <option value="mine">{t('settings.cardStyles.mine')}</option>
               <option value="off">{t('settings.cardStyles.off')}</option>
-            </select>
+            </Select>
           </Row>
           {DEVICE_PICTURES && <PictureStoreRow />}
         </Tabs.Content>
@@ -343,13 +346,17 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
           )}
         </Tabs.Content>
 
+        <Tabs.Content value="playgroup" className={styles.panel}>
+          <PlaygroupSettings />
+        </Tabs.Content>
+
         <Tabs.Content value="import" className={styles.panel}>
           <Bookmarklet />
         </Tabs.Content>
 
         <Tabs.Content value="language" className={styles.panel}>
           <Row label={t('settings.language')} detail={t('settings.language.detail')}>
-            <select
+            <Select
               className={styles.select}
               value={settings.locale}
               aria-label={t('settings.language')}
@@ -357,7 +364,7 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
             >
               <option value="auto">{t('settings.language.auto', { language: languageName(browserLocale(navigator.languages ?? [navigator.language])) })}</option>
               {LOCALES.map((locale) => <option key={locale.code} value={locale.code} lang={locale.code}>{locale.name}</option>)}
-            </select>
+            </Select>
           </Row>
         </Tabs.Content>
 
@@ -559,7 +566,7 @@ function PlaymatSettings() {
         </div>
       </Row>
       <Row label={t('settings.playmat.art')} detail={t('settings.playmat.art.detail')}>
-        <select
+        <Select
           className={styles.select}
           value={settings.matArt === 'card' && !settings.matCard ? 'deck' : settings.matArt}
           aria-label={t('settings.playmat.art')}
@@ -570,7 +577,7 @@ function PlaymatSettings() {
               {value === 'card' && settings.matCard?.name ? `${t(key)}: ${settings.matCard.name}` : t(key)}
             </option>
           ))}
-        </select>
+        </Select>
       </Row>
       <form
         className={styles.matCard}
@@ -601,7 +608,7 @@ function PlaymatSettings() {
         <div className={styles.rowLabel} id={`${listId}-backs`}>{t('settings.playmat.back')}</div>
         <div className={styles.rowDetail}>{t('settings.playmat.back.detail')}</div>
         <div className={styles.backGrid} role="radiogroup" aria-labelledby={`${listId}-backs`}>
-          {([...CARD_BACKS, 'classic'] as CardBackId[]).map((id) => {
+          {(['sideboardy', ...CARD_BACKS, 'classic'] as CardBackId[]).map((id) => {
             const label = t(`settings.playmat.back.${id}` as MessageKey);
             return (
               <button

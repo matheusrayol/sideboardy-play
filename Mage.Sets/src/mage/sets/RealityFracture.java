@@ -122,6 +122,8 @@ public final class RealityFracture extends ExpansionSet {
         cards.add(new SetCardInfo("Essence Burn", 369, Rarity.UNCOMMON, mage.cards.e.EssenceBurn.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Essence Burn", 82, Rarity.UNCOMMON, mage.cards.e.EssenceBurn.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Extended Absence", 54, Rarity.COMMON, mage.cards.e.ExtendedAbsence.class));
+        cards.add(new SetCardInfo("Extrapolate the Impossible", 364, Rarity.RARE, mage.cards.e.ExtrapolateTheImpossible.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Extrapolate the Impossible", 55, Rarity.RARE, mage.cards.e.ExtrapolateTheImpossible.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Eye of Jace", 170, Rarity.UNCOMMON, mage.cards.e.EyeOfJace.class));
         cards.add(new SetCardInfo("Face Yourself", 370, Rarity.RARE, mage.cards.f.FaceYourself.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Face Yourself", 83, Rarity.RARE, mage.cards.f.FaceYourself.class, NON_FULL_USE_VARIOUS));
@@ -241,6 +243,7 @@ public final class RealityFracture extends ExpansionSet {
         cards.add(new SetCardInfo("Liliana the Repentant", 231, Rarity.RARE, mage.cards.l.LilianaTheRepentant.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Liliana the Repentant", 305, Rarity.RARE, mage.cards.l.LilianaTheRepentant.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Living Library", 172, Rarity.COMMON, mage.cards.l.LivingLibrary.class));
+        cards.add(new SetCardInfo("Loot, the Anomaly", 232, Rarity.UNCOMMON, mage.cards.l.LootTheAnomaly.class));
         cards.add(new SetCardInfo("Loot, the Nexus", 262, Rarity.UNCOMMON, mage.cards.l.LootTheNexus.class));
         cards.add(new SetCardInfo("Loyal Tutor", 14, Rarity.RARE, mage.cards.l.LoyalTutor.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Loyal Tutor", 404, Rarity.MYTHIC, mage.cards.l.LoyalTutor.class, NON_FULL_USE_VARIOUS));
@@ -272,6 +275,8 @@ public final class RealityFracture extends ExpansionSet {
         cards.add(new SetCardInfo("Multiply by Zero", 58, Rarity.UNCOMMON, mage.cards.m.MultiplyByZero.class));
         cards.add(new SetCardInfo("Murmuring Volume", 174, Rarity.COMMON, mage.cards.m.MurmuringVolume.class));
         cards.add(new SetCardInfo("No Admittance", 89, Rarity.COMMON, mage.cards.n.NoAdmittance.class));
+        cards.add(new SetCardInfo("Null Summoner", 142, Rarity.RARE, mage.cards.n.NullSummoner.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Null Summoner", 353, Rarity.RARE, mage.cards.n.NullSummoner.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Omnipresence", 110, Rarity.MYTHIC, mage.cards.o.Omnipresence.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Omnipresence", 331, Rarity.MYTHIC, mage.cards.o.Omnipresence.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Omnipresence", 448, Rarity.MYTHIC, mage.cards.o.Omnipresence.class, NON_FULL_USE_VARIOUS));
@@ -341,6 +346,10 @@ public final class RealityFracture extends ExpansionSet {
         cards.add(new SetCardInfo("Sanctum Lurker", 342, Rarity.RARE, mage.cards.s.SanctumLurker.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Sanctum Lurker", 64, Rarity.RARE, mage.cards.s.SanctumLurker.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Screeching Soulbreaker", 65, Rarity.COMMON, mage.cards.s.ScreechingSoulbreaker.class));
+        cards.add(new SetCardInfo("Seasoned Cryomancer", 324, Rarity.MYTHIC, mage.cards.s.SeasonedCryomancer.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Seasoned Cryomancer", 38, Rarity.MYTHIC, mage.cards.s.SeasonedCryomancer.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Seasoned Cryomancer", 441, Rarity.MYTHIC, mage.cards.s.SeasonedCryomancer.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Seasoned Cryomancer", 452, Rarity.MYTHIC, mage.cards.s.SeasonedCryomancer.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Semester Foreseer", 39, Rarity.COMMON, mage.cards.s.SemesterForeseer.class));
         cards.add(new SetCardInfo("Shatterwing Pegasus", 21, Rarity.COMMON, mage.cards.s.ShatterwingPegasus.class));
         cards.add(new SetCardInfo("Shipwreck Marsh", 189, Rarity.RARE, mage.cards.s.ShipwreckMarsh.class, NON_FULL_USE_VARIOUS));

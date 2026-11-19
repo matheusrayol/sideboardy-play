@@ -36,9 +36,9 @@ public final class CommanderLegendsBattleForBaldursGate extends ExpansionSet {
         cards.add(new SetCardInfo("Agent of the Shadow Thieves", 108, Rarity.UNCOMMON, mage.cards.a.AgentOfTheShadowThieves.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Agent of the Shadow Thieves", 493, Rarity.UNCOMMON, mage.cards.a.AgentOfTheShadowThieves.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Agitator Ant", 776, Rarity.RARE, mage.cards.a.AgitatorAnt.class));
-        //cards.add(new SetCardInfo("Alaundo the Seer", 264, Rarity.RARE, mage.cards.a.AlaundoTheSeer.class, NON_FULL_USE_VARIOUS));
-        //cards.add(new SetCardInfo("Alaundo the Seer", 412, Rarity.RARE, mage.cards.a.AlaundoTheSeer.class, NON_FULL_USE_VARIOUS));
-        //cards.add(new SetCardInfo("Alaundo the Seer", 523, Rarity.RARE, mage.cards.a.AlaundoTheSeer.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Alaundo the Seer", 264, Rarity.RARE, mage.cards.a.AlaundoTheSeer.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Alaundo the Seer", 412, Rarity.RARE, mage.cards.a.AlaundoTheSeer.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Alaundo the Seer", 523, Rarity.RARE, mage.cards.a.AlaundoTheSeer.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Alora, Merry Thief", 381, Rarity.UNCOMMON, mage.cards.a.AloraMerryThief.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Alora, Merry Thief", 481, Rarity.UNCOMMON, mage.cards.a.AloraMerryThief.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Alora, Merry Thief", 55, Rarity.UNCOMMON, mage.cards.a.AloraMerryThief.class, NON_FULL_USE_VARIOUS));
@@ -281,8 +281,8 @@ public final class CommanderLegendsBattleForBaldursGate extends ExpansionSet {
         cards.add(new SetCardInfo("Dungeon Delver", 483, Rarity.UNCOMMON, mage.cards.d.DungeonDelver.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Dungeon Delver", 67, Rarity.UNCOMMON, mage.cards.d.DungeonDelver.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Dungeoneer's Pack", 312, Rarity.UNCOMMON, mage.cards.d.DungeoneersPack.class));
-        //cards.add(new SetCardInfo("Durnan of the Yawning Portal", 635, Rarity.MYTHIC, mage.cards.d.DurnanOfTheYawningPortal.class, NON_FULL_USE_VARIOUS));
-        //cards.add(new SetCardInfo("Durnan of the Yawning Portal", 657, Rarity.MYTHIC, mage.cards.d.DurnanOfTheYawningPortal.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Durnan of the Yawning Portal", 635, Rarity.MYTHIC, mage.cards.d.DurnanOfTheYawningPortal.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Durnan of the Yawning Portal", 657, Rarity.MYTHIC, mage.cards.d.DurnanOfTheYawningPortal.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Dusk // Dawn", 691, Rarity.RARE, mage.cards.d.DuskDawn.class));
         cards.add(new SetCardInfo("Dusk Mangler", 751, Rarity.UNCOMMON, mage.cards.d.DuskMangler.class));
         cards.add(new SetCardInfo("Dynaheir, Invoker Adept", 273, Rarity.RARE, mage.cards.d.DynaheirInvokerAdept.class, NON_FULL_USE_VARIOUS));

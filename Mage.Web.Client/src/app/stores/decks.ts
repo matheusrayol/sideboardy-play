@@ -16,6 +16,12 @@ export interface StarterDeck {
   cover: { name: string; setCode: string; cardNumber: string };
   /** the deck type it is built for; Freeform when absent */
   format?: string;
+  /** release / product name for precons ("Tarkir Dragonstorm (2025)") */
+  set?: string;
+  /** mana color letters ("W", "U", "B", "R", "G") */
+  colors?: string[];
+  /** default shelf tags ("Commander", "Precon", "Starter") */
+  tags?: string[];
 }
 
 /** A deck in the roster: one the player saved, or a starter deck not saved yet. */
@@ -73,15 +79,16 @@ function summaryToRoster(deck: DeckSummary): RosterDeck {
 }
 
 function starterToRoster(starter: StarterDeck): RosterDeck {
+  const kind = isCommanderFormat(starter.format) ? 'Commander starter' : 'Starter deck';
   return {
     id: STARTER_PREFIX + starter.file,
     name: starter.name,
-    note: `${isCommanderFormat(starter.format) ? 'Commander starter' : 'Starter deck'} · ${starter.cards} cards`,
+    note: `${starter.set ?? kind} · ${starter.cards} cards`,
     cardCount: starter.cards,
     cover: starter.cover,
-    colors: [],
+    colors: starter.colors ?? [],
     starter,
-    tags: [],
+    tags: cleanTags(starter.tags),
     draft: false,
   };
 }
@@ -143,7 +150,14 @@ async function shippedDeck(folder: string, deck: StarterDeck | MetaDeck): Promis
   const response = await fetch(`/${folder}/${encodeURIComponent(deck.file)}`);
   const text = response.ok ? await response.text() : '';
   if (!text || /^\s*</.test(text)) throw new Error(`Couldn't load ${deck.name}.`);
-  return { ...DeckSerializer.importDeck(text), name: deck.name, coverCard: deck.cover, format: deck.format ?? 'Constructed - Freeform' };
+  const tags = 'tags' in deck && deck.tags?.length ? cleanTags(deck.tags) : undefined;
+  return {
+    ...DeckSerializer.importDeck(text),
+    name: deck.name,
+    coverCard: deck.cover,
+    format: deck.format ?? 'Constructed - Freeform',
+    ...(tags ? { tags } : {}),
+  };
 }
 
 /** The deck type a starter deck is built for. */

@@ -73,6 +73,7 @@ public final class ArabianNights extends ExpansionSet {
         cards.add(new SetCardInfo("Island of Wak-Wak", 75, Rarity.RARE, mage.cards.i.IslandOfWakWak.class, RETRO_ART));
         cards.add(new SetCardInfo("Jandor's Ring", 64, Rarity.RARE, mage.cards.j.JandorsRing.class, RETRO_ART));
         cards.add(new SetCardInfo("Jandor's Saddlebags", 65, Rarity.RARE, mage.cards.j.JandorsSaddlebags.class, RETRO_ART));
+        cards.add(new SetCardInfo("Jeweled Bird", 66, Rarity.RARE, mage.cards.j.JeweledBird.class, RETRO_ART));
         cards.add(new SetCardInfo("Jihad", 5, Rarity.RARE, mage.cards.j.Jihad.class, RETRO_ART));
         cards.add(new SetCardInfo("Junun Efreet", 28, Rarity.RARE, mage.cards.j.JununEfreet.class, RETRO_ART));
         cards.add(new SetCardInfo("Juzam Djinn", 29, Rarity.RARE, mage.cards.j.JuzamDjinn.class, RETRO_ART));
@@ -104,6 +105,7 @@ public final class ArabianNights extends ExpansionSet {
         cards.add(new SetCardInfo("Sandstorm", 53, Rarity.COMMON, mage.cards.s.Sandstorm.class, RETRO_ART));
         cards.add(new SetCardInfo("Serendib Djinn", 19, Rarity.RARE, mage.cards.s.SerendibDjinn.class, RETRO_ART));
         cards.add(new SetCardInfo("Serendib Efreet", 20, Rarity.RARE, mage.cards.s.SerendibEfreet.class, RETRO_ART));
+        cards.add(new SetCardInfo("Shahrazad", 10, Rarity.RARE, mage.cards.s.Shahrazad.class, RETRO_ART));
         cards.add(new SetCardInfo("Sindbad", 21, Rarity.UNCOMMON, mage.cards.s.Sindbad.class, RETRO_ART));
         cards.add(new SetCardInfo("Singing Tree", 54, Rarity.RARE, mage.cards.s.SingingTree.class, RETRO_ART));
         cards.add(new SetCardInfo("Sorceress Queen", 32, Rarity.UNCOMMON, mage.cards.s.SorceressQueen.class, RETRO_ART));

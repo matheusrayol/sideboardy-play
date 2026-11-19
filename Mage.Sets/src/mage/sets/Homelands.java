@@ -152,6 +152,7 @@ public final class Homelands extends ExpansionSet {
         cards.add(new SetCardInfo("Shrink", "97b", Rarity.COMMON, mage.cards.s.Shrink.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Soraya the Falconer", 18, Rarity.RARE, mage.cards.s.SorayaTheFalconer.class, RETRO_ART));
         cards.add(new SetCardInfo("Spectral Bears", 98, Rarity.UNCOMMON, mage.cards.s.SpectralBears.class, RETRO_ART));
+        cards.add(new SetCardInfo("Timmerian Fiends", 58, Rarity.RARE, mage.cards.t.TimmerianFiends.class, RETRO_ART));
         cards.add(new SetCardInfo("Torture", "59a", Rarity.COMMON, mage.cards.t.Torture.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Torture", "59b", Rarity.COMMON, mage.cards.t.Torture.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Trade Caravan", "19a", Rarity.COMMON, mage.cards.t.TradeCaravan.class, RETRO_ART_USE_VARIOUS));

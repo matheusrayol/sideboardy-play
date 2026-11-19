@@ -91,7 +91,7 @@ public class DominariaPromos extends ExpansionSet {
         cards.add(new SetCardInfo("Rite of Belzenlok", "102s", Rarity.RARE, mage.cards.r.RiteOfBelzenlok.class));
         cards.add(new SetCardInfo("Rona, Disciple of Gix", "203s", Rarity.UNCOMMON, mage.cards.r.RonaDiscipleOfGix.class));
         // Japanese-only printing
-        //cards.add(new SetCardInfo("Serra Angel", "33c", Rarity.UNCOMMON, mage.cards.s.SerraAngel.class));
+        cards.add(new SetCardInfo("Serra Angel", "33c", Rarity.UNCOMMON, mage.cards.s.SerraAngel.class));
         cards.add(new SetCardInfo("Shalai, Voice of Plenty", "35p", Rarity.RARE, mage.cards.s.ShalaiVoiceOfPlenty.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Shalai, Voice of Plenty", "35s", Rarity.RARE, mage.cards.s.ShalaiVoiceOfPlenty.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Shanna, Sisay's Legacy", 204, Rarity.UNCOMMON, mage.cards.s.ShannaSisaysLegacy.class, NON_FULL_USE_VARIOUS));

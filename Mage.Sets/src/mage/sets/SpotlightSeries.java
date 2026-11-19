@@ -24,10 +24,15 @@ public final class SpotlightSeries extends ExpansionSet {
 
         cards.add(new SetCardInfo("Cloud, Midgar Mercenary", 4, Rarity.MYTHIC, mage.cards.c.CloudMidgarMercenary.class));
         cards.add(new SetCardInfo("Day of Black Sun", 7, Rarity.RARE, mage.cards.d.DayOfBlackSun.class));
+        cards.add(new SetCardInfo("Elektra, Daughter of the Hand", 11, Rarity.RARE, mage.cards.e.ElektraDaughterOfTheHand.class));
         cards.add(new SetCardInfo("Get Lost", 5, Rarity.RARE, mage.cards.g.GetLost.class));
+        cards.add(new SetCardInfo("Harbinger of the Seas", 15, Rarity.RARE, mage.cards.h.HarbingerOfTheSeas.class));
+        cards.add(new SetCardInfo("Jace Beleren", 13, Rarity.MYTHIC, mage.cards.j.JaceBeleren.class));
+        cards.add(new SetCardInfo("Jean-Luc Picard, Luminary", 14, Rarity.MYTHIC, mage.cards.j.JeanLucPicardLuminary.class));
         cards.add(new SetCardInfo("Kaldra Compleat", 2, Rarity.MYTHIC, mage.cards.k.KaldraCompleat.class));
         cards.add(new SetCardInfo("Liliana Vess", 10, Rarity.MYTHIC, mage.cards.l.LilianaVess.class));
-        cards.add(new SetCardInfo("Riddles in the Dark", 11, Rarity.RARE, mage.cards.r.RiddlesInTheDark.class));
+        cards.add(new SetCardInfo("Riddles in the Dark", 11, Rarity.RARE, mage.cards.r.RiddlesInTheDark.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Riddles in the Dark", 12, Rarity.RARE, mage.cards.r.RiddlesInTheDark.class, NON_FULL_USE_VARIOUS));
         cards.add(new SetCardInfo("Spectacular Spider-Man", 6, Rarity.RARE, mage.cards.s.SpectacularSpiderMan.class));
         cards.add(new SetCardInfo("Super Shredder", 9, Rarity.MYTHIC, mage.cards.s.SuperShredder.class));
         cards.add(new SetCardInfo("Sword of Forge and Frontier", 3, Rarity.MYTHIC, mage.cards.s.SwordOfForgeAndFrontier.class));

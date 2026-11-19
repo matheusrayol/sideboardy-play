@@ -61,17 +61,18 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  width: 156px;
+  min-width: 156px;
   padding: 4px 12px;
   border: 0;
   border-radius: 6px;
   background: transparent;
   color: var(--ink-dim);
   font-family: var(--font-print);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  white-space: nowrap;
   flex-direction: row-reverse;
   cursor: pointer;
 }
@@ -94,6 +95,7 @@
 }
 
 .dot {
+  flex: none;
   width: 12px;
   height: 12px;
   border-radius: 50%;

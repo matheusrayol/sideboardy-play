@@ -177,6 +177,7 @@ public final class DragonsMaze extends ExpansionSet {
         cards.add(new SetCardInfo("Thrashing Mossdog", 50, Rarity.COMMON, mage.cards.t.ThrashingMossdog.class));
         cards.add(new SetCardInfo("Tithe Drinker", 109, Rarity.COMMON, mage.cards.t.TitheDrinker.class));
         cards.add(new SetCardInfo("Toil // Trouble", 133, Rarity.UNCOMMON, mage.cards.t.ToilTrouble.class));
+        cards.add(new SetCardInfo("Trait Doctoring", 18, Rarity.RARE, mage.cards.t.TraitDoctoring.class));
         cards.add(new SetCardInfo("Trostani's Summoner", 110, Rarity.UNCOMMON, mage.cards.t.TrostanisSummoner.class));
         cards.add(new SetCardInfo("Turn // Burn", 134, Rarity.UNCOMMON, mage.cards.t.TurnBurn.class));
         cards.add(new SetCardInfo("Ubul Sar Gatekeepers", 30, Rarity.COMMON, mage.cards.u.UbulSarGatekeepers.class));

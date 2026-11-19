@@ -27,6 +27,8 @@ public final class Conspiracy extends ExpansionSet {
         this.numBoosterRare = 1;
         this.ratioBoosterMythic = 8;
         cards.add(new SetCardInfo("Academy Elite", 20, Rarity.RARE, mage.cards.a.AcademyElite.class));
+        cards.add(new SetCardInfo("Advantageous Proclamation", 1, Rarity.UNCOMMON, mage.cards.a.AdvantageousProclamation.class));
+        cards.add(new SetCardInfo("Aether Searcher", 53, Rarity.RARE, mage.cards.a.AetherSearcher.class));
         cards.add(new SetCardInfo("Aether Tradewinds", 89, Rarity.COMMON, mage.cards.a.AetherTradewinds.class));
         cards.add(new SetCardInfo("Agent of Acquisitions", 54, Rarity.UNCOMMON, mage.cards.a.AgentOfAcquisitions.class)); // draftmatters ability not implemented
         cards.add(new SetCardInfo("Air Servant", 90, Rarity.UNCOMMON, mage.cards.a.AirServant.class));
@@ -35,10 +37,12 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Altar's Reap", 112, Rarity.COMMON, mage.cards.a.AltarsReap.class));
         cards.add(new SetCardInfo("Apex Hawks", 67, Rarity.COMMON, mage.cards.a.ApexHawks.class));
         cards.add(new SetCardInfo("Assassinate", 113, Rarity.COMMON, mage.cards.a.Assassinate.class));
+        cards.add(new SetCardInfo("Backup Plan", 2, Rarity.RARE, mage.cards.b.BackupPlan.class));
         cards.add(new SetCardInfo("Barbed Shocker", 136, Rarity.UNCOMMON, mage.cards.b.BarbedShocker.class));
         cards.add(new SetCardInfo("Basandra, Battle Seraph", 184, Rarity.RARE, mage.cards.b.BasandraBattleSeraph.class));
         cards.add(new SetCardInfo("Bite of the Black Rose", 26, Rarity.UNCOMMON, mage.cards.b.BiteOfTheBlackRose.class));
         cards.add(new SetCardInfo("Boldwyr Intimidator", 137, Rarity.UNCOMMON, mage.cards.b.BoldwyrIntimidator.class));
+        cards.add(new SetCardInfo("Brago's Favor", 3, Rarity.COMMON, mage.cards.b.BragosFavor.class));
         cards.add(new SetCardInfo("Brago's Representative", 14, Rarity.COMMON, mage.cards.b.BragosRepresentative.class));
         cards.add(new SetCardInfo("Brago, King Eternal", 41, Rarity.RARE, mage.cards.b.BragoKingEternal.class));
         cards.add(new SetCardInfo("Brainstorm", 91, Rarity.COMMON, mage.cards.b.Brainstorm.class));
@@ -49,8 +53,10 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Chartooth Cougar", 139, Rarity.COMMON, mage.cards.c.ChartoothCougar.class));
         cards.add(new SetCardInfo("Cinder Wall", 140, Rarity.COMMON, mage.cards.c.CinderWall.class));
         cards.add(new SetCardInfo("Coercive Portal", 56, Rarity.MYTHIC, mage.cards.c.CoercivePortal.class));
+        cards.add(new SetCardInfo("Cogwork Grinder", 57, Rarity.RARE, mage.cards.c.CogworkGrinder.class));
         cards.add(new SetCardInfo("Cogwork Librarian", 58, Rarity.COMMON, mage.cards.c.CogworkLibrarian.class)); // draftmatters ability not implemented
         cards.add(new SetCardInfo("Cogwork Spy", 59, Rarity.COMMON, mage.cards.c.CogworkSpy.class)); // draftmatters ability not implemented
+        cards.add(new SetCardInfo("Cogwork Tracker", 60, Rarity.UNCOMMON, mage.cards.c.CogworkTracker.class));
         cards.add(new SetCardInfo("Compulsive Research", 93, Rarity.COMMON, mage.cards.c.CompulsiveResearch.class));
         cards.add(new SetCardInfo("Copperhorn Scout", 160, Rarity.COMMON, mage.cards.c.CopperhornScout.class));
         cards.add(new SetCardInfo("Council Guardian", 15, Rarity.UNCOMMON, mage.cards.c.CouncilGuardian.class));
@@ -68,6 +74,7 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Decimate", 185, Rarity.RARE, mage.cards.d.Decimate.class));
         cards.add(new SetCardInfo("Dimir Doppelganger", 186, Rarity.RARE, mage.cards.d.DimirDoppelganger.class));
         cards.add(new SetCardInfo("Doomed Traveler", 69, Rarity.COMMON, mage.cards.d.DoomedTraveler.class));
+        cards.add(new SetCardInfo("Double Stroke", 4, Rarity.UNCOMMON, mage.cards.d.DoubleStroke.class));
         cards.add(new SetCardInfo("Drakestown Forgotten", 27, Rarity.RARE, mage.cards.d.DrakestownForgotten.class));
         cards.add(new SetCardInfo("Dream Fracture", 95, Rarity.COMMON, mage.cards.d.DreamFracture.class));
         cards.add(new SetCardInfo("Echoing Courage", 161, Rarity.COMMON, mage.cards.e.EchoingCourage.class));
@@ -92,6 +99,7 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Gnarlid Pack", 166, Rarity.COMMON, mage.cards.g.GnarlidPack.class));
         cards.add(new SetCardInfo("Grenzo, Dungeon Warden", 47, Rarity.RARE, mage.cards.g.GrenzoDungeonWarden.class));
         cards.add(new SetCardInfo("Grenzo's Cutthroat", 32, Rarity.COMMON, mage.cards.g.GrenzosCutthroat.class));
+        cards.add(new SetCardInfo("Grenzo's Rebuttal", 33, Rarity.RARE, mage.cards.g.GrenzosRebuttal.class));
         cards.add(new SetCardInfo("Grixis Illusionist", 99, Rarity.COMMON, mage.cards.g.GrixisIllusionist.class));
         cards.add(new SetCardInfo("Grudge Keeper", 28, Rarity.COMMON, mage.cards.g.GrudgeKeeper.class));
         cards.add(new SetCardInfo("Guardian Zendikon", 71, Rarity.COMMON, mage.cards.g.GuardianZendikon.class));
@@ -102,14 +110,17 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Hydra Omnivore", 169, Rarity.MYTHIC, mage.cards.h.HydraOmnivore.class));
         cards.add(new SetCardInfo("Ignition Team", 34, Rarity.RARE, mage.cards.i.IgnitionTeam.class));
         cards.add(new SetCardInfo("Ill-Gotten Gains", 114, Rarity.RARE, mage.cards.i.IllGottenGains.class));
+        cards.add(new SetCardInfo("Immediate Action", 5, Rarity.COMMON, mage.cards.i.ImmediateAction.class));
         cards.add(new SetCardInfo("Infectious Horror", 115, Rarity.COMMON, mage.cards.i.InfectiousHorror.class));
         cards.add(new SetCardInfo("Intangible Virtue", 72, Rarity.UNCOMMON, mage.cards.i.IntangibleVirtue.class));
+        cards.add(new SetCardInfo("Iterative Analysis", 6, Rarity.UNCOMMON, mage.cards.i.IterativeAnalysis.class));
         cards.add(new SetCardInfo("Jetting Glasskite", 100, Rarity.UNCOMMON, mage.cards.j.JettingGlasskite.class));
         cards.add(new SetCardInfo("Kor Chant", 73, Rarity.COMMON, mage.cards.k.KorChant.class));
         cards.add(new SetCardInfo("Lead the Stampede", 170, Rarity.UNCOMMON, mage.cards.l.LeadTheStampede.class));
         cards.add(new SetCardInfo("Liliana's Specter", 116, Rarity.COMMON, mage.cards.l.LilianasSpecter.class));
         cards.add(new SetCardInfo("Lizard Warrior", 146, Rarity.COMMON, mage.cards.l.LizardWarrior.class));
         cards.add(new SetCardInfo("Lore Seeker", 62, Rarity.RARE, mage.cards.l.LoreSeeker.class)); // draftmatters ability not implemented
+        cards.add(new SetCardInfo("Lurking Automaton", 63, Rarity.COMMON, mage.cards.l.LurkingAutomaton.class));
         cards.add(new SetCardInfo("Magister of Worth", 48, Rarity.RARE, mage.cards.m.MagisterOfWorth.class));
         cards.add(new SetCardInfo("Magus of the Mirror", 117, Rarity.RARE, mage.cards.m.MagusOfTheMirror.class));
         cards.add(new SetCardInfo("Mana Geyser", 147, Rarity.COMMON, mage.cards.m.ManaGeyser.class));
@@ -124,11 +135,13 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Moment of Heroism", 74, Rarity.COMMON, mage.cards.m.MomentOfHeroism.class));
         cards.add(new SetCardInfo("Morkrut Banshee", 118, Rarity.UNCOMMON, mage.cards.m.MorkrutBanshee.class));
         cards.add(new SetCardInfo("Mortify", 190, Rarity.UNCOMMON, mage.cards.m.Mortify.class));
+        cards.add(new SetCardInfo("Muzzio's Preparations", 7, Rarity.COMMON, mage.cards.m.MuzziosPreparations.class));
         cards.add(new SetCardInfo("Muzzio, Visionary Architect", 23, Rarity.MYTHIC, mage.cards.m.MuzzioVisionaryArchitect.class));
         cards.add(new SetCardInfo("Nature's Claim", 171, Rarity.COMMON, mage.cards.n.NaturesClaim.class));
         cards.add(new SetCardInfo("Necromantic Thirst", 119, Rarity.COMMON, mage.cards.n.NecromanticThirst.class));
         cards.add(new SetCardInfo("Noble Templar", 75, Rarity.COMMON, mage.cards.n.NobleTemplar.class));
         cards.add(new SetCardInfo("Orcish Cannonade", 148, Rarity.COMMON, mage.cards.o.OrcishCannonade.class));
+        cards.add(new SetCardInfo("Paliano, the High City", 65, Rarity.RARE, mage.cards.p.PalianoTheHighCity.class));
         cards.add(new SetCardInfo("Peace Strider", 201, Rarity.UNCOMMON, mage.cards.p.PeaceStrider.class));
         cards.add(new SetCardInfo("Pelakka Wurm", 172, Rarity.UNCOMMON, mage.cards.p.PelakkaWurm.class));
         cards.add(new SetCardInfo("Pernicious Deed", 191, Rarity.MYTHIC, mage.cards.p.PerniciousDeed.class));
@@ -140,6 +153,7 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Plea for Power", 24, Rarity.RARE, mage.cards.p.PleaForPower.class));
         cards.add(new SetCardInfo("Plummet", 173, Rarity.COMMON, mage.cards.p.Plummet.class));
         cards.add(new SetCardInfo("Power of Fire", 150, Rarity.COMMON, mage.cards.p.PowerOfFire.class));
+        cards.add(new SetCardInfo("Power Play", 8, Rarity.UNCOMMON, mage.cards.p.PowerPlay.class));
         cards.add(new SetCardInfo("Predator's Howl", 37, Rarity.UNCOMMON, mage.cards.p.PredatorsHowl.class));
         cards.add(new SetCardInfo("Pride Guardian", 77, Rarity.COMMON, mage.cards.p.PrideGuardian.class));
         cards.add(new SetCardInfo("Pristine Angel", 78, Rarity.MYTHIC, mage.cards.p.PristineAngel.class));
@@ -162,9 +176,12 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Scaled Wurm", 178, Rarity.COMMON, mage.cards.s.ScaledWurm.class));
         cards.add(new SetCardInfo("Scourge of the Throne", 35, Rarity.MYTHIC, mage.cards.s.ScourgeOfTheThrone.class));
         cards.add(new SetCardInfo("Screaming Seahawk", 105, Rarity.COMMON, mage.cards.s.ScreamingSeahawk.class));
+        cards.add(new SetCardInfo("Secret Summoning", 9, Rarity.UNCOMMON, mage.cards.s.SecretSummoning.class));
+        cards.add(new SetCardInfo("Secrets of Paradise", 10, Rarity.COMMON, mage.cards.s.SecretsOfParadise.class));
         cards.add(new SetCardInfo("Selvala, Explorer Returned", 51, Rarity.RARE, mage.cards.s.SelvalaExplorerReturned.class));
         cards.add(new SetCardInfo("Selvala's Charge", 39, Rarity.UNCOMMON, mage.cards.s.SelvalasCharge.class));
         cards.add(new SetCardInfo("Selvala's Enforcer", 40, Rarity.COMMON, mage.cards.s.SelvalasEnforcer.class));
+        cards.add(new SetCardInfo("Sentinel Dispatch", 11, Rarity.COMMON, mage.cards.s.SentinelDispatch.class));
         cards.add(new SetCardInfo("Shoreline Ranger", 106, Rarity.COMMON, mage.cards.s.ShorelineRanger.class));
         cards.add(new SetCardInfo("Silent Arbiter", 204, Rarity.RARE, mage.cards.s.SilentArbiter.class));
         cards.add(new SetCardInfo("Silverchase Fox", 81, Rarity.COMMON, mage.cards.s.SilverchaseFox.class));
@@ -197,6 +214,7 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Typhoid Rats", 130, Rarity.COMMON, mage.cards.t.TyphoidRats.class));
         cards.add(new SetCardInfo("Tyrant's Choice", 30, Rarity.COMMON, mage.cards.t.TyrantsChoice.class));
         cards.add(new SetCardInfo("Uncontrollable Anger", 155, Rarity.UNCOMMON, mage.cards.u.UncontrollableAnger.class));
+        cards.add(new SetCardInfo("Unexpected Potential", 12, Rarity.UNCOMMON, mage.cards.u.UnexpectedPotential.class));
         cards.add(new SetCardInfo("Unhallowed Pact", 131, Rarity.COMMON, mage.cards.u.UnhallowedPact.class));
         cards.add(new SetCardInfo("Unquestioned Authority", 85, Rarity.UNCOMMON, mage.cards.u.UnquestionedAuthority.class));
         cards.add(new SetCardInfo("Valor Made Real", 86, Rarity.COMMON, mage.cards.v.ValorMadeReal.class));
@@ -214,6 +232,7 @@ public final class Conspiracy extends ExpansionSet {
         cards.add(new SetCardInfo("Wolfbriar Elemental", 182, Rarity.RARE, mage.cards.w.WolfbriarElemental.class));
         cards.add(new SetCardInfo("Wood Sage", 195, Rarity.UNCOMMON, mage.cards.w.WoodSage.class));
         cards.add(new SetCardInfo("Woodvine Elemental", 52, Rarity.UNCOMMON, mage.cards.w.WoodvineElemental.class));
+        cards.add(new SetCardInfo("Worldknit", 13, Rarity.RARE, mage.cards.w.Worldknit.class));
         cards.add(new SetCardInfo("Wrap in Flames", 158, Rarity.COMMON, mage.cards.w.WrapInFlames.class));
         cards.add(new SetCardInfo("Wrap in Vigor", 183, Rarity.COMMON, mage.cards.w.WrapInVigor.class));
         cards.add(new SetCardInfo("Zombie Goliath", 135, Rarity.COMMON, mage.cards.z.ZombieGoliath.class));

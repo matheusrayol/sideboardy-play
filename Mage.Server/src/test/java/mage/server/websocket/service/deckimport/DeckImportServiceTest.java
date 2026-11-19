@@ -151,7 +151,7 @@ public class DeckImportServiceTest {
         for (DeckImportService.DeckSourceStatus status : service.sourceStatuses()) {
             sites.add(status.getSite());
         }
-        Assert.assertEquals(new HashSet<>(java.util.Arrays.asList("archidekt", "tcgplayer", "mtgtop8", "scryfall", "manabox")), sites);
+        Assert.assertEquals(new HashSet<>(java.util.Arrays.asList("archidekt", "tcgplayer", "mtgtop8", "scryfall", "manabox", "sideboardy")), sites);
     }
 
     private String statusOf(String site) {

@@ -12,6 +12,7 @@ import type { Message } from './translate';
 
 /** Languages the app is translated into; English is the source and the fallback. */
 export const LOCALES = [
+  { code: 'pt', name: 'Português (Brasil)' },
   { code: 'en', name: 'English' },
   { code: 'es', name: 'Español' },
 ] as const;

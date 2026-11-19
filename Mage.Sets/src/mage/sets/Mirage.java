@@ -111,7 +111,8 @@ public final class Mirage extends ExpansionSet {
         cards.add(new SetCardInfo("Early Harvest", 213, Rarity.RARE, mage.cards.e.EarlyHarvest.class, RETRO_ART));
         cards.add(new SetCardInfo("Ebony Charm", 120, Rarity.COMMON, mage.cards.e.EbonyCharm.class, RETRO_ART_USE_VARIOUS));
         cards.add(new SetCardInfo("Ebony Charm", "120+", Rarity.COMMON, mage.cards.e.EbonyCharm.class, RETRO_ART_USE_VARIOUS));
-//        cards.add(new SetCardInfo("Ekundu Cyclops", 171, Rarity.COMMON, mage.cards.e.EkunduCyclops.class, RETRO_ART));
+        cards.add(new SetCardInfo("Ebony Charm", "120†", Rarity.COMMON, mage.cards.e.EbonyCharm.class, NON_FULL_USE_VARIOUS));
+        cards.add(new SetCardInfo("Ekundu Cyclops", 171, Rarity.COMMON, mage.cards.e.EkunduCyclops.class, RETRO_ART));
         cards.add(new SetCardInfo("Ekundu Griffin", 13, Rarity.COMMON, mage.cards.e.EkunduGriffin.class, RETRO_ART));
         cards.add(new SetCardInfo("Elixir of Vitality", 300, Rarity.UNCOMMON, mage.cards.e.ElixirOfVitality.class, RETRO_ART));
         cards.add(new SetCardInfo("Emberwilde Caliph", 262, Rarity.RARE, mage.cards.e.EmberwildeCaliph.class, RETRO_ART));
@@ -212,7 +213,7 @@ public final class Mirage extends ExpansionSet {
         cards.add(new SetCardInfo("Memory Lapse", 74, Rarity.COMMON, mage.cards.m.MemoryLapse.class, RETRO_ART));
         cards.add(new SetCardInfo("Merfolk Raiders", 75, Rarity.COMMON, mage.cards.m.MerfolkRaiders.class, RETRO_ART));
         cards.add(new SetCardInfo("Merfolk Seer", 76, Rarity.COMMON, mage.cards.m.MerfolkSeer.class, RETRO_ART));
-//        cards.add(new SetCardInfo("Mind Bend", 77, Rarity.UNCOMMON, mage.cards.m.MindBend.class, RETRO_ART));
+        cards.add(new SetCardInfo("Mind Bend", 77, Rarity.UNCOMMON, mage.cards.m.MindBend.class, RETRO_ART));
         cards.add(new SetCardInfo("Mind Harness", 78, Rarity.UNCOMMON, mage.cards.m.MindHarness.class, RETRO_ART));
         cards.add(new SetCardInfo("Mindbender Spores", 229, Rarity.RARE, mage.cards.m.MindbenderSpores.class, RETRO_ART));
         cards.add(new SetCardInfo("Mire Shade", 131, Rarity.UNCOMMON, mage.cards.m.MireShade.class, RETRO_ART));
@@ -298,8 +299,8 @@ public final class Mirage extends ExpansionSet {
         cards.add(new SetCardInfo("Shadowbane", 38, Rarity.UNCOMMON, mage.cards.s.Shadowbane.class, RETRO_ART));
         cards.add(new SetCardInfo("Shallow Grave", 141, Rarity.RARE, mage.cards.s.ShallowGrave.class, RETRO_ART));
         cards.add(new SetCardInfo("Shaper Guildmage", 91, Rarity.COMMON, mage.cards.s.ShaperGuildmage.class, RETRO_ART));
-        cards.add(new SetCardInfo("Shauku's Minion", 283, Rarity.UNCOMMON, mage.cards.s.ShaukusMinion.class, RETRO_ART));
         cards.add(new SetCardInfo("Shauku, Endbringer", 142, Rarity.RARE, mage.cards.s.ShaukuEndbringer.class, RETRO_ART));
+        cards.add(new SetCardInfo("Shauku's Minion", 283, Rarity.UNCOMMON, mage.cards.s.ShaukusMinion.class, RETRO_ART));
         cards.add(new SetCardInfo("Shimmer", 92, Rarity.RARE, mage.cards.s.Shimmer.class, RETRO_ART));
         cards.add(new SetCardInfo("Sidar Jabari", 39, Rarity.RARE, mage.cards.s.SidarJabari.class, RETRO_ART));
         cards.add(new SetCardInfo("Sirocco", 192, Rarity.UNCOMMON, mage.cards.s.Sirocco.class, RETRO_ART));

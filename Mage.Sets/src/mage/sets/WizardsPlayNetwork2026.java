@@ -34,7 +34,7 @@ public class WizardsPlayNetwork2026 extends ExpansionSet {
         cards.add(new SetCardInfo("Mister Fantastic, Reed Richards", 10, Rarity.RARE, mage.cards.m.MisterFantasticReedRichards.class));
         cards.add(new SetCardInfo("Echo, Perceptive Prodigy", 11, Rarity.RARE, mage.cards.e.EchoPerceptiveProdigy.class));
         cards.add(new SetCardInfo("Dark Deed", 12, Rarity.RARE, mage.cards.d.DarkDeed.class));
-        // cards.add(new SetCardInfo("Hellcat, Undying Vigilante", 13, Rarity.RARE, mage.cards.h.HellcatUndyingVigilante.class));
+        cards.add(new SetCardInfo("Hellcat, Undying Vigilante", 13, Rarity.RARE, mage.cards.h.HellcatUndyingVigilante.class));
         cards.add(new SetCardInfo("An Unexpected Party", 14, Rarity.RARE, mage.cards.a.AnUnexpectedParty.class));
         cards.add(new SetCardInfo("Bilbo, Luckwearer", 15, Rarity.RARE, mage.cards.b.BilboLuckwearer.class));
         cards.add(new SetCardInfo("Wood Elves", 16, Rarity.RARE, mage.cards.w.WoodElves.class));

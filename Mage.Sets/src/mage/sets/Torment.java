@@ -38,6 +38,7 @@ public final class Torment extends ExpansionSet {
 
         cards.add(new SetCardInfo("Accelerate", 90, Rarity.COMMON, mage.cards.a.Accelerate.class, RETRO_ART));
         cards.add(new SetCardInfo("Acorn Harvest", 118, Rarity.COMMON, mage.cards.a.AcornHarvest.class, RETRO_ART));
+        cards.add(new SetCardInfo("Alter Reality", 22, Rarity.RARE, mage.cards.a.AlterReality.class, RETRO_ART));
         cards.add(new SetCardInfo("Ambassador Laquatus", 23, Rarity.RARE, mage.cards.a.AmbassadorLaquatus.class, RETRO_ART));
         cards.add(new SetCardInfo("Angel of Retribution", 1, Rarity.RARE, mage.cards.a.AngelOfRetribution.class, RETRO_ART));
         cards.add(new SetCardInfo("Anurid Scavenger", 119, Rarity.UNCOMMON, mage.cards.a.AnuridScavenger.class, RETRO_ART));

@@ -15,6 +15,8 @@ interface RememberedLogin {
   account?: boolean;
   /** signed in through the server's single sign-on: a reload signs in the same way, without asking */
   signOn?: boolean;
+  /** signed out manually on this device: do not immediately re-enter via silent SSO */
+  signedOutManually?: boolean;
 }
 
 const LOGIN_KEY = 'playmat.login';
@@ -237,8 +239,10 @@ export const useSession = create<SessionState>((set, get) => ({
 
   async signInWithSignOn(serverUrl, userName, silent = false) {
     const before = readJson<RememberedLogin | null>(LOGIN_KEY, null);
-    // signed out on this device: the player asks again (the sign-on would sign straight back in otherwise)
-    if (silent && before && !(before.signOn && before.serverUrl === serverUrl)) return false;
+    // signed out manually as this user on this device: do not silently log right back in
+    if (silent && before?.signedOutManually && before.serverUrl === serverUrl && sameName(before.userName, userName)) {
+      return false;
+    }
     writeJson<RememberedLogin>(LOGIN_KEY, { serverUrl, userName, passwordless: false, account: true, signOn: true });
     return get().signIn(serverUrl, userName, '');
   },
@@ -324,7 +328,7 @@ export const useSession = create<SessionState>((set, get) => ({
       writeJson<RememberedRestore | null>(RESTORE_KEY, null);
       forgetOpenGames(get().serverUrl, get().userName);
     }
-    writeJson<RememberedLogin>(LOGIN_KEY, { serverUrl: get().serverUrl, userName: get().userName, passwordless: false, account: false });
+    writeJson<RememberedLogin>(LOGIN_KEY, { serverUrl: get().serverUrl, userName: get().userName, passwordless: false, account: false, signedOutManually: true });
     rpc.disconnect();
     set({ phase: 'signedOut', roomId: null, signedInElsewhere: false, staleLogin: false, signedInViaOidc: false });
     // the provider bounces the browser back to the sign-in screen; when its session is gone, the next

@@ -7,6 +7,7 @@
 .card {
   position: absolute;
   border-radius: var(--card-radius) / calc(var(--card-radius) * 63 / 88);
+  box-shadow: 0 7px 14px rgb(0 0 0 / 0.44), 0 2px 3px rgb(0 0 0 / 0.35);
   transition: transform var(--dur-place) var(--ease-place), box-shadow var(--dur-quick) linear;
   outline: none;
 }

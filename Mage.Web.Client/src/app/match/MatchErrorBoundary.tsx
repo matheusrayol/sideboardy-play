@@ -1,5 +1,7 @@
 import { Component, Fragment, type ErrorInfo, type ReactNode } from 'react';
 import { reportError } from '../../core/telemetry/reporter';
+import { t } from '../i18n';
+import './matchMessages';
 import { Button } from '../ui/Button';
 import { Stitch } from '../ui/Stitch';
 import styles from './MatchErrorBoundary.module.css';
@@ -42,13 +44,13 @@ export class MatchErrorBoundary extends Component<Props, State> {
       <div className={styles.fallback} role="alert">
         <Stitch inset={10} radius={22} />
         <div className={styles.panel}>
-          <h1 className={styles.title}>The board stopped drawing</h1>
+          <h1 className={styles.title}>{t('match.error.title')}</h1>
           <p className={styles.body}>
-            Your game is still running on the server. Reload the board to pick up where it is now.
+            {t('match.error.body')}
           </p>
           <p className={styles.detail}><code>{error.message}</code></p>
           <div className={styles.actions}>
-            <Button variant="decision" size="lg" onClick={this.reload}>Reload board</Button>
+            <Button variant="decision" size="lg" onClick={this.reload}>{t('match.error.reload')}</Button>
             <Button variant="print" size="lg" onClick={this.props.onBack}>{this.props.backLabel}</Button>
           </div>
         </div>
