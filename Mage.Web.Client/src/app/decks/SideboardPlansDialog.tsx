@@ -2,6 +2,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { ARCHETYPES, countsByName, newPlan, planProblems, setCount, total } from '../../core/decks/sideboardPlans';
 import type { DeckCardLists, PlanCard, SideboardPlan } from '../../core/decks/types';
+import { useTx } from '../i18n';
 import { Button } from '../ui/Button';
 import { Dialog } from '../ui/Dialog';
 import styles from './SideboardPlans.module.css';
@@ -16,6 +17,7 @@ export function SideboardPlansDialog({ open, onOpenChange, deck, onChange }: {
   deck: DeckCardLists;
   onChange(update: (current: DeckCardLists) => DeckCardLists): void;
 }) {
+  const tx = useTx();
   const plans = deck.sideboardPlans ?? [];
   const [selected, setSelected] = useState<string | null>(null);
   const [label, setLabel] = useState<string>(ARCHETYPES[0]);
@@ -28,7 +30,7 @@ export function SideboardPlansDialog({ open, onOpenChange, deck, onChange }: {
     sideboardPlans: (current.sideboardPlans ?? []).map((candidate) => (candidate.id === id ? change(candidate) : candidate)),
   }));
   const add = () => {
-    const created = newPlan(label.trim() || 'Untitled');
+    const created = newPlan(label.trim() || tx('Untitled'));
     onChange((current) => ({ ...current, sideboardPlans: [...(current.sideboardPlans ?? []), created] }));
     setSelected(created.id);
   };
@@ -51,7 +53,7 @@ export function SideboardPlansDialog({ open, onOpenChange, deck, onChange }: {
       footer={<Button variant="decision" onClick={() => onOpenChange(false)}>Done</Button>}
     >
       <div className={styles.layout}>
-        <nav className={styles.plans} aria-label="Plans">
+        <nav className={styles.plans} aria-label={tx('Plans')}>
           {plans.map((candidate) => (
             <button
               key={candidate.id}
@@ -61,7 +63,7 @@ export function SideboardPlansDialog({ open, onOpenChange, deck, onChange }: {
               onClick={() => setSelected(candidate.id)}
             >
               vs {candidate.archetype}
-              <small>{total(candidate.in)} in · {total(candidate.out)} out{candidate.default ? ' · default' : ''}</small>
+              <small>{tx(`${total(candidate.in)} in · ${total(candidate.out)} out${candidate.default ? ' · default' : ''}`)}</small>
             </button>
           ))}
           <div className={styles.add}>
@@ -69,7 +71,7 @@ export function SideboardPlansDialog({ open, onOpenChange, deck, onChange }: {
               list="sideboard-archetypes"
               value={label}
               onChange={(event) => setLabel(event.target.value)}
-              aria-label="Kind of deck"
+              aria-label={tx('Kind of deck')}
               maxLength={40}
             />
             <datalist id="sideboard-archetypes">
@@ -80,26 +82,26 @@ export function SideboardPlansDialog({ open, onOpenChange, deck, onChange }: {
         </nav>
 
         {!plan ? (
-          <p className={styles.quiet}>{(deck.sideboard ?? []).length === 0 ? 'Add cards to the sideboard first, then plan what comes in.' : 'Add a plan for a kind of deck you expect to meet.'}</p>
+          <p className={styles.quiet}>{(deck.sideboard ?? []).length === 0 ? tx('Add cards to the sideboard first, then plan what comes in.') : tx('Add a plan for a kind of deck you expect to meet.')}</p>
         ) : (
           <div className={styles.editor}>
             <div className={styles.planHead}>
-              <h3>Against {plan.archetype}</h3>
+              <h3>{tx(`Against ${plan.archetype}`)}</h3>
               <label className={styles.check}>
                 <input type="checkbox" checked={!!plan.default} onChange={(event) => makeDefault(plan.id, event.target.checked)} />
-                Apply on its own between games
+                {tx('Apply on its own between games')}
               </label>
               <Button size="sm" variant="quiet" icon={<Trash2 size={15} />} onClick={() => remove(plan.id)}>Delete plan</Button>
             </div>
             <div className={styles.columns}>
-              <Side title={`Bring in (${total(plan.in)})`} cards={side} chosen={plan.in} onCount={(name, count) => update(plan.id, (current) => ({ ...current, in: setCount(current.in, name, count) }))} empty="The sideboard is empty." />
-              <Side title={`Take out (${total(plan.out)})`} cards={main} chosen={plan.out} onCount={(name, count) => update(plan.id, (current) => ({ ...current, out: setCount(current.out, name, count) }))} empty="The main deck is empty." />
+              <Side title={tx(`Bring in (${total(plan.in)})`)} cards={side} chosen={plan.in} onCount={(name, count) => update(plan.id, (current) => ({ ...current, in: setCount(current.in, name, count) }))} empty={tx('The sideboard is empty.')} />
+              <Side title={tx(`Take out (${total(plan.out)})`)} cards={main} chosen={plan.out} onCount={(name, count) => update(plan.id, (current) => ({ ...current, out: setCount(current.out, name, count) }))} empty={tx('The main deck is empty.')} />
             </div>
             <label className={styles.note}>
-              <span>Why (for the drill)</span>
-              <input value={plan.note ?? ''} maxLength={200} onChange={(event) => update(plan.id, (current) => ({ ...current, note: event.target.value }))} placeholder="Lifegain and blockers in; slow threats out" />
+              <span>{tx('Why (for the drill)')}</span>
+              <input value={plan.note ?? ''} maxLength={200} onChange={(event) => update(plan.id, (current) => ({ ...current, note: event.target.value }))} placeholder={tx('Lifegain and blockers in; slow threats out')} />
             </label>
-            {planProblems(deck, plan).map((problem) => <p key={problem} className={styles.problem}>{problem}</p>)}
+            {planProblems(deck, plan).map((problem) => <p key={problem} className={styles.problem}>{tx(problem)}</p>)}
           </div>
         )}
       </div>
@@ -114,6 +116,7 @@ function Side({ title, cards, chosen, onCount, empty }: {
   onCount(name: string, count: number): void;
   empty: string;
 }) {
+  const tx = useTx();
   const counts = new Map(chosen.map((card) => [card.name, card.count]));
   return (
     <section className={styles.side} aria-label={title}>
@@ -124,11 +127,11 @@ function Side({ title, cards, chosen, onCount, empty }: {
             const count = counts.get(name) ?? 0;
             return (
               <li key={name} className={count > 0 ? styles.picked : undefined}>
-                <span>{name} <small>of {available}</small></span>
+                <span>{name} <small>{tx(`of ${available}`)}</small></span>
                 <span className={styles.stepper}>
-                  <button type="button" aria-label={`One fewer ${name}`} disabled={count === 0} onClick={() => onCount(name, count - 1)}>−</button>
+                  <button type="button" aria-label={tx(`One fewer ${name}`)} disabled={count === 0} onClick={() => onCount(name, count - 1)}>−</button>
                   <b aria-live="polite">{count}</b>
-                  <button type="button" aria-label={`One more ${name}`} disabled={count >= available} onClick={() => onCount(name, count + 1)}>+</button>
+                  <button type="button" aria-label={tx(`One more ${name}`)} disabled={count >= available} onClick={() => onCount(name, count + 1)}>+</button>
                 </span>
               </li>
             );

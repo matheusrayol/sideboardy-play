@@ -2,10 +2,12 @@ import { siteById } from '../../../core/deckImport/sites';
 import type { DeckImportSource } from '../../../core/decks/types';
 import { SiteMark } from './SiteMark';
 import { timeAgo } from './text';
+import { useTx } from '../../i18n';
 import styles from './SourceLine.module.css';
 
 /** "From Archidekt · updated 3 days ago", with a link to the deck on its site. */
 export function SourceLine({ source, className }: { source: DeckImportSource; className?: string }) {
+  const tx = useTx();
   const site = siteById(source.site);
   if (!site) return null;
   const changed = source.remoteUpdatedAt ?? source.importedAt;
@@ -13,9 +15,9 @@ export function SourceLine({ source, className }: { source: DeckImportSource; cl
     <p className={[styles.line, className ?? ''].join(' ')}>
       <SiteMark site={site} size="sm" />
       <span>
-        From <a href={source.url} target="_blank" rel="noopener noreferrer">{site.name}</a>
+        {tx('From')} <a href={source.url} target="_blank" rel="noopener noreferrer">{site.name}</a>
         {' · '}
-        {source.remoteUpdatedAt ? `updated ${timeAgo(changed)}` : `imported ${timeAgo(source.importedAt)}`}
+        {source.remoteUpdatedAt ? `${tx('updated')} ${tx(timeAgo(changed))}` : `${tx('imported')} ${tx(timeAgo(source.importedAt))}`}
       </span>
     </p>
   );

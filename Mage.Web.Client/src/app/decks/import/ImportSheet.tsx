@@ -13,6 +13,7 @@ import { sleeveFor, useDecks, type RosterDeck } from '../../stores/decks';
 import { useImportSheet } from '../../stores/importSheet';
 import { usePlay } from '../../stores/play';
 import { notify } from '../../stores/toasts';
+import { useTx } from '../../i18n';
 import { Button, ButtonLink } from '../../ui/Button';
 import { Dialog } from '../../ui/Dialog';
 import { DeckBox } from '../../ui/DeckBox';
@@ -85,6 +86,7 @@ function StepView({ flow, onDone }: { flow: Flow; onDone(): void }) {
 }
 
 function InputStep({ flow, failure }: { flow: Flow; failure?: string }) {
+  const tx = useTx();
   const field = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -192,7 +194,7 @@ function InputStep({ flow, failure }: { flow: Flow; failure?: string }) {
           )}
         </section>
       )}
-      <label className={styles.fieldLabel} htmlFor="import-input">Deck link or list</label>
+      <label className={styles.fieldLabel} htmlFor="import-input">{tx('Deck link or list')}</label>
       <div className={styles.inputWrap}>
         <textarea
           id="import-input"
@@ -200,7 +202,7 @@ function InputStep({ flow, failure }: { flow: Flow; failure?: string }) {
           className={styles.input}
           value={flow.text}
           spellCheck={false}
-          placeholder={'https://archidekt.com/decks/…\n\nor a list:\n4 Lightning Bolt\n20 Mountain\n\nSideboard\n2 Smash to Smithereens'}
+          placeholder={'https://archidekt.com/decks/…\n\nou uma lista:\n4 Lightning Bolt\n20 Mountain\n\nSideboard\n2 Smash to Smithereens'}
           aria-describedby="import-hint"
           aria-invalid={failure ? true : undefined}
           onChange={(event) => flow.setText(event.target.value)}
@@ -225,22 +227,22 @@ function InputStep({ flow, failure }: { flow: Flow; failure?: string }) {
         {site && (
           <div className={styles.recognized} role="status">
             <SiteMark site={site} />
-            <span><b>{site.name} deck</b> · {direct ? 'reads in one step' : 'copy and paste'}</span>
+            <span><b>{site.name}</b> · {tx(direct ? 'reads in one step' : 'copy and paste')}</span>
           </div>
         )}
         {recognized.kind === 'list' && (
           <div className={styles.recognized} role="status">
             <ClipboardPaste size={16} aria-hidden="true" />
-            <span><b>Deck list</b> · {recognized.text.split(/\r?\n/).filter((line) => line.trim()).length} lines</span>
+            <span><b>{tx('Deck list')}</b> · {recognized.text.split(/\r?\n/).filter((line) => line.trim()).length} {tx('lines')}</span>
           </div>
         )}
       </div>
       <p id="import-hint" className={failure ? styles.failure : styles.hint} role={failure ? 'alert' : undefined}>
-        {failure ?? `Paste a link from a deck site, or a list with one card per line, like “4 Lightning Bolt”. Lists from Arena, MTGO and XMage work too. You can also drop a deck file here.`}
+        {tx(failure ?? `Paste a link from a deck site, or a list with one card per line, like “4 Lightning Bolt”. Lists from Arena, MTGO and XMage work too. You can also drop a deck file here.`)}
       </p>
 
-      <p className={styles.sitesLegend}>Sites marked <Link2 size={12} aria-hidden="true" className={styles.siteTier} /> read in one step. The others take a copy and a paste.</p>
-      <div className={styles.sites} aria-label={`Deck sites ${APP_NAME} reads`}>
+      <p className={styles.sitesLegend}>{tx('Sites marked')} <Link2 size={12} aria-hidden="true" className={styles.siteTier} /> {tx('reads in one step')}. {tx('The others take a copy and a paste.')}</p>
+      <div className={styles.sites} aria-label={tx(`Deck sites ${APP_NAME} reads`)}>
         {DECK_SITES.map((entry) => {
           const lit = site?.id === entry.id;
           const oneStep = entry.tier === 'direct' && !degraded.has(entry.id);
@@ -248,7 +250,7 @@ function InputStep({ flow, failure }: { flow: Flow; failure?: string }) {
             <span key={entry.id} className={[styles.site, lit ? styles.siteLit : ''].join(' ')}>
               <SiteMark site={entry} size="sm" />
               <span className={styles.siteName}>{entry.name}</span>
-              {oneStep && <Link2 size={12} aria-label="reads in one step" className={styles.siteTier} />}
+              {oneStep && <Link2 size={12} aria-label={tx('reads in one step')} className={styles.siteTier} />}
             </span>
           );
         })}
@@ -276,13 +278,14 @@ function InputStep({ flow, failure }: { flow: Flow; failure?: string }) {
 }
 
 function LoadingStep({ site, onCancel }: { site?: DeckSite; onCancel(): void }) {
+  const tx = useTx();
   return (
     <div className={[styles.body, styles.loadingBody].join(' ')} role="status" aria-live="polite">
       <div className={styles.ghostBox} aria-hidden="true">
         <span className={styles.ghostWindow}>{site && <SiteMark site={site} size="lg" />}</span>
         <span className={styles.ghostPlate}><i /><i /></span>
       </div>
-      <p className={styles.loadingText}>{site ? `Reading the deck from ${site.name}…` : 'Matching the cards…'}</p>
+      <p className={styles.loadingText}>{tx(site ? `Reading the deck from ${site.name}…` : 'Matching the cards…')}</p>
       {/* focus waits on Cancel, not on the sheet's outline, while the deck is read */}
       <Button variant="quiet" onClick={onCancel} autoFocus>Cancel</Button>
     </div>
@@ -290,6 +293,7 @@ function LoadingStep({ site, onCancel }: { site?: DeckSite; onCancel(): void }) 
 }
 
 function AssistedStep({ flow, step }: { flow: Flow; step: Extract<ImportStep, { kind: 'assisted' }> }) {
+  const tx = useTx();
   const site = siteById(step.site)!;
   const [opened, setOpened] = useState(false);
   const [back, setBack] = useState(false);
@@ -325,9 +329,9 @@ function AssistedStep({ flow, step }: { flow: Flow; step: Extract<ImportStep, { 
       <div className={styles.assistedHead}>
         <SiteMark site={site} size="lg" />
         <div>
-          <h3 className={styles.assistedTitle}>Bring it over from {site.name}</h3>
+          <h3 className={styles.assistedTitle}>{tx(`Bring it over from ${site.name}`)}</h3>
           <p className={styles.assistedNote}>
-            {step.failure ? step.failure.message : `${site.name} doesn’t let other apps read its decks, so this one takes a copy and a paste.`}
+            {tx(step.failure ? step.failure.message : `${site.name} doesn’t let other apps read its decks, so this one takes a copy and a paste.`)}
           </p>
         </div>
       </div>
@@ -336,35 +340,36 @@ function AssistedStep({ flow, step }: { flow: Flow; step: Extract<ImportStep, { 
           <span className={styles.stepNo}>{opened ? <Check size={14} /> : 1}</span>
           <div>
             <ButtonLink href={exportUrl} target="_blank" rel="noopener noreferrer" icon={<ExternalLink size={15} />} onClick={() => setOpened(true)}>
-              Open the deck on {site.name}
+              {`Open the deck on ${site.name}`}
             </ButtonLink>
           </div>
         </li>
         <li>
           <span className={styles.stepNo}>2</span>
-          <div>{site.exportHint}</div>
+          <div>{tx(site.exportHint)}</div>
         </li>
         <li>
           <span className={styles.stepNo}>3</span>
-          <div>Come back here and press <kbd className={styles.kbd}>{PASTE_KEYS}</kbd>.</div>
+          <div>{tx('Come back here and press')} <kbd className={styles.kbd}>{PASTE_KEYS}</kbd>.</div>
         </li>
       </ol>
       <div
         ref={target}
         tabIndex={0}
         className={[styles.pasteTarget, back ? styles.pasteWaiting : ''].join(' ')}
-        aria-label={`Paste the ${site.name} list here`}
+        aria-label={tx(`Paste the ${site.name} list here`)}
       >
         <ClipboardPaste size={22} aria-hidden="true" />
-        <span>{back ? `Press ${PASTE_KEYS} to finish` : 'The list lands here'}</span>
+        <span>{tx(back ? `Press ${PASTE_KEYS} to finish` : 'The list lands here')}</span>
       </div>
-      {hint && <p className={styles.failure} role="alert">{hint}</p>}
-      <p className={styles.hint}>Tip: the “Send to {APP_NAME}” bookmark in Settings brings decks over in one click.</p>
+      {hint && <p className={styles.failure} role="alert">{tx(hint)}</p>}
+      <p className={styles.hint}>{tx(`Tip: the “Send to ${APP_NAME}” bookmark in Settings brings decks over in one click.`)}</p>
     </div>
   );
 }
 
 function FixRow({ issue, onPick, onSkip, autoFocus }: { issue: CardIssue; onPick(card: CardView): void; onSkip(): void; autoFocus: boolean }) {
+  const tx = useTx();
   const [open, setOpen] = useState(false);
   const button = useRef<HTMLButtonElement>(null);
   const options = useQuery({
@@ -384,7 +389,7 @@ function FixRow({ issue, onPick, onSkip, autoFocus }: { issue: CardIssue; onPick
         <span className={styles.fixName}>
           {issue.cardName}
           {issue.setCode && <small> {issue.setCode}{issue.cardNumber ? ` ${issue.cardNumber}` : ''}</small>}
-          <small className={styles.fixReason}>{issue.reason}</small>
+          <small className={styles.fixReason}>{tx(issue.reason)}</small>
         </span>
         <Button ref={button} size="sm" variant="decision" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
           {open ? 'Hide' : 'Find it'}
@@ -393,8 +398,8 @@ function FixRow({ issue, onPick, onSkip, autoFocus }: { issue: CardIssue; onPick
       </div>
       {open && (
         <div className={styles.fixOptions}>
-          {options.isLoading && <p className={styles.hint}>Looking for close matches…</p>}
-          {options.data && options.data.length === 0 && <p className={styles.hint}>Nothing close in the card database. Leave it out, or add it in the builder later.</p>}
+          {options.isLoading && <p className={styles.hint}>{tx('Looking for close matches…')}</p>}
+          {options.data && options.data.length === 0 && <p className={styles.hint}>{tx('Nothing close in the card database. Leave it out, or add it in the builder later.')}</p>}
           {options.data && options.data.length > 0 && (
             <ul className={styles.optionList}>
               {options.data.map((card) => (
@@ -427,6 +432,7 @@ function PrintingOption({ card, onPick }: { card: CardView; onPick(): void }) {
 const COMMANDER_FORMATS = /^Variant Magic - (Commander|Duel Commander|MTGO 1v1 Commander|Brawl|Oathbreaker|Freeform Commander|Penny Dreadful Commander|Tiny Leaders|Centurion Commander)$/;
 
 function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; onDone(): void }) {
+  const tx = useTx();
   const navigate = useNavigate();
   const target = useImportSheet((state) => state.target);
   const sleeves = useDecks((state) => state.sleeves);
@@ -455,8 +461,8 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
 
   const roster: RosterDeck = {
     id: 'import-preview',
-    name: draft.name || 'Imported deck',
-    note: `${shortFormat(draft.format)} · ${counts.main} cards${counts.side ? ` + ${counts.side}` : ''}`,
+    name: draft.name || tx('Imported deck'),
+    note: `${shortFormat(draft.format)} · ${counts.main} ${tx('cards')}${counts.side ? ` + ${counts.side}` : ''}`,
     cardCount: counts.main,
     cover: finished.coverCard ?? null,
     colors,
@@ -521,7 +527,7 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
 
   return (
     <div className={[styles.body, styles.previewBody].join(' ')} onKeyDown={onKeyDown}>
-      <section className={styles.deckSide} aria-label="The deck as it lands on your shelf">
+      <section className={styles.deckSide} aria-label={tx('The deck as it lands on your shelf')}>
         {!into && <MatPrint card={finished.coverCard ?? null} className={styles.deckPrint} />}
         {!into && (
           <div className={styles.boxStage} style={{ '--sleeve': sleeve } as CSSProperties}>
@@ -529,9 +535,9 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
           </div>
         )}
         <dl className={styles.counts}>
-          <div><dt>Deck</dt><dd>{counts.main}</dd></div>
-          {counts.commanders > 0 && <div><dt>{counts.commanders > 1 ? 'Commanders' : 'Commander'}</dt><dd>{counts.commanders}</dd></div>}
-          {counts.side > 0 && <div><dt>Sideboard</dt><dd>{counts.side}</dd></div>}
+          <div><dt>{tx('Deck')}</dt><dd>{counts.main}</dd></div>
+          {counts.commanders > 0 && <div><dt>{tx(counts.commanders > 1 ? 'Commanders' : 'Commander')}</dt><dd>{counts.commanders}</dd></div>}
+          {counts.side > 0 && <div><dt>{tx('Sideboard')}</dt><dd>{counts.side}</dd></div>}
         </dl>
         {counts.commanders > 0 && (
           <div className={styles.commanders}>
@@ -540,9 +546,9 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
         )}
         <ManaCurve curve={curve} className={styles.curve} />
         {!into && problems.length > 0 && (
-          <ul ref={problemList} tabIndex={-1} className={styles.problems} aria-label={`${shortFormat(draft.format)} problems`}>
-            {problems.slice(0, 5).map((problem, index) => <li key={index}>{legalityLine(problem.group, problem.message, draft.format)}</li>)}
-            {problems.length > 5 && <li>and {problems.length - 5} more</li>}
+          <ul ref={problemList} tabIndex={-1} className={styles.problems} aria-label={`${shortFormat(draft.format)} ${tx('problems')}`}>
+            {problems.slice(0, 5).map((problem, index) => <li key={index}>{tx(legalityLine(problem.group, problem.message, draft.format))}</li>)}
+            {problems.length > 5 && <li>{tx(`and ${problems.length - 5} more`)}</li>}
           </ul>
         )}
       </section>
@@ -551,13 +557,13 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
         {into ? (
           <p className={styles.intoNote}>
             {into.mode === 'replace'
-              ? <>These cards take the place of everything in <b>{into.deckName}</b>. Its name and sleeve stay.</>
-              : <>These cards join <b>{into.deckName}</b>.</>}
+              ? <>{tx('These cards take the place of everything in')} <b>{into.deckName}</b>. {tx('Its name and sleeve stay.')}</>
+              : <>{tx('These cards join')} <b>{into.deckName}</b>.</>}
           </p>
         ) : (
         <>
         <div className={styles.nameRow}>
-          <label className={styles.fieldLabel} htmlFor="import-name">Deck name</label>
+          <label className={styles.fieldLabel} htmlFor="import-name">{tx('Deck name')}</label>
           <input
             id="import-name"
             ref={nameField}
@@ -571,15 +577,15 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
           />
           {draft.source && site && (
             <p className={styles.source}>
-              From <a href={draft.source.url} target="_blank" rel="noopener noreferrer">{site.name}</a>
-              {draft.author && <> · by {draft.author}</>}
+              {tx('From')} <a href={draft.source.url} target="_blank" rel="noopener noreferrer">{site.name}</a>
+              {draft.author && <> · {tx('by')} {draft.author}</>}
               {draft.description && <> · {draft.description}</>}
             </p>
           )}
         </div>
 
         <div className={styles.formatRow}>
-          <label className={styles.fieldLabel} htmlFor="import-format">Format</label>
+          <label className={styles.fieldLabel} htmlFor="import-format">{tx('Format')}</label>
           <div className={styles.formatLine}>
             <select
               id="import-format"
@@ -590,13 +596,13 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
                 flow.updateDraft((current) => ({ ...current, format }));
               }}
             >
-              {formats.map((type) => <option key={type} value={type}>{shortFormat(type)}</option>)}
+              {formats.map((type) => <option key={type} value={type}>{tx(shortFormat(type))}</option>)}
             </select>
             {validation.data && (validation.data.valid
               ? <span className={[styles.chip, styles.chipOk].join(' ')}><Check size={14} aria-hidden="true" /> Legal</span>
               : (
                 <button type="button" className={[styles.chip, styles.chipBad].join(' ')} onClick={() => problemList.current?.focus()}>
-                  <TriangleAlert size={14} aria-hidden="true" /> {problems.length} {problems.length === 1 ? 'problem' : 'problems'}
+                  <TriangleAlert size={14} aria-hidden="true" /> {tx(`${problems.length} ${problems.length === 1 ? 'problem' : 'problems'}`)}
                 </button>
               ))}
           </div>
@@ -605,14 +611,14 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
         )}
 
         <fieldset className={styles.printings}>
-          <legend className={styles.fieldLabel}>Printings</legend>
+          <legend className={styles.fieldLabel}>{tx('Printings')}</legend>
           <label>
             <input type="radio" name="printings" checked={draft.printings === 'site'} onChange={() => void flow.setPrintings('site')} />
-            {draft.source && site ? `Keep ${site.name}’s` : 'Keep the list’s'}
+            {tx(draft.source && site ? `Keep ${site.name}’s` : 'Keep the list’s')}
           </label>
           <label>
             <input type="radio" name="printings" checked={draft.printings === 'preferred'} onChange={() => void flow.setPrintings('preferred')} />
-            Use my preferred art
+            {tx('Use my preferred art')}
           </label>
         </fieldset>
 
@@ -620,7 +626,7 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
           {issues.length > 0 ? (
             <>
               <h3 className={styles.fixesTitle}>
-                {issues.length === 1 ? '1 card needs a look' : `${issues.length} cards need a look`}
+                {tx(issues.length === 1 ? '1 card needs a look' : `${issues.length} cards need a look`)}
               </h3>
               <ul className={styles.fixList}>
                 {issues.map((issue, index) => (
@@ -635,24 +641,24 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
               </ul>
             </>
           ) : (
-            <p className={styles.allMatched}><Check size={16} aria-hidden="true" /> Every card matched.</p>
+            <p className={styles.allMatched}><Check size={16} aria-hidden="true" /> {tx('Every card matched.')}</p>
           )}
           {draft.list.skipped.length > 0 && (
             <div className={styles.skipped}>
               <h3 className={styles.fixesTitle}>
-                {draft.list.skipped.length === 1 ? '1 line couldn’t be read' : `${draft.list.skipped.length} lines couldn’t be read`}
+                {tx(draft.list.skipped.length === 1 ? '1 line couldn’t be read' : `${draft.list.skipped.length} lines couldn’t be read`)}
               </h3>
               <ul className={styles.notes}>
                 {draft.list.skipped.map((line, index) => <li key={`${index}:${line}`}><code>{line}</code></li>)}
               </ul>
-              <p className={styles.hint}>These aren’t in the deck. Cards are read as a count, then a name: “4 Lightning Bolt”.</p>
+              <p className={styles.hint}>{tx('These aren’t in the deck. Cards are read as a count, then a name: “4 Lightning Bolt”.')}</p>
             </div>
           )}
           {(counts.maybeboard > 0 || counts.sideboardDropped > 0 || counts.missing > 0) && (
             <ul className={styles.notes}>
-              {counts.maybeboard > 0 && <li>{counts.maybeboard} maybeboard {counts.maybeboard === 1 ? 'card stays' : 'cards stay'} behind.</li>}
-              {counts.sideboardDropped > 0 && <li>{counts.sideboardDropped} sideboard {counts.sideboardDropped === 1 ? 'card stays' : 'cards stay'} behind: a commander deck keeps only its commanders there.</li>}
-              {counts.missing > 0 && issues.length === 0 && <li>{counts.missing} {counts.missing === 1 ? 'card is' : 'cards are'} left out.</li>}
+              {counts.maybeboard > 0 && <li>{counts.maybeboard} {tx('maybeboard cards skipped.')}</li>}
+              {counts.sideboardDropped > 0 && <li>{counts.sideboardDropped} {tx('sideboard cards skipped (commander keeps only commanders there).')}</li>}
+              {counts.missing > 0 && issues.length === 0 && <li>{counts.missing} {tx('cards left out.')}</li>}
             </ul>
           )}
         </div>
@@ -663,8 +669,8 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
       <footer className={[styles.foot, styles.previewFoot].join(' ')}>
         <span className={styles.footNote}>
           {issues.length > 0
-            ? 'Saving now leaves out the cards that need a look.'
-            : !into && !playable ? `Fix ${problems.length === 1 ? 'the problem' : `the ${problems.length} problems`} in the builder to play this deck.` : ''}
+            ? tx('Saving now leaves out the cards that need a look.')
+            : !into && !playable ? tx(`Fix ${problems.length === 1 ? 'the problem' : `the ${problems.length} problems`} in the builder to play this deck.`) : ''}
         </span>
         {target.kind === 'into' ? (
           <Button variant="decision" busy={busy} disabled={counts.main === 0} onClick={() => void save('stay')}>
@@ -686,13 +692,14 @@ function PreviewStep({ flow, draft, onDone }: { flow: Flow; draft: ImportDraft; 
 
 /** What's coming in, grouped the way the deck builder groups it. */
 function DeckList({ deck, info, commanderDeck }: { deck: { cards: DeckCardInfo[]; sideboard: DeckCardInfo[] }; info: ReadonlyMap<string, CardView>; commanderDeck: boolean }) {
+  const tx = useTx();
   const groups = useMemo(() => groupDeck(deck.cards, info), [deck.cards, info]);
   const side = useMemo(() => groupDeck(deck.sideboard, info).flatMap((group) => group.rows), [deck.sideboard, info]);
   return (
-    <div className={styles.list} aria-label="Cards in the deck">
+    <div className={styles.list} aria-label={tx('Cards in the deck')}>
       {groups.map((group) => (
         <section key={group.key} className={styles.group}>
-          <h4 className={styles.groupHead}>{group.label}<span>{group.count}</span></h4>
+          <h4 className={styles.groupHead}>{tx(group.label)}<span>{group.count}</span></h4>
           <ul>
             {group.rows.map((row) => (
               <li key={row.key} className={styles.row}>

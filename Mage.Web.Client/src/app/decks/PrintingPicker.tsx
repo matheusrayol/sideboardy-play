@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import type { CardView } from '../../protocol/generated/views';
 import { api } from '../connection';
+import { useTx } from '../i18n';
 import { CardFace } from '../ui/CardFace';
 import { Dialog } from '../ui/Dialog';
 import { useCardInfoStore } from './cardInfo';
@@ -19,6 +20,7 @@ export function PrintingPicker({ name, current, onPick, onClose, description = '
   /** what picking does, under the title */
   description?: string;
 }) {
+  const tx = useTx();
   const remember = useCardInfoStore((state) => state.remember);
   const sets = useQuery({ queryKey: ['expansionSets'], queryFn: () => api.getExpansionSets(), staleTime: Infinity });
   const printings = useQuery({
@@ -49,9 +51,9 @@ export function PrintingPicker({ name, current, onPick, onClose, description = '
       width="xl"
     >
       {printings.isPending ? (
-        <p className={styles.note}>Looking through the sets…</p>
+        <p className={styles.note}>{tx('Looking through the sets…')}</p>
       ) : cards.length === 0 ? (
-        <p className={styles.note}>No other printings found.</p>
+        <p className={styles.note}>{tx('No other printings found.')}</p>
       ) : (
         <div className={styles.grid}>
           {cards.map((card: CardView) => {

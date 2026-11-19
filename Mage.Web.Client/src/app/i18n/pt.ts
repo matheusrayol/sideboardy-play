@@ -1,4 +1,5 @@
 import type { Catalog } from './locales';
+export { translatePtPhrase } from './ptPhrases';
 
 /**
  * Português do Brasil (PT-BR), utilizando a terminologia oficial de Magic: The Gathering:
@@ -197,7 +198,7 @@ const pt: Catalog = {
   'match.zone.commanderCastIt': '. Conjurar',
   'match.zone.commanderCasts': { one: 'Conjurado {count} vez da zona de comando', other: 'Conjurado {count} vezes da zona de comando' },
 
-  'match.phase.upkeep': 'Upkeep',
+  'match.phase.upkeep': 'Manutenção',
   'match.phase.draw': 'Compra',
   'match.phase.main': 'Principal',
   'match.phase.mainBefore': 'Principal, pré-combate',

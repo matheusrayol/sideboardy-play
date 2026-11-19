@@ -9,6 +9,7 @@ import type { CardView } from '../../../protocol/generated/views';
 import { deckStorage } from '../../../core/decks/DeckStorageService';
 import type { DeckCardLists } from '../../../core/decks/types';
 import { api } from '../../connection';
+import { useTx } from '../../i18n';
 import { useDecks } from '../../stores/decks';
 import { notify } from '../../stores/toasts';
 import { Button } from '../../ui/Button';
@@ -25,6 +26,7 @@ type State =
 
 /** "Update from Archidekt": fetch the deck again and show what changed before replacing the cards. */
 export function UpdateDialog({ deckId, onClose }: { deckId: string | null; onClose(): void }) {
+  const tx = useTx();
   const [state, setState] = useState<State>({ kind: 'loading' });
   const [busy, setBusy] = useState(false);
 
@@ -112,12 +114,16 @@ export function UpdateDialog({ deckId, onClose }: { deckId: string | null; onClo
               <li key={`${row.zone}:${row.cardName}`} className={row.before === 0 ? styles.added : row.after === 0 ? styles.removed : styles.changed}>
                 <span className={styles.delta}>{row.after > row.before ? `+${row.after - row.before}` : `−${row.before - row.after}`}</span>
                 <span className={styles.name}>{row.cardName}</span>
-                {row.zone === 'side' && <span className={styles.zone}>Sideboard</span>}
+                {row.zone === 'side' && <span className={styles.zone}>{tx('Sideboard')}</span>}
                 <span className={styles.total}>{row.before} → {row.after}</span>
               </li>
             ))}
           </ul>
-          {ready.unmatched > 0 && <p className={styles.note}>{ready.unmatched} new {ready.unmatched === 1 ? 'card isn’t' : 'cards aren’t'} in the card database yet and will be left out.</p>}
+          {ready.unmatched > 0 && (
+            <p className={styles.note}>
+              {tx(`${ready.unmatched} new ${ready.unmatched === 1 ? 'card isn’t' : 'cards aren’t'} in the card database yet and will be left out.`)}
+            </p>
+          )}
         </>
       ) : (
         <span />

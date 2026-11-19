@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { CHAT_HELP, completeWhisper, parseChatInput } from '../../core/social/chatInput';
 import { splitInviteLinks, withoutIgnored, type ChatLine } from '../../core/social/chatLine';
 import { useSession } from '../stores/session';
+import { useTx } from '../i18n';
 import { useSocial } from '../stores/social';
 import { IconButton } from '../ui/Button';
 import { PromptText } from '../ui/PromptText';
@@ -34,6 +35,7 @@ let localSeq = 0;
 
 /** A chat: lines, whispers, links to invites, and a box that understands /help, /w, /ignore and /friend. */
 export function ChatPanel({ names = [], lines, ready, onSend, label, placeholder, empty, incoming, onIncomingTaken, onLocal, className }: ChatPanelProps) {
+  const tx = useTx();
   const ignored = useSocial((state) => state.ignored);
   const myName = useSession((state) => state.userName);
   const [draft, setDraft] = useState('');
@@ -41,7 +43,8 @@ export function ChatPanel({ names = [], lines, ready, onSend, label, placeholder
   const input = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLOListElement>(null);
 
-  const addLocal = (text: string) => {
+  const addLocal = (raw: string) => {
+    const text = tx(raw);
     if (onLocal) {
       onLocal(text);
       return;
@@ -84,7 +87,7 @@ export function ChatPanel({ names = [], lines, ready, onSend, label, placeholder
         return;
       case 'help':
         addLocal('Chat commands:');
-        CHAT_HELP.forEach((item) => addLocal(`${item.command} — ${item.detail}`));
+        CHAT_HELP.forEach((item) => addLocal(`${item.command} — ${tx(item.detail)}`));
         break;
       case 'ignoreList':
         addLocal(social.ignored.length > 0 ? `You ignore: ${social.ignored.join(', ')}` : "You don't ignore anyone.");
@@ -130,9 +133,9 @@ export function ChatPanel({ names = [], lines, ready, onSend, label, placeholder
   };
 
   return (
-    <section className={[styles.chat, className ?? ''].join(' ')} aria-label={label}>
+    <section className={[styles.chat, className ?? ''].join(' ')} aria-label={tx(label)}>
       <ol ref={list} className={styles.lines} aria-live="polite">
-        {visible.length === 0 && <li className={styles.empty}>{empty ?? 'No messages yet. Type /help for commands.'}</li>}
+        {visible.length === 0 && <li className={styles.empty}>{tx(empty ?? 'No messages yet. Type /help for commands.')}</li>}
         {visible.map((line) => <Line key={line.key} line={line} me={myName} onWhisper={startWhisper} />)}
       </ol>
       <form
@@ -148,9 +151,9 @@ export function ChatPanel({ names = [], lines, ready, onSend, label, placeholder
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={onKeyDown}
-          placeholder={ready ? placeholder ?? 'Say something, or /help' : 'Joining chat…'}
+          placeholder={tx(ready ? placeholder ?? 'Say something, or /help' : 'Joining chat…')}
           disabled={!ready}
-          aria-label={`${label} message`}
+          aria-label={tx(`${label} message`)}
           maxLength={400}
         />
         <IconButton label="Send" icon={<Send size={16} />} type="submit" disabled={!ready || !draft.trim()} />
@@ -160,6 +163,7 @@ export function ChatPanel({ names = [], lines, ready, onSend, label, placeholder
 }
 
 function Line({ line, me, onWhisper }: { line: ChatLine; me: string; onWhisper(name: string): void }) {
+  const tx = useTx();
   const kindClass = styles[line.kind] ?? '';
   const time = new Date(line.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   if (line.kind === 'info' || line.kind === 'status' || line.kind === 'game') {
@@ -176,14 +180,14 @@ function Line({ line, me, onWhisper }: { line: ChatLine; me: string; onWhisper(n
   return (
     <li className={[styles.line, kindClass, line.who === me ? styles.mine : ''].join(' ')}>
       <time className={styles.time} dateTime={new Date(line.at).toISOString()}>{time}</time>
-      {prefix && <span className={styles.whisperTag}>{prefix}</span>}
+      {prefix && <span className={styles.whisperTag}>{tx(prefix)}</span>}
       {other && other !== me
-        ? <button type="button" className={styles.who} onClick={() => onWhisper(other)} title={`Whisper to ${other}`}>{other}</button>
-        : <span className={styles.who}>{other || 'You'}</span>}
+        ? <button type="button" className={styles.who} onClick={() => onWhisper(other)} title={tx(`Whisper to ${other}`)}>{other}</button>
+        : <span className={styles.who}>{other || tx('You')}</span>}
       <Flair name={other || me} />
       <span className={styles.text}>
         {splitInviteLinks(line.text, PUBLIC_ORIGIN).map((part, index) => (part.kind === 'invite'
-          ? <Link key={index} className={styles.invite} to={part.path}>Join the table</Link>
+          ? <Link key={index} className={styles.invite} to={part.path}>{tx('Join the table')}</Link>
           : <span key={index}>{part.text}</span>))}
       </span>
     </li>

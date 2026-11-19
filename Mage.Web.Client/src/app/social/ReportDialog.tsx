@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { api } from '../connection';
+import { useTx } from '../i18n';
 import { useLobby } from '../stores/lobby';
 import { notify } from '../stores/toasts';
 import { Button } from '../ui/Button';
@@ -27,6 +28,7 @@ export function ReportDialog() {
 }
 
 function ReportForm({ name, onDone }: { name: string; onDone(): void }) {
+  const tx = useTx();
   const [reason, setReason] = useState<string>('abuse');
   const [details, setDetails] = useState('');
   const [busy, setBusy] = useState(false);
@@ -50,18 +52,18 @@ function ReportForm({ name, onDone }: { name: string; onDone(): void }) {
   return (
     <form className={styles.form} onSubmit={submit}>
       <fieldset className={styles.reasons}>
-        <legend>What happened?</legend>
+        <legend>{tx('What happened?')}</legend>
         {REASONS.map((choice) => (
           <label key={choice.value} className={styles.reason}>
             <input type="radio" name="reason" value={choice.value} checked={reason === choice.value} onChange={() => setReason(choice.value)} />
-            {choice.label}
+            {tx(choice.label)}
           </label>
         ))}
       </fieldset>
       <label className={styles.details}>
-        <span>Details (optional)</span>
+        <span>{tx('Details (optional)')}</span>
         <textarea value={details} maxLength={1000} rows={4} onChange={(event) => setDetails(event.target.value)}
-          placeholder="What they said or did, and when. Which game, if it was in one." />
+          placeholder={tx('What they said or did, and when. Which game, if it was in one.')} />
       </label>
       {error && <p className={styles.error} role="alert">{error}</p>}
       <div className={styles.actions}>

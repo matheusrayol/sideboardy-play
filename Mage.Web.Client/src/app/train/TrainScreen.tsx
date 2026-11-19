@@ -1,4 +1,5 @@
 import { NavLink, useParams } from 'react-router-dom';
+import { useTx } from '../i18n';
 import { MatchupLab } from './MatchupLab';
 import { MulliganTrainer } from './MulliganTrainer';
 import { SideboardDrill } from './SideboardDrill';
@@ -12,17 +13,18 @@ const TOOLS = [
 
 /** Training on your own (S015, S017, S018): keep-or-ship hands, matchups played by the AI, and sideboard drills. */
 export function TrainScreen() {
+  const tx = useTx();
   const { tool = 'mulligan' } = useParams();
   return (
     <main className={styles.page}>
       <header className={styles.pageHead}>
-        <h1>Train</h1>
-        <p>Practice the decisions around the game. The deck page's Numbers has the deck simulator; finished games have a review.</p>
+        <h1>{tx('Train')}</h1>
+        <p>{tx("Practice the decisions around the game. The deck page's Numbers has the deck simulator; finished games have a review.")}</p>
       </header>
-      <nav className={styles.tabs} aria-label="Training tools">
+      <nav className={styles.tabs} aria-label={tx('Training tools')}>
         {TOOLS.map((entry) => (
           <NavLink key={entry.id} to={`/train/${entry.id}`} className={({ isActive }) => (isActive || (entry.id === 'mulligan' && tool === 'mulligan') ? styles.tabOn : styles.tab)}>
-            {entry.label}
+            {tx(entry.label)}
           </NavLink>
         ))}
       </nav>

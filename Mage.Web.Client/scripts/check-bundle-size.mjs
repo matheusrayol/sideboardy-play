@@ -141,10 +141,12 @@ import { gzipSync } from 'node:zlib';
 // app raised 2026-11-18 from 848 kB for swings that reach their target: master had grown to the edge since, and the box
 // sweep in combatMotion (lazy match chunk) tipped it to 848.1 kB (merged from origin/master)
 // initial/app raised 2026-11-18 for Sideboardy SSO integration in LoginScreen/session store and combatMotion merge. Measured initial 221.6 kB
+// app raised 2026-11-19 from 926 kB for complete PT-BR UI phrase dictionary (lazy pt chunk + useTx hooks across lazy screens).
+// Measured entry 85.9 kB, initial 221.8 kB, app 937.7 kB
 const BUDGET_KB = {
   entry: 87,
   initial: 224,
-  app: 926,
+  app: 945,
 };
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));

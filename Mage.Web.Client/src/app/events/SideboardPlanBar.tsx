@@ -1,6 +1,7 @@
 import { ArrowLeftRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { SideboardPlan } from '../../core/decks/types';
+import { useTx } from '../i18n';
 import { useDecks } from '../stores/decks';
 import { Button } from '../ui/Button';
 import styles from './Build.module.css';
@@ -10,6 +11,7 @@ import styles from './Build.module.css';
  * one-click swaps. The plan marked default is applied as the screen opens.
  */
 export function SideboardPlanBar({ deckName, disabled, onApply }: { deckName: string | undefined; disabled: boolean; onApply(plan: SideboardPlan): void }) {
+  const tx = useTx();
   const saved = useDecks((state) => state.saved);
   const loaded = useDecks((state) => state.loaded);
   const refresh = useDecks((state) => state.refresh);
@@ -45,9 +47,9 @@ export function SideboardPlanBar({ deckName, disabled, onApply }: { deckName: st
   }, [id, loadList]);
   if (!id || plans.length === 0) return null;
   return (
-    <div className={styles.planBar} role="group" aria-label="Sideboard plans">
+    <div className={styles.planBar} role="group" aria-label={tx('Sideboard plans')}>
       <ArrowLeftRight size={16} aria-hidden="true" />
-      <span>Your plans:</span>
+      <span>{tx('Your plans:')}</span>
       {plans.map((plan) => (
         <Button
           key={plan.id}
@@ -63,7 +65,7 @@ export function SideboardPlanBar({ deckName, disabled, onApply }: { deckName: st
           vs {plan.archetype}
         </Button>
       ))}
-      {applied && <span className={styles.planNote}>Applied. Click cards to adjust.</span>}
+      {applied && <span className={styles.planNote}>{tx('Applied. Click cards to adjust.')}</span>}
     </div>
   );
 }

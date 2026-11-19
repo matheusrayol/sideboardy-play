@@ -3,6 +3,7 @@ import { ClipboardCopy, FileDown, Upload } from 'lucide-react';
 import type { DeckCardLists } from '../../core/decks/types';
 import { DECK_EXPORT_FORMATS, deckFileName, exportDeckAs, type DeckExportFormat } from '../../core/decks/exportFormats';
 import { notify } from '../stores/toasts';
+import { useTx } from '../i18n';
 import { Button, type ButtonProps } from '../ui/Button';
 import { downloadText } from '../ui/download';
 import styles from './ExportMenu.module.css';
@@ -28,6 +29,7 @@ export interface ExportMenuProps {
 
 /** Export: copy the list in the format the destination reads, or download it as a file. */
 export function ExportMenu({ getDeck, size = 'sm', side = 'bottom', disabled }: ExportMenuProps) {
+  const tx = useTx();
   async function copy(format: DeckExportFormat) {
     try {
       const deck = await getDeck();
@@ -54,17 +56,17 @@ export function ExportMenu({ getDeck, size = 'sm', side = 'bottom', disabled }: 
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content className={styles.menu} side={side} align="start" sideOffset={6}>
-          <DropdownMenu.Label className={styles.label}>Copy list</DropdownMenu.Label>
+          <DropdownMenu.Label className={styles.label}>{tx('Copy list')}</DropdownMenu.Label>
           {COPY_FORMATS.map(({ format, hint }) => (
             <DropdownMenu.Item key={format} className={styles.item} onSelect={() => void copy(format)}>
-              <ClipboardCopy size={16} aria-hidden="true" /> {DECK_EXPORT_FORMATS[format].label} <small>{hint}</small>
+              <ClipboardCopy size={16} aria-hidden="true" /> {DECK_EXPORT_FORMATS[format].label} <small>{tx(hint)}</small>
             </DropdownMenu.Item>
           ))}
           <DropdownMenu.Separator className={styles.rule} />
-          <DropdownMenu.Label className={styles.label}>Download</DropdownMenu.Label>
+          <DropdownMenu.Label className={styles.label}>{tx('Download')}</DropdownMenu.Label>
           {DOWNLOADS.map(({ format, label }) => (
             <DropdownMenu.Item key={format} className={styles.item} onSelect={() => void download(format)}>
-              <FileDown size={16} aria-hidden="true" /> {label} <small>{DECK_EXPORT_FORMATS[format].label}</small>
+              <FileDown size={16} aria-hidden="true" /> {tx(label)} <small>{DECK_EXPORT_FORMATS[format].label}</small>
             </DropdownMenu.Item>
           ))}
         </DropdownMenu.Content>

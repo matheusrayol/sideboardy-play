@@ -10,6 +10,7 @@ import {
   type OptionHTMLAttributes,
   type ReactNode,
 } from 'react';
+import { useTx, type PhraseTranslator } from '../i18n';
 import styles from './Select.module.css';
 
 export interface SelectChangeEvent {
@@ -91,7 +92,8 @@ function collectEntries(children: ReactNode): ParsedEntry[] {
   return entries;
 }
 
-function renderOptionItem(option: ParsedOption) {
+function renderOptionItem(option: ParsedOption, tx: PhraseTranslator) {
+  const shown = typeof option.label === 'string' ? tx(option.label) : option.label;
   return (
     <DropdownMenu.RadioItem
       key={option.value}
@@ -100,7 +102,7 @@ function renderOptionItem(option: ParsedOption) {
       lang={option.lang}
       className={styles.item}
     >
-      <span>{option.label}</span>
+      <span>{shown}</span>
       <DropdownMenu.ItemIndicator className={styles.check}>
         <Check size={16} aria-hidden="true" />
       </DropdownMenu.ItemIndicator>
@@ -124,6 +126,7 @@ export function Select({
   align = 'start',
   children,
 }: SelectProps) {
+  const tx = useTx();
   const current = String(value);
   const entries = useMemo(() => collectEntries(children), [children]);
   const selected = useMemo(() => {
@@ -149,14 +152,14 @@ export function Select({
           id={id}
           type="button"
           disabled={disabled}
-          aria-label={ariaLabel}
-          title={title}
+          aria-label={ariaLabel ? tx(ariaLabel) : ariaLabel}
+          title={title ? tx(title) : title}
           data-a11y-dynamic-name=""
           className={[styles.trigger, className ?? ''].join(' ').trim()}
           style={style}
         >
           <span className={styles.label} lang={selected?.lang}>
-            {selected ? selected.text : placeholder}
+            {selected ? tx(selected.text) : placeholder ? tx(placeholder) : placeholder}
           </span>
           <ChevronDown className={styles.chevron} size={16} aria-hidden="true" />
         </button>
@@ -165,12 +168,12 @@ export function Select({
         <DropdownMenu.Content className={styles.menu} side={side} align={align} sideOffset={6} collisionPadding={12}>
           <DropdownMenu.RadioGroup value={current} onValueChange={handleChange}>
             {entries.map((entry, index) => {
-              if (entry.kind === 'option') return renderOptionItem(entry);
+              if (entry.kind === 'option') return renderOptionItem(entry, tx);
               return (
                 <Fragment key={`${entry.label}-${index}`}>
                   {index > 0 && <DropdownMenu.Separator className={styles.rule} />}
-                  {entry.label && <DropdownMenu.Label className={styles.groupLabel}>{entry.label}</DropdownMenu.Label>}
-                  {entry.options.map(renderOptionItem)}
+                  {entry.label && <DropdownMenu.Label className={styles.groupLabel}>{tx(entry.label)}</DropdownMenu.Label>}
+                  {entry.options.map((option) => renderOptionItem(option, tx))}
                 </Fragment>
               );
             })}

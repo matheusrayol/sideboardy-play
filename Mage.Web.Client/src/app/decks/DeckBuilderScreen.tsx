@@ -11,6 +11,7 @@ import { appendDeckCardLists } from '../../core/decks/merge';
 import { deckStorage } from '../../core/decks/DeckStorageService';
 import type { DeckCardInfo, DeckCardLists } from '../../core/decks/types';
 import { useServerState } from '../queries';
+import { tx as translatePhrase, useTx } from '../i18n';
 import { STARTER_PREFIX, useDecks } from '../stores/decks';
 import { openImport, type ImportTarget } from '../stores/importSheet';
 import { notify } from '../stores/toasts';
@@ -78,6 +79,7 @@ export function DeckBuilderScreen() {
 }
 
 function DeckLoader({ deckId }: { deckId: string }) {
+  const tx = useTx();
   const navigate = useNavigate();
   const [deck, setDeck] = useState<DeckCardLists | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +88,7 @@ function DeckLoader({ deckId }: { deckId: string }) {
     let cancelled = false;
     (async () => {
       if (deckId === 'new') {
-        const id = await deckStorage.saveDeck({ name: 'New deck', format: DEFAULT_FORMAT, cards: [], sideboard: [] }, { forceNew: true });
+        const id = await deckStorage.saveDeck({ name: translatePhrase('New deck'), format: DEFAULT_FORMAT, cards: [], sideboard: [] }, { forceNew: true });
         await useDecks.getState().refresh();
         useDecks.getState().select(id);
         if (!cancelled) navigate(`/decks/${id}`, { replace: true });
@@ -111,18 +113,19 @@ function DeckLoader({ deckId }: { deckId: string }) {
   if (error) {
     return (
       <div className={styles.missing}>
-        <h1>Deck not found</h1>
-        <p>{error}</p>
+        <h1>{tx('Deck not found')}</h1>
+        <p>{tx(error)}</p>
         <Button variant="print" onClick={() => navigate('/decks')}>Back to decks</Button>
       </div>
     );
   }
-  if (!deck) return <div className={styles.missing}><p>Opening the deck…</p></div>;
+  if (!deck) return <div className={styles.missing}><p>{tx('Opening the deck…')}</p></div>;
   return <DeckBuilder key={deck.id} initial={deck} />;
 }
 
 /** The builder itself; `mode` builds a deck outside the library (Career). */
 export function DeckBuilder({ initial, mode }: { initial: DeckCardLists; mode?: BuilderMode }) {
+  const tx = useTx();
   const navigate = useNavigate();
   const [deck, setDeck] = useState(initial);
   const [zone, setZone] = useState<DeckZone>('cards');
@@ -225,20 +228,22 @@ export function DeckBuilder({ initial, mode }: { initial: DeckCardLists; mode?: 
 
   return (
     <div className={styles.page} data-pane={pane}>
-      <div className={styles.paneSwitch} role="group" aria-label="Show">
-        <button type="button" aria-pressed={pane === 'binder'} className={pane === 'binder' ? styles.paneOn : styles.paneOff} onClick={() => setPane('binder')}>Card binder</button>
-        <button type="button" aria-pressed={pane === 'deck'} className={pane === 'deck' ? styles.paneOn : styles.paneOff} onClick={() => setPane('deck')}>Deck list · {countZone(deck, 'cards')}</button>
+      <div className={styles.paneSwitch} role="group" aria-label={tx('Show')}>
+        <button type="button" aria-pressed={pane === 'binder'} className={pane === 'binder' ? styles.paneOn : styles.paneOff} onClick={() => setPane('binder')}>{tx('Card binder')}</button>
+        <button type="button" aria-pressed={pane === 'deck'} className={pane === 'deck' ? styles.paneOn : styles.paneOff} onClick={() => setPane('deck')}>{tx('Deck list')} · {countZone(deck, 'cards')}</button>
       </div>
       <div className={styles.binderPane}>
         {view === 'mana' ? (
-          <section className={styles.collection} aria-label="Deck by mana value">
+          <section className={styles.collection} aria-label={tx('Deck by mana value')}>
             <div className={styles.filters}>
-              <span className={styles.toggle}>{zone === 'cards' ? 'Deck' : rules.commandZone ? 'Command zone' : 'Sideboard'} by mana value. Click a card for one more, right-click for one less.</span>
-              <button type="button" className={styles.reset} onClick={() => setView('list')}>Back to the cards</button>
+              <span className={styles.toggle}>
+                {tx(`${zone === 'cards' ? 'Deck' : rules.commandZone ? 'Command zone' : 'Sideboard'} by mana value. Click a card for one more, right-click for one less.`)}
+              </span>
+              <button type="button" className={styles.reset} onClick={() => setView('list')}>{tx('Back to the cards')}</button>
             </div>
             <div className={styles.results}>
               {deck[zone].length === 0
-                ? <p className={styles.note}>No cards here yet.</p>
+                ? <p className={styles.note}>{tx('No cards here yet.')}</p>
                 : <ManaColumns entries={deck[zone]} info={info} onAdd={addRow} onRemove={removeRow} onPreview={onPreview} />}
             </div>
           </section>
@@ -307,6 +312,7 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
   onDone(): void;
   onPlay(): void;
 }) {
+  const tx = useTx();
   const format = deck.format || DEFAULT_FORMAT;
   const groups = useMemo(() => groupDeck(deck[zone], info), [deck, zone, info]);
   const curve = useMemo(() => manaCurve(deck.cards, info), [deck.cards, info]);
@@ -330,7 +336,7 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
     return {
       kind: 'into',
       mode,
-      deckName: deck.name || 'this deck',
+      deckName: deck.name || tx('this deck'),
       apply: (fresh) => onChange((current) => (mode === 'replace'
         ? { ...current, cards: fresh.cards, sideboard: fresh.sideboard, format: fresh.format || current.format, source: fresh.source ?? current.source }
         : appendDeckCardLists(current, fresh))),
@@ -338,7 +344,7 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
   }
 
   return (
-    <aside className={styles.deck} aria-label="Deck">
+    <aside className={styles.deck} aria-label={tx('Deck')}>
       <header className={styles.deckHead}>
         <input
           className={styles.deckName}
@@ -347,7 +353,7 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
             const name = event.target.value;
             onChange((current) => ({ ...current, name }));
           }}
-          aria-label="Deck name"
+          aria-label={tx('Deck name')}
           maxLength={60}
         />
         <select
@@ -358,32 +364,32 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
             const value = event.target.value;
             onChange((current) => ({ ...current, format: value }));
           }}
-          aria-label="Format"
+          aria-label={tx('Format')}
         >
-          {!listed && <option value={format}>{formatRules(format).label}</option>}
+          {!listed && <option value={format}>{tx(formatRules(format).label)}</option>}
           {formats.map((group) => (
-            <optgroup key={group.label} label={group.label}>
-              {group.types.map((type) => <option key={type} value={type}>{formatRules(type).label}</option>)}
+            <optgroup key={group.label} label={tx(group.label)}>
+              {group.types.map((type) => <option key={type} value={type}>{tx(formatRules(type).label)}</option>)}
             </optgroup>
           ))}
         </select>
       </header>
 
       <div className={styles.status}>
-        <span className={styles.total}>{total}{rules.deckSize ? <small> / {rules.deckSize}</small> : <small> cards</small>}</span>
+        <span className={styles.total}>{total}{rules.deckSize ? <small> / {rules.deckSize}</small> : <small> {tx('cards')}</small>}</span>
         {validation.data && (validation.data.valid ? (
-          <span className={[styles.chip, styles.chipOk].join(' ')}><Check size={15} aria-hidden="true" /> Legal</span>
+          <span className={[styles.chip, styles.chipOk].join(' ')}><Check size={15} aria-hidden="true" /> {tx('Legal')}</span>
         ) : (
           <button type="button" className={[styles.chip, styles.chipBad].join(' ')} onClick={() => setProblemsOpen((open) => !open)} aria-expanded={problemsOpen}>
-            <TriangleAlert size={15} aria-hidden="true" /> {problems.length} {problems.length === 1 ? 'problem' : 'problems'}
+            <TriangleAlert size={15} aria-hidden="true" /> {tx(`${problems.length} ${problems.length === 1 ? 'problem' : 'problems'}`)}
           </button>
         ))}
-        <span className={styles.saved} aria-live="polite">{saving ? 'Saving…' : 'Saved'}</span>
+        <span className={styles.saved} aria-live="polite">{tx(saving ? 'Saving…' : 'Saved')}</span>
       </div>
       {problemsOpen && problems.length > 0 && (
         <ul className={styles.problems}>
           {problems.slice(0, 12).map((problem, index) => (
-            <li key={index}><b>{problem.group}</b> {problem.message}</li>
+            <li key={index}><b>{problem.group ? tx(problem.group) : ''}</b> {problem.message ? tx(problem.message) : ''}</li>
           ))}
         </ul>
       )}
@@ -391,20 +397,20 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
       {commandZone && <CommandZone deck={deck} info={info} rules={rules} identity={identity} onChange={onChange} onPreview={onPreview} />}
 
       <div className={styles.tabs}>
-        <div className={styles.zoneTabs} role="tablist" aria-label="Deck zone">
-          <button type="button" role="tab" aria-selected={zone === 'cards'} className={zone === 'cards' ? styles.tabOn : styles.tab} onClick={() => onZone('cards')}>Deck {mainCount}</button>
+        <div className={styles.zoneTabs} role="tablist" aria-label={tx('Deck zone')}>
+          <button type="button" role="tab" aria-selected={zone === 'cards'} className={zone === 'cards' ? styles.tabOn : styles.tab} onClick={() => onZone('cards')}>{tx('Deck')} {mainCount}</button>
           <button type="button" role="tab" aria-selected={zone === 'sideboard'} className={zone === 'sideboard' ? styles.tabOn : styles.tab} onClick={() => onZone('sideboard')}>
-            {commandZone ? 'Command zone' : 'Sideboard'} {sideCount}
+            {tx(commandZone ? 'Command zone' : 'Sideboard')} {sideCount}
           </button>
         </div>
         <button
           type="button"
           className={[styles.viewToggle, view === 'mana' ? styles.viewToggleOn : ''].join(' ')}
           aria-pressed={view === 'mana'}
-          title={view === 'mana' ? 'Back to the cards' : 'Lay out the deck in columns by mana value'}
+          title={tx(view === 'mana' ? 'Back to the cards' : 'Lay out the deck in columns by mana value')}
           onClick={() => onView(view === 'mana' ? 'list' : 'mana')}
         >
-          <Columns3 size={15} aria-hidden="true" /> By mana value
+          <Columns3 size={15} aria-hidden="true" /> {tx('By mana value')}
         </button>
       </div>
 
@@ -412,15 +418,15 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
         {groups.length === 0 && (
           <p className={styles.note}>
             {zone === 'cards'
-              ? 'Click cards on the left to add them.'
+              ? tx('Click cards on the left to add them.')
               : commandZone
-                ? `Cards added while this tab is open go to the command zone. ${commandZone.cardLabel}: ${commandZone.min === commandZone.max ? commandZone.min : `${commandZone.min} to ${commandZone.max}`}.`
-                : 'Cards added while this tab is open go to the sideboard.'}
+                ? tx(`Cards added while this tab is open go to the command zone. ${commandZone.cardLabel}: ${commandZone.min === commandZone.max ? commandZone.min : `${commandZone.min} to ${commandZone.max}`}.`)
+                : tx('Cards added while this tab is open go to the sideboard.')}
           </p>
         )}
         {groups.map((group) => (
           <section key={group.key} className={styles.group}>
-            <h3 className={styles.groupHead}>{group.label}<span>{group.count}</span></h3>
+            <h3 className={styles.groupHead}>{tx(group.label)}<span>{group.count}</span></h3>
             <ul>
               {group.rows.map((row) => (
                 <li
@@ -433,14 +439,14 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
                   <span className={styles.rowName}>{row.entry.cardName}</span>
                   <StyledMark card={row.entry.cardName} />
                   {identity && zone === 'cards' && row.card && !withinIdentity(row.card, identity) && (
-                    <TriangleAlert size={14} className={styles.offColor} aria-label="Outside your commander's colors" />
+                    <TriangleAlert size={14} className={styles.offColor} aria-label={tx("Outside your commander's colors")} />
                   )}
                   {row.card && <ManaCost cost={row.card.manaCostLeftStr} size="sm" />}
                   <span className={styles.rowActions}>
-                    <button type="button" aria-label={`One less ${row.entry.cardName}`} onClick={() => onChange((current) => removeCard(current, zone, row.key))}><Minus size={14} /></button>
+                    <button type="button" aria-label={tx(`One less ${row.entry.cardName}`)} onClick={() => onChange((current) => removeCard(current, zone, row.key))}><Minus size={14} /></button>
                     <button
                       type="button"
-                      aria-label={`One more ${row.entry.cardName}`}
+                      aria-label={tx(`One more ${row.entry.cardName}`)}
                       onClick={() => onChange((current) => {
                         const limit = limitFor(row.card, row.entry.cardName);
                         return copiesByName(current, row.entry.cardName) >= limit ? current : addCard(current, zone, { cardName: row.entry.cardName, setCode: row.entry.setCode ?? '', cardNumber: row.entry.cardNumber ?? '' });
@@ -450,21 +456,21 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
                     </button>
                     {commandZone && zone === 'cards' ? (
                       canCommand(row.card, format) && sideCount < commandZone.max && (
-                        <button type="button" aria-label={`Make ${row.entry.cardName} your ${commandZone.cardLabel.toLowerCase()}`} title={`To the command zone`} onClick={() => onChange((current) => moveCard(current, 'cards', row.key))}>
+                        <button type="button" aria-label={tx(`Make ${row.entry.cardName} your ${commandZone.cardLabel.toLowerCase()}`)} title={tx('To the command zone')} onClick={() => onChange((current) => moveCard(current, 'cards', row.key))}>
                           <Crown size={14} />
                         </button>
                       )
                     ) : (
                       <button
                         type="button"
-                        aria-label={zone === 'cards' ? 'Move one to sideboard' : 'Move one to deck'}
-                        title={zone === 'cards' ? 'To sideboard' : 'To deck'}
+                        aria-label={tx(zone === 'cards' ? 'Move one to sideboard' : 'Move one to deck')}
+                        title={tx(zone === 'cards' ? 'To sideboard' : 'To deck')}
                         onClick={() => onChange((current) => moveCard(current, zone, row.key))}
                       >
                         <ArrowLeftRight size={14} />
                       </button>
                     )}
-                    <button type="button" aria-label={`Choose the printing of ${row.entry.cardName}`} title="Printing" onClick={() => setPrintingFor(row)}>
+                    <button type="button" aria-label={tx(`Choose the printing of ${row.entry.cardName}`)} title={tx('Printing')} onClick={() => setPrintingFor(row)}>
                       <Images size={14} />
                     </button>
                   </span>
@@ -490,10 +496,10 @@ function DeckPanel({ deck, zone, view, onView, info, formats, rules, identity, s
           <DropdownMenu.Portal>
             <DropdownMenu.Content className={styles.menu} side="top" align="start" sideOffset={6} onCloseAutoFocus={(event) => event.preventDefault()}>
               <DropdownMenu.Item className={styles.menuItem} onSelect={() => openImport(null, intoDeck('replace'))}>
-                <Replace size={16} aria-hidden="true" /> Replace deck
+                <Replace size={16} aria-hidden="true" /> {tx('Replace deck')}
               </DropdownMenu.Item>
               <DropdownMenu.Item className={styles.menuItem} onSelect={() => openImport(null, intoDeck('add'))}>
-                <ListPlus size={16} aria-hidden="true" /> Add to deck
+                <ListPlus size={16} aria-hidden="true" /> {tx('Add to deck')}
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
@@ -543,6 +549,7 @@ function BasicLands({ deck, info, rules, identity, onChange }: {
   identity: string[] | null;
   onChange(update: (deck: DeckCardLists) => DeckCardLists): void;
 }) {
+  const tx = useTx();
   const size = rules.deckSize ?? Math.max(rules.minDeck, countZone(deck, 'cards'));
   const allowed = (identity ?? MANA_LETTERS) as ManaLetter[];
   // the command zone counts toward a commander deck's size, so the lands fill what is left of the main deck
@@ -559,18 +566,18 @@ function BasicLands({ deck, info, rules, identity, onChange }: {
   }
   return (
     <div className={styles.landsBlock}>
-      <div className={styles.basics} aria-label="Basic lands">
+      <div className={styles.basics} aria-label={tx('Basic lands')}>
         {BASICS.map((basic) => {
           const entry = deck.cards.find((candidate) => candidate.cardName === basic.name);
           const count = deck.cards.filter((candidate) => candidate.cardName === basic.name).reduce((sum, candidate) => sum + candidate.amount, 0);
           return (
             <div key={basic.name} className={styles.basic}>
               <i className={`ms ms-cost ms-${basic.symbol}`} aria-hidden="true" />
-              <button type="button" aria-label={`One less ${basic.name}`} disabled={!entry} onClick={() => entry && onChange((current) => removeCard(current, 'cards', entryKey(entry)))}><Minus size={13} /></button>
+              <button type="button" aria-label={tx(`One less ${basic.name}`)} disabled={!entry} onClick={() => entry && onChange((current) => removeCard(current, 'cards', entryKey(entry)))}><Minus size={13} /></button>
               <b aria-label={`${count} ${basic.name}`}>{count}</b>
               <button
                 type="button"
-                aria-label={`One more ${basic.name}`}
+                aria-label={tx(`One more ${basic.name}`)}
                 onClick={() => onChange((current) => addCard(current, 'cards', entry
                   ? { cardName: entry.cardName, setCode: entry.setCode ?? '', cardNumber: entry.cardNumber ?? '' }
                   : { cardName: basic.name, setCode: '', cardNumber: '' }))}
@@ -582,8 +589,8 @@ function BasicLands({ deck, info, rules, identity, onChange }: {
         })}
       </div>
       {adding.length > 0 && (
-        <button type="button" className={styles.fill} onClick={fill} title={`Brings the deck to ${suggestion.target} lands, split by the colors of its spells`}>
-          <Mountain size={14} aria-hidden="true" /> Fill to {suggestion.target} lands: {adding.map(([name, amount]) => `${amount} ${name}`).join(', ')}
+        <button type="button" className={styles.fill} onClick={fill} title={tx(`Brings the deck to ${suggestion.target} lands, split by the colors of its spells`)}>
+          <Mountain size={14} aria-hidden="true" /> {tx(`Fill to ${suggestion.target} lands: ${adding.map(([name, amount]) => `${amount} ${name}`).join(', ')}`)}
         </button>
       )}
     </div>
@@ -599,13 +606,14 @@ function CommandZone({ deck, info, rules, identity, onChange, onPreview }: {
   onChange(update: (deck: DeckCardLists) => DeckCardLists): void;
   onPreview(card: CardView | null, anchor?: DOMRect): void;
 }) {
+  const tx = useTx();
   const zone = rules.commandZone!;
   const commanders = deck.sideboard;
   return (
-    <section className={styles.command} aria-label={zone.label}>
+    <section className={styles.command} aria-label={tx(zone.label)}>
       {commanders.length === 0 ? (
         <p className={styles.commandEmpty}>
-          <Crown size={16} aria-hidden="true" /> No {zone.cardLabel.toLowerCase()} yet. Point at a legendary creature in your deck and press its crown.
+          <Crown size={16} aria-hidden="true" /> {tx(`No ${zone.cardLabel.toLowerCase()} yet. Point at a legendary creature in your deck and press its crown.`)}
         </p>
       ) : (
         <>
@@ -624,7 +632,7 @@ function CommandZone({ deck, info, rules, identity, onChange, onPreview }: {
                     <CardFace card={card ?? { name: entry.cardName }} size="small" />
                   </div>
                   <span className={styles.commanderName}>{entry.cardName}</span>
-                  <button type="button" className={styles.commanderBack} aria-label={`Put ${entry.cardName} back in the deck`} title="Back to the deck" onClick={() => onChange((current) => moveCard(current, 'sideboard', key, entry.amount))}>
+                  <button type="button" className={styles.commanderBack} aria-label={tx(`Put ${entry.cardName} back in the deck`)} title={tx('Back to the deck')} onClick={() => onChange((current) => moveCard(current, 'sideboard', key, entry.amount))}>
                     <ArrowLeftRight size={14} />
                   </button>
                 </li>
@@ -632,10 +640,10 @@ function CommandZone({ deck, info, rules, identity, onChange, onPreview }: {
             })}
           </ul>
           <p className={styles.identity}>
-            <span>Colors</span>
+            <span>{tx('Colors')}</span>
             {identity && identity.length > 0
               ? identity.map((letter) => <i key={letter} className={`ms ms-cost ms-${letter.toLowerCase()}`} aria-label={BASIC_FOR[letter as ManaLetter]} />)
-              : <i className="ms ms-cost ms-c" aria-label="Colorless" />}
+              : <i className="ms ms-cost ms-c" aria-label={tx('Colorless')} />}
           </p>
         </>
       )}
@@ -670,6 +678,7 @@ function Preview({ card, anchor, side }: { card: CardView; anchor: DOMRect; side
 
 /** A card wearing one of the account's card styles (capsule machines) is marked in the list. */
 function StyledMark({ card }: { card: string }) {
+  const tx = useTx();
   const worn = useMyCardStyles()?.[card];
-  return worn ? <Sparkles size={13} className={styles.styledMark} aria-label="Wears a card style" /> : null;
+  return worn ? <Sparkles size={13} className={styles.styledMark} aria-label={tx('Wears a card style')} /> : null;
 }

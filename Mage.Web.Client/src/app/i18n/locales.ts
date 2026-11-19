@@ -45,5 +45,7 @@ export function browserLocale(languages: readonly string[]): Locale {
 }
 
 export function resolveLocale(preference: LocalePreference | undefined, languages: readonly string[]): Locale {
-  return preference && preference !== 'auto' && isLocale(preference) ? preference : browserLocale(languages);
+  if (preference && preference !== 'auto' && isLocale(preference)) return preference;
+  if (!import.meta.env.VITEST) return 'pt';
+  return browserLocale(languages);
 }

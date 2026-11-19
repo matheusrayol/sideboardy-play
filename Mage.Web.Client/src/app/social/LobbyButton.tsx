@@ -1,9 +1,11 @@
 import { Users } from 'lucide-react';
+import { useTx } from '../i18n';
 import { useLobby } from '../stores/lobby';
 import styles from './LobbyDrawer.module.css';
 
 /** The rail's lobby button: who's online, and unread chat. */
 export function LobbyButton() {
+  const tx = useTx();
   const open = useLobby((state) => state.open);
   const unread = useLobby((state) => state.unread);
   const online = useLobby((state) => state.users.length);
@@ -13,7 +15,7 @@ export function LobbyButton() {
       type="button"
       className={styles.button}
       aria-pressed={open}
-      aria-label={`Lobby: ${online} online${unread ? `, ${unread} unread` : ''}`}
+      aria-label={tx(`Lobby: ${online} online${unread ? `, ${unread} unread` : ''}`)}
       onClick={() => setOpen(!open)}
     >
       <Users size={18} aria-hidden="true" />

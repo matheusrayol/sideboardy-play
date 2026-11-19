@@ -1,7 +1,7 @@
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { ArrowLeft, X } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { useT } from '../i18n';
+import { useT, useTx } from '../i18n';
 import styles from './Dialog.module.css';
 
 export interface DialogProps {
@@ -21,6 +21,9 @@ export interface DialogProps {
 /** A printed zone laid over the dimmed mat. Focus is trapped and returned on close. */
 export function Dialog({ open, onOpenChange, title, description, children, footer, width = 'md', dismissible = true, onBack }: DialogProps) {
   const t = useT();
+  const tx = useTx();
+  const shownTitle = tx(title);
+  const shownDescription = typeof description === 'string' ? tx(description) : description;
   return (
     <RadixDialog.Root open={open} onOpenChange={dismissible ? onOpenChange : undefined}>
       <RadixDialog.Portal>
@@ -36,7 +39,7 @@ export function Dialog({ open, onOpenChange, title, description, children, foote
             }
           }}
           onPointerDownOutside={dismissible ? undefined : (event) => event.preventDefault()}
-          aria-describedby={description ? undefined : undefined}
+          aria-describedby={shownDescription ? undefined : undefined}
         >
           <header className={styles.head}>
             {onBack && (
@@ -44,16 +47,16 @@ export function Dialog({ open, onOpenChange, title, description, children, foote
                 <ArrowLeft size={18} />
               </button>
             )}
-            <RadixDialog.Title className={styles.title}>{title}</RadixDialog.Title>
+            <RadixDialog.Title className={styles.title}>{shownTitle}</RadixDialog.Title>
             {dismissible && (
               <RadixDialog.Close className={styles.close} aria-label={t('ui.close')}>
                 <X size={18} />
               </RadixDialog.Close>
             )}
           </header>
-          {description
-            ? <RadixDialog.Description className={styles.description}>{description}</RadixDialog.Description>
-            : <RadixDialog.Description className="visually-hidden">{title}</RadixDialog.Description>}
+          {shownDescription
+            ? <RadixDialog.Description className={styles.description}>{shownDescription}</RadixDialog.Description>
+            : <RadixDialog.Description className="visually-hidden">{shownTitle}</RadixDialog.Description>}
           <div className={styles.body}>{children}</div>
           {footer && <footer className={styles.footer}>{footer}</footer>}
         </RadixDialog.Content>

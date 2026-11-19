@@ -6,6 +6,7 @@ import { useTables } from '../queries';
 import { useDecks } from '../stores/decks';
 import { useDeckRoster } from '../stores/useDeckRoster';
 import { useSession } from '../stores/session';
+import { useTx } from '../i18n';
 import { Button } from '../ui/Button';
 import { Field } from '../ui/Field';
 import { Zone } from '../ui/Zone';
@@ -14,6 +15,7 @@ import styles from './JoinScreen.module.css';
 
 /** Where an invite link leads: the table, and a seat at it with one of your decks. */
 export function JoinScreen() {
+  const tx = useTx();
   const { tableId = '' } = useParams();
   const navigate = useNavigate();
   const { data: tables = [], dataUpdatedAt, refetch } = useTables();
@@ -59,9 +61,9 @@ export function JoinScreen() {
     return (
       <div className={styles.page}>
         <Zone label="Invite" className={styles.card}>
-          {!fresh ? <p className={styles.note} role="status">Looking for the table…</p> : (
+          {!fresh ? <p className={styles.note} role="status">{tx('Looking for the table…')}</p> : (
             <>
-              <p className={styles.note}>This table is gone: the game may have started, or the host closed it.</p>
+              <p className={styles.note}>{tx('This table is gone: the game may have started, or the host closed it.')}</p>
               <Button variant="print" onClick={() => navigate('/tables')}>See open tables</Button>
             </>
           )}
@@ -74,29 +76,29 @@ export function JoinScreen() {
     <div className={styles.page}>
       <Zone label="You're invited" className={styles.card}>
         <h2 className={styles.name}>
-          {table.passworded && <Lock size={18} aria-label="Password required" />}
+          {table.passworded && <Lock size={18} aria-label={tx('Password required')} />}
           {table.tableName}
         </h2>
         <p className={styles.meta}>
-          {formatRules(table.deckType ?? '').label} · {table.gameType} · hosted by {(table.controllerName ?? '').split(', ')[0]}
+          {tx(formatRules(table.deckType ?? '').label)} · {tx(table.gameType ?? '')} · {tx(`hosted by ${(table.controllerName ?? '').split(', ')[0]}`)}
         </p>
-        <ul className={styles.seats} aria-label="Seats">
+        <ul className={styles.seats} aria-label={tx('Seats')}>
           {(table.seats ?? []).map((seat, index) => (
             <li key={index} className={seat.playerName ? styles.taken : styles.free}>
               {seat.playerType && seat.playerType !== 'HUMAN' ? <Bot size={14} aria-hidden="true" /> : <UserRound size={14} aria-hidden="true" />}
-              {seat.playerName || 'Open seat'}
+              {seat.playerName || tx('Open seat')}
             </li>
           ))}
         </ul>
 
         {seated ? (
           <>
-            <p className={styles.note}>You have a seat at this table.</p>
+            <p className={styles.note}>{tx('You have a seat at this table.')}</p>
             <Button variant="decision" onClick={() => navigate('/tables')}>Go to your tables</Button>
           </>
         ) : !open ? (
           <>
-            <p className={styles.note}>This table has no open seat any more.</p>
+            <p className={styles.note}>{tx('This table has no open seat any more.')}</p>
             <Button variant="print" onClick={() => navigate('/tables')}>See open tables</Button>
           </>
         ) : (
@@ -108,7 +110,7 @@ export function JoinScreen() {
             }}
           >
             <label className={styles.select}>
-              <span>Deck</span>
+              <span>{tx('Deck')}</span>
               <select value={chosen?.id ?? ''} onChange={(event) => setDeckId(event.target.value)} disabled={roster.length === 0}>
                 {roster.map((deck) => <option key={deck.id} value={deck.id}>{deck.name}</option>)}
               </select>
@@ -116,7 +118,7 @@ export function JoinScreen() {
             {table.passworded && (
               <Field label="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} hint="Ask the host for it." />
             )}
-            {error && <p className={styles.error} role="alert">{error}</p>}
+            {error && <p className={styles.error} role="alert">{tx(error)}</p>}
             <div className={styles.actions}>
               <Button variant="quiet" onClick={() => navigate('/tables')}>Not now</Button>
               <Button type="submit" variant="decision" busy={busy} disabled={!chosen || (table.passworded && !password)}>Take a seat</Button>

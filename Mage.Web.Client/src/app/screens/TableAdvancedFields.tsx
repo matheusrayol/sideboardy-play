@@ -3,6 +3,7 @@ import { useId, useState, type ReactNode } from 'react';
 import {
   ATTACK_OPTIONS, BUFFER_TIMES, describeAdvanced, MULLIGAN_TYPES, parseSeed, RANGES, SKILL_LEVELS, TIME_LIMITS, type TableAdvanced,
 } from '../../core/game/tableSetup';
+import { useTx } from '../i18n';
 import styles from './TableAdvancedFields.module.css';
 
 function Select<T extends string | number>({ label, value, options, onChange, hint }: {
@@ -12,10 +13,11 @@ function Select<T extends string | number>({ label, value, options, onChange, hi
   onChange(value: T): void;
   hint?: ReactNode;
 }) {
+  const tx = useTx();
   const id = useId();
   return (
     <div className={styles.field}>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id}>{tx(label)}</label>
       <select
         id={id}
         value={String(value)}
@@ -24,37 +26,39 @@ function Select<T extends string | number>({ label, value, options, onChange, hi
           if (picked) onChange(picked.value);
         }}
       >
-        {options.map((option) => <option key={String(option.value)} value={String(option.value)}>{option.label}</option>)}
+        {options.map((option) => <option key={String(option.value)} value={String(option.value)}>{tx(option.label)}</option>)}
       </select>
-      {hint && <p className={styles.hint}>{hint}</p>}
+      {hint && <p className={styles.hint}>{typeof hint === 'string' ? tx(hint) : hint}</p>}
     </div>
   );
 }
 
 function Check({ label, checked, onChange }: { label: string; checked: boolean; onChange(checked: boolean): void }) {
+  const tx = useTx();
   return (
     <label className={styles.check}>
       <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} />
-      {label}
+      {tx(label)}
     </label>
   );
 }
 
 function SeedField({ value, onChange }: { value: string; onChange(value: string): void }) {
+  const tx = useTx();
   const id = useId();
   const invalid = value.trim() !== '' && parseSeed(value) === null;
   return (
     <div className={styles.field}>
-      <label htmlFor={id}>Seed</label>
+      <label htmlFor={id}>{tx('Seed')}</label>
       <input
         id={id}
         inputMode="numeric"
-        placeholder="Random"
+        placeholder={tx('Random')}
         value={value}
         aria-invalid={invalid}
         onChange={(event) => onChange(event.target.value)}
       />
-      <p className={styles.hint}>{invalid ? 'Up to 15 digits.' : 'The same seed deals the same cards, to replay a game.'}</p>
+      <p className={styles.hint}>{tx(invalid ? 'Up to 15 digits.' : 'The same seed deals the same cards, to replay a game.')}</p>
     </div>
   );
 }
@@ -72,15 +76,16 @@ export function TableAdvancedFields({ value, onChange, multiplayer, commander }:
   multiplayer: boolean;
   commander: boolean;
 }) {
+  const tx = useTx();
   const [open, setOpen] = useState(false);
-  const changed = describeAdvanced(value);
+  const changed = describeAdvanced(value).map(tx);
   const bodyId = useId();
   return (
     <section className={styles.advanced}>
       <button type="button" className={styles.toggle} aria-expanded={open} aria-controls={bodyId} onClick={() => setOpen(!open)}>
         <ChevronDown size={16} className={open ? styles.chevronOpen : styles.chevron} aria-hidden="true" />
-        Advanced
-        <span className={styles.summary}>{changed.length > 0 ? changed.join(' · ') : 'Standard rules'}</span>
+        {tx('Advanced')}
+        <span className={styles.summary}>{changed.length > 0 ? changed.join(' · ') : tx('Standard rules')}</span>
       </button>
       {open && (
         <div id={bodyId} className={styles.grid}>

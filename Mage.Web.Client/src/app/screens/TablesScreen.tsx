@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { api } from '../connection';
 import { toWire } from '../decks/deckModel';
-import { type Translate, useT } from '../i18n';
+import { type Translate, useT, useTx } from '../i18n';
 import '../match/matchMessages';
 import { playgroupErrorText } from '../playgroup/playgroupUi';
 import { refreshTables, useServerState, useTables } from '../queries';
@@ -47,6 +47,7 @@ const STATE_LABEL: Record<string, string> = {
 /** Every table on the server: join one with your selected deck, watch a game, or host your own. */
 export function TablesScreen() {
   const t = useT();
+  const tx = useTx();
   const location = useLocation();
   const { data: tables = [], isLoading } = useTables();
   const userName = useSession((state) => state.userName);
@@ -102,7 +103,7 @@ export function TablesScreen() {
         >
           {mine.length > 0 && (
             <div className={styles.group}>
-              <h3 className={styles.groupLabel}>Your tables</h3>
+              <h3 className={styles.groupLabel}>{tx('Your tables')}</h3>
               {mine.map((table) => (
                 <MyTable key={table.tableId} table={table} />
               ))}
@@ -110,7 +111,7 @@ export function TablesScreen() {
           )}
           <div className={styles.group}>
             {open.length === 0 && !isLoading && (
-              <p className={styles.empty}>No one is waiting right now. Host a table and invite a friend, or play the AI from Home.</p>
+              <p className={styles.empty}>{tx('No one is waiting right now. Host a table and invite a friend, or play the AI from Home.')}</p>
             )}
             {open.map((table) => (
               <TableRow key={table.tableId} table={table}>
@@ -123,7 +124,7 @@ export function TablesScreen() {
         </Zone>
 
         <Zone label="Games in progress" className={styles.list}>
-          {running.length === 0 && <p className={styles.empty}>No games are being played.</p>}
+          {running.length === 0 && <p className={styles.empty}>{tx('No games are being played.')}</p>}
           {running.map((table) => (
             <TableRow key={table.tableId} table={table}>
               {table.spectatorsAllowed && (
@@ -187,27 +188,28 @@ export function TablesScreen() {
 }
 
 function TableRow({ table, children }: { table: TableView; children?: React.ReactNode }) {
+  const tx = useTx();
   return (
     <article className={styles.row}>
       <div className={styles.rowMain}>
         <h3 className={styles.tableName}>
-          {table.passworded && <Lock size={14} aria-label="Password required" />}
+          {table.passworded && <Lock size={14} aria-label={tx('Password required')} />}
           {table.tableName}
         </h3>
         <p className={styles.tableMeta}>
-          {table.gameType} · {(table.deckType ?? '').replace(/^Constructed - /, '')} · {table.controllerName}
+          {tx(table.gameType ?? '')} · {tx((table.deckType ?? '').replace(/^Constructed - /, ''))} · {table.controllerName}
         </p>
       </div>
-      <ul className={styles.seats} aria-label="Seats">
+      <ul className={styles.seats} aria-label={tx('Seats')}>
         {(table.seats ?? []).map((seat, index) => (
-          <li key={index} className={seat.playerName ? styles.seatTaken : styles.seatOpen} title={seat.playerName || 'Open seat'}>
+          <li key={index} className={seat.playerName ? styles.seatTaken : styles.seatOpen} title={seat.playerName || tx('Open seat')}>
             {seat.playerType && seat.playerType !== 'HUMAN' ? <Bot size={14} aria-hidden="true" /> : <UserRound size={14} aria-hidden="true" />}
-            <span className={styles.seatName}>{seat.playerName || 'Open'}</span>
+            <span className={styles.seatName}>{seat.playerName || tx('Open')}</span>
             {seat.playerName && (!seat.playerType || seat.playerType === 'HUMAN') && <NameLevel name={seat.playerName} className={styles.seatLevel} />}
           </li>
         ))}
       </ul>
-      <span className={styles.state}>{STATE_LABEL[table.tableState ?? ''] ?? table.tableStateText}</span>
+      <span className={styles.state}>{tx(STATE_LABEL[table.tableState ?? ''] ?? table.tableStateText ?? '')}</span>
       <div className={styles.rowActions}>{children}</div>
     </article>
   );
@@ -303,6 +305,7 @@ function rosterSelectOptions(roster: readonly RosterDeck[], t: Translate) {
 
 function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChange(open: boolean): void; deckId: string | null }) {
   const t = useT();
+  const tx = useTx();
   const { data: serverState } = useServerState();
   const roomId = useSession((state) => state.roomId);
   const userName = useSession((state) => state.userName);
@@ -459,45 +462,45 @@ function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChang
         <Field label="Table name" value={name} placeholder={`${userName}'s table`} onChange={(event) => setName(event.target.value)} />
         <div className={styles.pair}>
           <label className={styles.selectField}>
-            <span>Format</span>
+            <span>{tx('Format')}</span>
             <select value={deckType} onChange={(event) => setDeckType(event.target.value)}>
-              {!listed && <option value={deckType}>{formatRules(deckType).label}</option>}
+              {!listed && <option value={deckType}>{tx(formatRules(deckType).label)}</option>}
               {menu.map((group) => (
-                <optgroup key={group.label} label={group.label}>
-                  {group.types.map((item) => <option key={item} value={item}>{formatRules(item).label}</option>)}
+                <optgroup key={group.label} label={tx(group.label)}>
+                  {group.types.map((item) => <option key={item} value={item}>{tx(formatRules(item).label)}</option>)}
                 </optgroup>
               ))}
             </select>
           </label>
           <label className={styles.selectField}>
-            <span>Game</span>
+            <span>{tx('Game')}</span>
             <select value={chosenGame} onChange={(event) => setGameType(event.target.value)}>
-              {gameTypes.map((item) => <option key={item} value={item}>{item}</option>)}
+              {gameTypes.map((item) => <option key={item} value={item}>{tx(item)}</option>)}
             </select>
           </label>
         </div>
         <div className={styles.pair}>
           {maxSeats > 2 ? (
             <label className={styles.selectField}>
-              <span>Players</span>
+              <span>{tx('Players')}</span>
               <select value={seatCount} onChange={(event) => setSeats(Number(event.target.value))}>
                 {Array.from({ length: maxSeats - minSeats + 1 }, (_, index) => minSeats + index).map((count) => <option key={count} value={count}>{count}</option>)}
               </select>
             </label>
           ) : (
             <label className={styles.selectField}>
-              <span>Games to win</span>
+              <span>{tx('Games to win')}</span>
               <select value={wins} onChange={(event) => setWins(Number(event.target.value))}>
-                <option value={1}>1 (single game)</option>
-                <option value={2}>2 (best of three)</option>
-                <option value={3}>3 (best of five)</option>
+                <option value={1}>{tx('1 (single game)')}</option>
+                <option value={2}>{tx('2 (best of three)')}</option>
+                <option value={3}>{tx('3 (best of five)')}</option>
               </select>
             </label>
           )}
           <label className={styles.selectField}>
-            <span>AI players</span>
+            <span>{tx('AI players')}</span>
             <select value={Math.min(aiSeats, seatCount - 1)} onChange={(event) => setAiSeats(Number(event.target.value))}>
-              {Array.from({ length: seatCount }, (_, index) => <option key={index} value={index}>{index === 0 ? 'None' : index}</option>)}
+              {Array.from({ length: seatCount }, (_, index) => <option key={index} value={index}>{index === 0 ? tx('None') : index}</option>)}
             </select>
           </label>
         </div>
@@ -544,7 +547,7 @@ function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChang
           multiplayer={seatCount > 2}
           commander={commander}
         />
-        {error && <p className={styles.error} role="alert">{error}</p>}
+        {error && <p className={styles.error} role="alert">{tx(error)}</p>}
       </div>
     </Dialog>
   );

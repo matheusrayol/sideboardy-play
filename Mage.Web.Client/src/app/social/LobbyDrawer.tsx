@@ -4,6 +4,7 @@ import { useEffect, useMemo } from 'react';
 import { inviteLink, toChatLines, type ChatLine } from '../../core/social/chatLine';
 import type { TableView, UsersView } from '../../protocol/generated/views';
 import { useServerInfo, useTables } from '../queries';
+import { useTx } from '../i18n';
 import { useLobby, type LobbyMessage, type LobbyTab } from '../stores/lobby';
 import { PRESENCE_STATUSES, usePresence, type PresenceStatus } from '../stores/presence';
 import { useSession } from '../stores/session';
@@ -23,6 +24,7 @@ import { PUBLIC_ORIGIN } from '../brand';
 
 /** The lobby: the main room's chat and the players online, beside whatever screen is open. */
 export function LobbyDrawer() {
+  const tx = useTx();
   const open = useLobby((state) => state.open);
   const setOpen = useLobby((state) => state.setOpen);
   const tab = useLobby((state) => state.tab);
@@ -41,16 +43,16 @@ export function LobbyDrawer() {
   // registered players are only listed where there are accounts
   const shown: LobbyTab = tab === 'directory' && !accounts ? 'players' : tab;
   return (
-    <aside className={styles.drawer} aria-label="Lobby">
+    <aside className={styles.drawer} aria-label={tx('Lobby')}>
       <header className={styles.head}>
-        <div className={styles.tabs} role="tablist" aria-label="Lobby">
+        <div className={styles.tabs} role="tablist" aria-label={tx('Lobby')}>
           <Tab id="chat" label="Chat" />
           <Tab id="players" label="Players" />
           {accounts && <Tab id="directory" label="Find" />}
         </div>
         <IconButton label="Close lobby" icon={<X size={18} />} onClick={() => setOpen(false)} />
       </header>
-      <div className={styles.body} role="tabpanel" aria-label={PANEL_LABEL[shown]}>
+      <div className={styles.body} role="tabpanel" aria-label={tx(PANEL_LABEL[shown])}>
         {shown === 'chat' ? <LobbyChat /> : shown === 'players' ? <PlayerList /> : <PlayerDirectory />}
       </div>
     </aside>
@@ -60,12 +62,13 @@ export function LobbyDrawer() {
 const PANEL_LABEL: Record<LobbyTab, string> = { chat: 'Lobby chat', players: 'Players online', directory: 'Registered players' };
 
 function Tab({ id, label }: { id: LobbyTab; label: string }) {
+  const tx = useTx();
   const tab = useLobby((state) => state.tab);
   const setOpen = useLobby((state) => state.setOpen);
   const count = useLobby((state) => (id === 'players' ? state.users.length : 0));
   return (
     <button type="button" role="tab" aria-selected={tab === id} className={styles.tab} onClick={() => setOpen(true, id)}>
-      {label}{count > 0 ? ` (${count})` : ''}
+      {tx(label)}{count > 0 ? ` (${count})` : ''}
     </button>
   );
 }
@@ -121,6 +124,7 @@ function useMyOpenTables(): TableView[] {
 }
 
 function PlayerList() {
+  const tx = useTx();
   const users = useLobby((state) => state.users);
   const me = useSession((state) => state.userName);
   const friends = useSocial((state) => state.friends);
@@ -136,13 +140,13 @@ function PlayerList() {
   return (
     <div className={styles.players}>
       <PresencePicker />
-      <ul className={styles.list} aria-label="Players online">
+      <ul className={styles.list} aria-label={tx('Players online')}>
         {sorted.map((user) => <PlayerRow key={user.userName} user={user} me={me} myTables={myTables} />)}
       </ul>
       {offlineFriends.length > 0 && (
         <>
-          <h3 className={styles.groupLabel}>Friends offline</h3>
-          <ul className={styles.list} aria-label="Friends offline">
+          <h3 className={styles.groupLabel}>{tx('Friends offline')}</h3>
+          <ul className={styles.list} aria-label={tx('Friends offline')}>
             {offlineFriends.map((name) => (
               <li key={name} className={[styles.player, styles.offline].join(' ')}>
                 <Avatar name={name} size="sm" />
@@ -161,6 +165,7 @@ const PRESENCE_LABEL: Record<PresenceStatus, string> = { online: 'Online', looki
 
 /** The player's own status (#229): kept by the server across sessions until changed. */
 function PresencePicker() {
+  const tx = useTx();
   const status = usePresence((state) => state.status);
   const supported = usePresence((state) => state.supported);
   const busy = usePresence((state) => state.busy);
@@ -168,7 +173,7 @@ function PresencePicker() {
   return (
     <label className={styles.presence}>
       <span>
-        {status === 'hidden' ? 'Others see you offline' : status === 'looking' ? 'Others see you looking to play' : 'Your status'}
+        {tx(status === 'hidden' ? 'Others see you offline' : status === 'looking' ? 'Others see you looking to play' : 'Your status')}
       </span>
       <select
         value={status}
@@ -178,13 +183,14 @@ function PresencePicker() {
             .catch((error: unknown) => notify("Couldn't change your status", error instanceof Error ? error.message : String(error), 'error'));
         }}
       >
-        {PRESENCE_STATUSES.map((value) => <option key={value} value={value}>{PRESENCE_LABEL[value]}</option>)}
+        {PRESENCE_STATUSES.map((value) => <option key={value} value={value}>{tx(PRESENCE_LABEL[value])}</option>)}
       </select>
     </label>
   );
 }
 
 function PlayerRow({ user, me, myTables }: { user: UsersView; me: string; myTables: TableView[] }) {
+  const tx = useTx();
   const name = user.userName ?? '';
   const friend = useSocial((state) => isFriend(state, name));
   const ignoredUser = useSocial((state) => isIgnored(state, name));
@@ -202,14 +208,14 @@ function PlayerRow({ user, me, myTables }: { user: UsersView; me: string; myTabl
 
   return (
     <li className={[styles.player, ignoredUser ? styles.ignored : ''].join(' ')}>
-      <button type="button" className={styles.identity} onClick={() => useLobby.getState().openProfile(name)} title={`${name}'s profile`}>
+      <button type="button" className={styles.identity} onClick={() => useLobby.getState().openProfile(name)} title={tx(`${name}'s profile`)}>
         <Avatar name={name} avatarId={user.avatarId} size="sm" ring={look?.frame === THANK_YOU.frame} frame={look?.frame} />
         <span className={styles.playerName}>
-          {name}<LevelBadge level={look?.level} /><Flair name={name} />{isMe ? ' (you)' : ''} <Flag flagName={user.flagName} />
-          {user.status === 'looking' && <span className={[styles.badge, styles.looking].join(' ')}>Looking to play</span>}
-          {user.status === 'hidden' && <span className={styles.badge} title="Others don't see this player online">Hidden</span>}
+          {name}<LevelBadge level={look?.level} /><Flair name={name} />{isMe ? tx(' (you)') : ''} <Flag flagName={user.flagName} />
+          {user.status === 'looking' && <span className={[styles.badge, styles.looking].join(' ')}>{tx('Looking to play')}</span>}
+          {user.status === 'hidden' && <span className={styles.badge} title={tx("Others don't see this player online")}>{tx('Hidden')}</span>}
         </span>
-        {friend && <Star className={styles.star} size={14} aria-label="Friend" />}
+        {friend && <Star className={styles.star} size={14} aria-label={tx('Friend')} />}
       </button>
       {status && <span className={styles.status} title={status}>{status}</span>}
       {!isMe && (
@@ -220,36 +226,36 @@ function PlayerRow({ user, me, myTables }: { user: UsersView; me: string; myTabl
           <DropdownMenu.Portal>
             <DropdownMenu.Content className={shell.menu} align="end" sideOffset={6}>
               <DropdownMenu.Item className={shell.menuItem} onSelect={() => useLobby.getState().whisper(name)}>
-                <MessageCircle size={16} aria-hidden="true" /> Whisper
+                <MessageCircle size={16} aria-hidden="true" /> {tx('Whisper')}
               </DropdownMenu.Item>
               {myTables.map((table) => (
                 <DropdownMenu.Item key={table.tableId} className={shell.menuItem} onSelect={() => invite(table)}>
-                  <Send size={16} aria-hidden="true" /> Invite to {table.tableName}
+                  <Send size={16} aria-hidden="true" /> {tx(`Invite to ${table.tableName}`)}
                 </DropdownMenu.Item>
               ))}
               {myTables.length === 0 && (
                 <DropdownMenu.Item className={shell.menuItem} disabled>
-                  <Send size={16} aria-hidden="true" /> Host a table to invite
+                  <Send size={16} aria-hidden="true" /> {tx('Host a table to invite')}
                 </DropdownMenu.Item>
               )}
               <DropdownMenu.Item className={shell.menuItem} onSelect={() => useLobby.getState().openProfile(name)}>
-                <UserRound size={16} aria-hidden="true" /> Profile
+                <UserRound size={16} aria-hidden="true" /> {tx('Profile')}
               </DropdownMenu.Item>
               <DropdownMenu.Separator className={shell.menuRule} />
               <DropdownMenu.Item
                 className={shell.menuItem}
                 onSelect={() => (friend ? useSocial.getState().removeFriend(name) : useSocial.getState().addFriend(name))}
               >
-                {friend ? <StarOff size={16} aria-hidden="true" /> : <Star size={16} aria-hidden="true" />} {friend ? 'Remove friend' : 'Add friend'}
+                {friend ? <StarOff size={16} aria-hidden="true" /> : <Star size={16} aria-hidden="true" />} {tx(friend ? 'Remove friend' : 'Add friend')}
               </DropdownMenu.Item>
               <DropdownMenu.Item
                 className={shell.menuItem}
                 onSelect={() => (ignoredUser ? useSocial.getState().unignore(name) : useSocial.getState().ignore(name))}
               >
-                <Ban size={16} aria-hidden="true" /> {ignoredUser ? 'Stop ignoring' : 'Ignore'}
+                <Ban size={16} aria-hidden="true" /> {tx(ignoredUser ? 'Stop ignoring' : 'Ignore')}
               </DropdownMenu.Item>
               <DropdownMenu.Item className={shell.menuItem} onSelect={() => useLobby.getState().openReport(name)}>
-                <FlagIcon size={16} aria-hidden="true" /> Report
+                <FlagIcon size={16} aria-hidden="true" /> {tx('Report')}
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>

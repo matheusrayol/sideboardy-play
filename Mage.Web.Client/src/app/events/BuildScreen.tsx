@@ -8,7 +8,7 @@ import { groupOf } from '../decks/deckModel';
 import { MatchScore } from '../match/MatchScore';
 import { lessonsFor, useCareerLessons } from '../stores/careerLessons';
 import { useEvents, type ConstructState } from '../stores/events';
-import { useT } from '../i18n';
+import { useT, useTx } from '../i18n';
 import { Button } from '../ui/Button';
 import { CardFace } from '../ui/CardFace';
 import { BASICS, countBasics, initialMain, isBasic, toDeckLists, type BasicName } from './buildDeck';
@@ -19,6 +19,7 @@ import styles from './Build.module.css';
 
 /** Deck building for an event: after a draft or with a sealed pool, and sideboarding between games. */
 export function BuildScreen() {
+  const tx = useTx();
   const { tableId = '' } = useParams();
   const navigate = useNavigate();
   const construct = useEvents((state) => (state.construct?.tableId === tableId ? state.construct : null));
@@ -26,8 +27,8 @@ export function BuildScreen() {
     return (
       <div className={styles.screen}>
         <div className={styles.empty}>
-          <h1>Nothing to build</h1>
-          <p>Deck building for this event isn't open in this tab.</p>
+          <h1>{tx('Nothing to build')}</h1>
+          <p>{tx("Deck building for this event isn't open in this tab.")}</p>
           <Button variant="print" onClick={() => navigate('/events')}>Back to events</Button>
         </div>
       </div>
@@ -37,6 +38,7 @@ export function BuildScreen() {
 }
 
 function Builder({ construct }: { construct: ConstructState }) {
+  const tx = useTx();
   const submit = useEvents((state) => state.submit);
   const pool = useMemo(
     () => [...Object.values(construct.deck.cards ?? {}), ...Object.values(construct.deck.sideboard ?? {})] as PoolCard[],
@@ -92,17 +94,17 @@ function Builder({ construct }: { construct: ConstructState }) {
     <div className={[styles.screen, lesson ? styles.screenLesson : ''].join(' ')}>
       <header className={styles.top}>
         <div>
-          <h1 className={styles.title}>{construct.kind === 'construct' ? 'Build your deck' : 'Adjust your deck'}</h1>
+          <h1 className={styles.title}>{tx(construct.kind === 'construct' ? 'Build your deck' : 'Adjust your deck')}</h1>
           {construct.kind === 'sideboard' && <MatchScore tableId={construct.tableId} />}
         </div>
         <div className={styles.topRight}>
           {construct.deadline && !construct.submitted && <Countdown deadline={construct.deadline} />}
           <div className={styles.count} aria-live="polite">
             <b className={total >= minimum ? styles.countOk : ''}>{total}</b>
-            <span>/ {minimum} cards{construct.limited ? ` · ${inDeck.length} spells, ${landCount} lands` : ''}</span>
+            <span>/ {minimum} {tx('cards')}{construct.limited ? ` · ${inDeck.length} ${tx('spells')}, ${landCount} ${tx('lands')}` : ''}</span>
           </div>
           {construct.submitted ? (
-            <span className={styles.submitted}><Check size={18} aria-hidden="true" /> Deck submitted — waiting for the others</span>
+            <span className={styles.submitted}><Check size={18} aria-hidden="true" /> {tx('Deck submitted — waiting for the others')}</span>
           ) : (
             <Button
               variant="decision"
@@ -132,10 +134,10 @@ function Builder({ construct }: { construct: ConstructState }) {
         />
       )}
 
-      <section className={styles.zone} aria-label={`Card pool, ${inPool.length} cards`}>
+      <section className={styles.zone} aria-label={tx(`Card pool, ${inPool.length} cards`)}>
         <div className={styles.zoneHead}>
-          <h2>Pool <span>{inPool.length}</span></h2>
-          <div className={styles.pips} role="group" aria-label="Show colors">
+          <h2>{tx('Pool')} <span>{inPool.length}</span></h2>
+          <div className={styles.pips} role="group" aria-label={tx('Show colors')}>
             {BASICS.map((basic) => {
               const on = colors.includes(basic.color);
               return (
@@ -144,7 +146,7 @@ function Builder({ construct }: { construct: ConstructState }) {
                   type="button"
                   className={[styles.pip, on ? styles.pipOn : ''].join(' ')}
                   aria-pressed={on}
-                  aria-label={`Show ${basic.color} cards`}
+                  aria-label={tx(`Show ${basic.color} cards`)}
                   onClick={() => setColors((current) => (on ? current.filter((color) => color !== basic.color) : [...current, basic.color]))}
                 >
                   <i className={`ms ms-cost ms-${basic.symbol}`} aria-hidden="true" />
@@ -152,22 +154,22 @@ function Builder({ construct }: { construct: ConstructState }) {
               );
             })}
           </div>
-          <p className={styles.tip}>Click a card to move it between the pool and your deck.</p>
+          <p className={styles.tip}>{tx('Click a card to move it between the pool and your deck.')}</p>
         </div>
         <Columns columns={poolColumns} info={info} onClick={toggle} empty="Every card is in your deck." />
       </section>
 
-      <section className={[styles.zone, styles.deckZone].join(' ')} aria-label={`Deck, ${inDeck.length} cards`}>
+      <section className={[styles.zone, styles.deckZone].join(' ')} aria-label={tx(`Deck, ${inDeck.length} cards`)}>
         <div className={styles.zoneHead}>
-          <h2>Deck <span>{inDeck.length}</span></h2>
+          <h2>{tx('Deck')} <span>{inDeck.length}</span></h2>
           {construct.limited && (
-            <div className={styles.basics} aria-label="Basic lands">
+            <div className={styles.basics} aria-label={tx('Basic lands')}>
               {BASICS.map((basic) => (
                 <div key={basic.name} className={styles.basic}>
                   <i className={`ms ms-cost ms-${basic.symbol}`} aria-hidden="true" />
-                  <button type="button" aria-label={`One less ${basic.name}`} disabled={basics[basic.name] === 0 || construct.submitted} onClick={() => setBasics((current) => ({ ...current, [basic.name]: current[basic.name] - 1 }))}><Minus size={13} /></button>
+                  <button type="button" aria-label={tx(`One less ${basic.name}`)} disabled={basics[basic.name] === 0 || construct.submitted} onClick={() => setBasics((current) => ({ ...current, [basic.name]: current[basic.name] - 1 }))}><Minus size={13} /></button>
                   <b aria-label={`${basics[basic.name]} ${basic.name}`}>{basics[basic.name]}</b>
-                  <button type="button" aria-label={`One more ${basic.name}`} disabled={construct.submitted} onClick={() => setBasics((current) => ({ ...current, [basic.name]: current[basic.name] + 1 }))}><Plus size={13} /></button>
+                  <button type="button" aria-label={tx(`One more ${basic.name}`)} disabled={construct.submitted} onClick={() => setBasics((current) => ({ ...current, [basic.name]: current[basic.name] + 1 }))}><Plus size={13} /></button>
                 </div>
               ))}
               <Button variant="quiet" size="sm" icon={<Sparkles size={15} />} disabled={construct.submitted || inDeck.length === 0} onClick={() => setBasics(() => suggestLands(inDeck, info, minimum - inDeck.length))}>
@@ -188,12 +190,13 @@ function Columns({ columns, info, onClick, empty }: {
   onClick(card: PoolCard): void;
   empty: string;
 }) {
-  if (columns.length === 0) return <p className={styles.note}>{empty}</p>;
+  const tx = useTx();
+  if (columns.length === 0) return <p className={styles.note}>{tx(empty)}</p>;
   return (
     <div className={styles.columns}>
       {columns.map((column) => (
         <div key={column.label} className={styles.column}>
-          <span className={styles.columnLabel}>{column.label} <small>{column.cards.length}</small></span>
+          <span className={styles.columnLabel}>{tx(column.label)} <small>{column.cards.length}</small></span>
           <div className={styles.columnCards} style={{ height: 176 + (column.cards.length - 1) * 30 }}>
             {column.cards.map((card, index) => (
               <button

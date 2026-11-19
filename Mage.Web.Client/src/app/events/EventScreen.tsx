@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import type { TournamentPlayerView } from '../../protocol/generated/views';
 import { api } from '../connection';
+import { useTx } from '../i18n';
 import { useEvents } from '../stores/events';
 import { useSession } from '../stores/session';
 import { Button } from '../ui/Button';
@@ -27,6 +28,7 @@ const STATE_TEXT: Record<string, string> = {
 
 /** One event: where it stands, the standings and every round's pairings. */
 export function EventScreen() {
+  const tx = useTx();
   const { tournamentId = '' } = useParams();
   const navigate = useNavigate();
   const live = useEvents((state) => state.tournaments[tournamentId]);
@@ -44,7 +46,7 @@ export function EventScreen() {
   if (!view) {
     return (
       <Zone label="Event" className={styles.page}>
-        <p className={styles.note}>{polled.isPending ? 'Loading the event…' : "This event isn't running on the server any more."}</p>
+        <p className={styles.note}>{tx(polled.isPending ? 'Loading the event…' : "This event isn't running on the server any more.")}</p>
         <Button variant="print" onClick={() => navigate('/events')}>All events</Button>
       </Zone>
     );
@@ -62,13 +64,13 @@ export function EventScreen() {
         <div>
           <h1 className={styles.title}>{view.tournamentName}</h1>
           <p className={styles.state}>
-            {[view.tournamentType, finished ? 'Event complete' : view.runningInfo || stateLine(view.tournamentState)].filter(Boolean).join(' · ')}
+            {[view.tournamentType ? tx(view.tournamentType) : '', finished ? tx('Event complete') : view.runningInfo ? tx(view.runningInfo) : tx(stateLine(view.tournamentState))].filter(Boolean).join(' · ')}
           </p>
         </div>
         <div className={styles.headActions}>
           {buildPending && (
             <Link to={`/build/${construct!.tableId}`} className={styles.due}>
-              <Hammer size={16} aria-hidden="true" /> Your deck is due — build it now
+              <Hammer size={16} aria-hidden="true" /> {tx('Your deck is due — build it now')}
             </Link>
           )}
           {me && !finished && !me.quit && (
@@ -80,7 +82,7 @@ export function EventScreen() {
       {finished && players[0] && (players[0].points ?? 0) > (players[1]?.points ?? -1) && (
         <div className={styles.winner}>
           <Trophy size={28} aria-hidden="true" />
-          <p><strong>{players[0].name}</strong> wins the event</p>
+          <p><strong>{players[0].name}</strong> {tx('wins the event')}</p>
         </div>
       )}
 
@@ -88,16 +90,16 @@ export function EventScreen() {
         <Zone label="Standings" className={styles.standings}>
           <table className={styles.table}>
             <thead>
-              <tr><th scope="col">#</th><th scope="col">Player</th><th scope="col">Points</th><th scope="col">Results</th><th scope="col">Now</th></tr>
+              <tr><th scope="col">#</th><th scope="col">{tx('Player')}</th><th scope="col">{tx('Points')}</th><th scope="col">{tx('Results')}</th><th scope="col">{tx('Now')}</th></tr>
             </thead>
             <tbody>
               {players.map((player, index) => (
                 <tr key={player.name} className={player.name === userName ? styles.meRow : undefined}>
                   <td>{index + 1}</td>
-                  <td className={styles.player}>{player.name}{player.quit && !finished ? ' (left)' : ''}</td>
+                  <td className={styles.player}>{player.name}{player.quit && !finished ? tx(' (left)') : ''}</td>
                   <td className={styles.points}>{player.points ?? 0}</td>
                   <td className={styles.results}>{player.results || '—'}</td>
-                  <td className={styles.now}>{STATE_TEXT[player.state ?? ''] ?? player.state ?? ''}</td>
+                  <td className={styles.now}>{tx(STATE_TEXT[player.state ?? ''] ?? player.state ?? '')}</td>
                 </tr>
               ))}
             </tbody>
@@ -106,13 +108,13 @@ export function EventScreen() {
 
         <Zone label="Rounds" className={styles.rounds}>
           {rounds.length === 0 ? (
-            <p className={styles.note}>Pairings appear when the first round starts.</p>
+            <p className={styles.note}>{tx('Pairings appear when the first round starts.')}</p>
           ) : (
             [...rounds].reverse().map((round, reversedIndex) => {
               const number = rounds.length - reversedIndex;
               return (
                 <section key={number} className={styles.round}>
-                  <h3 className={styles.roundHead}>Round {number}</h3>
+                  <h3 className={styles.roundHead}>{tx(`Round ${number}`)}</h3>
                   <ul>
                     {(round.games ?? []).map((game, index) => {
                       const mine = !!userName && (game.players ?? '').includes(userName);
@@ -120,7 +122,7 @@ export function EventScreen() {
                       return (
                         <li key={game.matchId ?? index} className={[styles.pairing, mine ? styles.minePairing : ''].join(' ')}>
                           <span className={styles.pairingPlayers}>{game.players}</span>
-                          <span className={styles.pairingResult}>{game.result || game.state}</span>
+                          <span className={styles.pairingResult}>{tx(game.result || game.state || '')}</span>
                           {running && !mine && game.gameId && (
                             <Button variant="quiet" size="sm" icon={<Eye size={15} />} onClick={() => api.gameWatchStart(game.gameId!).catch(() => undefined)}>Watch</Button>
                           )}

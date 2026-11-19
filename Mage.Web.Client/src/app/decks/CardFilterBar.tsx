@@ -1,6 +1,7 @@
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { useId, useState, type ReactNode } from 'react';
 import type { CardType, Rarity } from '../../protocol/generated/views';
+import { useTx } from '../i18n';
 import styles from './DeckBuilder.module.css';
 import { EMPTY_FILTERS, isFiltered, type CardFilters } from './filters';
 
@@ -43,6 +44,7 @@ export function CardFilterBar({ filters, onChange, toggles, sets }: {
   toggles?: ReactNode;
   sets?: { setCode?: string; name?: string }[] | null;
 }) {
+  const tx = useTx();
   const set = (patch: Partial<CardFilters>) => onChange({ ...filters, ...patch });
   // on a phone the filters fold away behind a button (the CSS shows them everywhere else): only the search stays out
   const [open, setOpen] = useState(false);
@@ -55,34 +57,35 @@ export function CardFilterBar({ filters, onChange, toggles, sets }: {
         <input
           value={filters.text}
           onChange={(event) => set({ text: event.target.value })}
-          placeholder={filters.anyText ? 'Name, type or rules text' : 'Card name'}
-          aria-label="Search cards"
+          placeholder={tx(filters.anyText ? 'Name, type or rules text' : 'Card name')}
+          aria-label={tx('Search cards')}
         />
         {filters.text && (
-          <button type="button" className={styles.clearText} onClick={() => set({ text: '' })} aria-label="Clear search"><X size={16} /></button>
+          <button type="button" className={styles.clearText} onClick={() => set({ text: '' })} aria-label={tx('Clear search')}><X size={16} /></button>
         )}
       </label>
       <button type="button" className={styles.filterToggle} aria-expanded={open} aria-controls={bodyId} onClick={() => setOpen(!open)}>
         <SlidersHorizontal size={18} aria-hidden="true" />
-        Filters{active > 0 && <b>{active}</b>}
+        {tx('Filters')}{active > 0 && <b>{active}</b>}
       </button>
       <div id={bodyId} className={styles.filterBody} data-open={open}>
       <label className={styles.toggle}>
         <input type="checkbox" checked={filters.anyText} onChange={(event) => set({ anyText: event.target.checked })} />
-        Rules text
+        {tx('Rules text')}
       </label>
       {toggles}
-      <div className={styles.pips} role="group" aria-label="Colors">
+      <div className={styles.pips} role="group" aria-label={tx('Colors')}>
         {COLORS.map((color) => {
           const on = filters.colors.includes(color.key);
+          const colorLabel = tx(color.label);
           return (
             <button
               key={color.key}
               type="button"
               className={[styles.pip, on ? styles.pipOn : ''].join(' ')}
               aria-pressed={on}
-              aria-label={color.label}
-              title={color.label}
+              aria-label={colorLabel}
+              title={colorLabel}
               onClick={() => set({ colors: on ? filters.colors.filter((key) => key !== color.key) : [...filters.colors, color.key] })}
             >
               <i className={`ms ms-cost ms-${color.symbol}`} aria-hidden="true" />
@@ -90,11 +93,11 @@ export function CardFilterBar({ filters, onChange, toggles, sets }: {
           );
         })}
       </div>
-      <label className={styles.toggle} title="Only cards inside the chosen colors: no other color in their cost or color identity, and colorless cards only when colorless is chosen">
+      <label className={styles.toggle} title={tx('Only cards inside the chosen colors: no other color in their cost or color identity, and colorless cards only when colorless is chosen')}>
         <input type="checkbox" checked={filters.onlyColors} onChange={(event) => set({ onlyColors: event.target.checked })} />
-        Only these colors
+        {tx('Only these colors')}
       </label>
-      <div className={styles.costs} role="group" aria-label="Mana value">
+      <div className={styles.costs} role="group" aria-label={tx('Mana value')}>
         {[0, 1, 2, 3, 4, 5, 6, 7].map((value) => {
           const on = filters.manaValue === value;
           return (
@@ -103,7 +106,7 @@ export function CardFilterBar({ filters, onChange, toggles, sets }: {
               type="button"
               className={[styles.cost, on ? styles.costOn : ''].join(' ')}
               aria-pressed={on}
-              aria-label={value === 7 ? 'Mana value 7 or more' : `Mana value ${value}`}
+              aria-label={tx(value === 7 ? 'Mana value 7 or more' : `Mana value ${value}`)}
               onClick={() => set({ manaValue: on ? null : value })}
             >
               {value === 7 ? '7+' : value}
@@ -111,19 +114,19 @@ export function CardFilterBar({ filters, onChange, toggles, sets }: {
           );
         })}
       </div>
-      <select className={styles.select} value={filters.type} onChange={(event) => set({ type: event.target.value as CardType | '' })} aria-label="Card type">
-        {TYPES.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
+      <select className={styles.select} value={filters.type} onChange={(event) => set({ type: event.target.value as CardType | '' })} aria-label={tx('Card type')}>
+        {TYPES.map((type) => <option key={type.value} value={type.value}>{tx(type.label)}</option>)}
       </select>
-      <select className={styles.select} value={filters.rarity} onChange={(event) => set({ rarity: event.target.value as Rarity | '' })} aria-label="Rarity">
-        {RARITIES.map((rarity) => <option key={rarity.value} value={rarity.value}>{rarity.label}</option>)}
+      <select className={styles.select} value={filters.rarity} onChange={(event) => set({ rarity: event.target.value as Rarity | '' })} aria-label={tx('Rarity')}>
+        {RARITIES.map((rarity) => <option key={rarity.value} value={rarity.value}>{tx(rarity.label)}</option>)}
       </select>
       {sets && (
-        <select className={[styles.select, styles.setSelect].join(' ')} value={filters.set} onChange={(event) => set({ set: event.target.value })} aria-label="Set">
-          <option value="">All sets</option>
+        <select className={[styles.select, styles.setSelect].join(' ')} value={filters.set} onChange={(event) => set({ set: event.target.value })} aria-label={tx('Set')}>
+          <option value="">{tx('All sets')}</option>
           {sets.map((item) => <option key={item.setCode} value={item.setCode}>{item.name} ({item.setCode})</option>)}
         </select>
       )}
-      {isFiltered(filters) && <button type="button" className={styles.reset} onClick={() => onChange(EMPTY_FILTERS)}>Reset</button>}
+      {isFiltered(filters) && <button type="button" className={styles.reset} onClick={() => onChange(EMPTY_FILTERS)}>{tx('Reset')}</button>}
       </div>
     </div>
   );

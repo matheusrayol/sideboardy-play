@@ -4,7 +4,7 @@ import { lazy, Suspense, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEFAULT_AVATAR_ID, flagChoices, SIGILS } from '../../core/social/identity';
 import { api } from '../connection';
-import { useT } from '../i18n';
+import { useT, useTx } from '../i18n';
 import { useServerInfo } from '../queries';
 import { useLobby } from '../stores/lobby';
 import { useSession } from '../stores/session';
@@ -38,6 +38,7 @@ export function ProfileDialog() {
 }
 
 function Profile({ name, onClose }: { name: string; onClose(): void }) {
+  const tx = useTx();
   const navigate = useNavigate();
   const me = useSession((state) => state.userName);
   const isMe = name === me;
@@ -63,8 +64,8 @@ function Profile({ name, onClose }: { name: string; onClose(): void }) {
         <Avatar name={name} avatarId={avatarId} size="lg" ring={look?.frame === THANK_YOU.frame} frame={look?.frame} />
         <div>
           <p className={styles.name}>{name}<LevelBadge level={look?.level} /><Flair name={name} /> <Flag flagName={flagName} always /></p>
-          {look?.title && <p className={styles.title} style={{ color: titleColor(look.title) }}>{titleName(look.title)}</p>}
-          <p className={styles.presence}>{user ? (user.infoGames?.trim() || 'Online') : 'Offline'}</p>
+          {look?.title && <p className={styles.title} style={{ color: titleColor(look.title) }}>{tx(titleName(look.title))}</p>}
+          <p className={styles.presence}>{user ? (user.infoGames?.trim() || tx('Online')) : tx('Offline')}</p>
         </div>
       </header>
 
@@ -73,20 +74,20 @@ function Profile({ name, onClose }: { name: string; onClose(): void }) {
           <dl className={styles.ratings}>
             {stats.map((stat) => (
               <div key={stat.label} className={styles.rating}>
-                <dt>{stat.label}</dt>
+                <dt>{tx(stat.label)}</dt>
                 <dd>{stat.value ? Math.round(stat.value) : '—'}</dd>
               </div>
             ))}
           </dl>
           <dl className={styles.record}>
-            <dt>Matches</dt>
-            <dd>{user.matchHistory?.trim() || 'None yet'}{quit(user.matchQuitRatio)}</dd>
-            <dt>Events</dt>
-            <dd>{user.tourneyHistory?.trim() || 'None yet'}{quit(user.tourneyQuitRatio)}</dd>
+            <dt>{tx('Matches')}</dt>
+            <dd>{user.matchHistory?.trim() || tx('None yet')}{quit(user.matchQuitRatio, tx)}</dd>
+            <dt>{tx('Events')}</dt>
+            <dd>{user.tourneyHistory?.trim() || tx('None yet')}{quit(user.tourneyQuitRatio, tx)}</dd>
           </dl>
         </>
       ) : (
-        <p className={styles.note}>{name} is not online, so their record isn't available right now.</p>
+        <p className={styles.note}>{tx(`${name} is not online, so their record isn't available right now.`)}</p>
       )}
 
       <Progression name={name} />
@@ -209,12 +210,13 @@ function Progression({ name }: { name: string }) {
   );
 }
 
-function quit(ratio: number | undefined): string {
-  return ratio ? ` · left ${ratio}%` : '';
+function quit(ratio: number | undefined, tx: (text: string) => string): string {
+  return ratio ? ` · ${tx(`left ${ratio}%`)}` : '';
 }
 
 /** Your own sigil and flag, sent to the server with your other preferences. */
 function Identity() {
+  const tx = useTx();
   const avatarId = useSettings((state) => state.settings.avatarId);
   const flag = useSettings((state) => state.settings.flag);
   const update = useSettings((state) => state.update);
@@ -223,24 +225,24 @@ function Identity() {
   return (
     <div className={styles.identity}>
       <fieldset className={styles.sigils}>
-        <legend>Sigil</legend>
-        <label className={styles.sigil} title="Your initial">
+        <legend>{tx('Sigil')}</legend>
+        <label className={styles.sigil} title={tx('Your initial')}>
           <input type="radio" name="sigil" checked={avatarId === DEFAULT_AVATAR_ID} onChange={() => update({ avatarId: DEFAULT_AVATAR_ID })} />
           <Avatar name={me} size="md" />
-          <span className="visually-hidden">Your initial</span>
+          <span className="visually-hidden">{tx('Your initial')}</span>
         </label>
         {SIGILS.map((sigil) => (
-          <label key={sigil.id} className={styles.sigil} title={sigil.label}>
+          <label key={sigil.id} className={styles.sigil} title={tx(sigil.label)}>
             <input type="radio" name="sigil" checked={avatarId === sigil.id} onChange={() => update({ avatarId: sigil.id })} />
             <Avatar name={me} avatarId={sigil.id} size="md" />
-            <span className="visually-hidden">{sigil.label}</span>
+            <span className="visually-hidden">{tx(sigil.label)}</span>
           </label>
         ))}
       </fieldset>
       <label className={styles.flagField}>
-        <span>Flag</span>
+        <span>{tx('Flag')}</span>
         <select value={flag} onChange={(event) => update({ flag: event.target.value })}>
-          {flags.map((choice) => <option key={choice.code} value={choice.code}>{choice.label}</option>)}
+          {flags.map((choice) => <option key={choice.code} value={choice.code}>{tx(choice.label)}</option>)}
         </select>
       </label>
     </div>

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { isEditableEventTarget } from '../ui/keys';
 import { api } from '../connection';
 import { useCardInfo } from '../decks/cardInfo';
+import { useTx } from '../i18n';
 import { useEvents } from '../stores/events';
 import { useSession } from '../stores/session';
 import { Button } from '../ui/Button';
@@ -16,6 +17,7 @@ const NONE: PoolCard[] = [];
 
 /** A booster draft: the pack in front of you, your picks below, the table around. */
 export function DraftScreen() {
+  const tx = useTx();
   const { draftId = '' } = useParams();
   const navigate = useNavigate();
   const draft = useEvents((state) => state.drafts[draftId]);
@@ -65,8 +67,8 @@ export function DraftScreen() {
     return (
       <div className={styles.screen}>
         <div className={styles.center}>
-          <h1 className={styles.title}>No draft here</h1>
-          <p className={styles.sub}>This draft isn't open in this tab.</p>
+          <h1 className={styles.title}>{tx('No draft here')}</h1>
+          <p className={styles.sub}>{tx("This draft isn't open in this tab.")}</p>
           <Button variant="print" onClick={() => navigate('/events')}>Back to events</Button>
         </div>
       </div>
@@ -78,7 +80,7 @@ export function DraftScreen() {
       <header className={styles.top}>
         <div className={styles.where}>
           <span className={styles.set}>{setName}</span>
-          <h1 className={styles.title}>Pack {packNumber} <span>· Pick {pickNumber}</span></h1>
+          <h1 className={styles.title}>{tx(`Pack ${packNumber}`)} <span>· {tx(`Pick ${pickNumber}`)}</span></h1>
         </div>
         <Seats players={view?.players ?? []} me={userName} passLeft={passLeft} />
         <div className={styles.topRight}>
@@ -87,19 +89,19 @@ export function DraftScreen() {
         </div>
       </header>
 
-      <main className={styles.pack} aria-label="Booster">
+      <main className={styles.pack} aria-label={tx('Booster')}>
         {draft.over ? (
           <div className={styles.center}>
-            <h2 className={styles.title}>Draft complete</h2>
-            <p className={styles.sub}>{picks.length} cards drafted. Deck building opens in a moment.</p>
+            <h2 className={styles.title}>{tx('Draft complete')}</h2>
+            <p className={styles.sub}>{tx(`${picks.length} cards drafted. Deck building opens in a moment.`)}</p>
           </div>
         ) : !draft.picking ? (
           <div className={styles.center}>
-            <h2 className={styles.waitTitle}>Waiting for the next pack</h2>
-            <p className={styles.sub}>The others are still picking.</p>
+            <h2 className={styles.waitTitle}>{tx('Waiting for the next pack')}</h2>
+            <p className={styles.sub}>{tx('The others are still picking.')}</p>
           </div>
         ) : (
-          <div className={styles.booster} role="listbox" aria-label={`Pick a card, ${booster.length} left in the pack`}>
+          <div className={styles.booster} role="listbox" aria-label={tx(`Pick a card, ${booster.length} left in the pack`)}>
             {booster.map((card, index) => {
               const id = card.id!;
               const isSelected = selected === id;
@@ -126,18 +128,18 @@ export function DraftScreen() {
         )}
         {draft.picking && (
           <div className={styles.action}>
-            <p className={styles.hint}>{selected ? 'Double-click or press Space to pick' : 'Choose a card'}</p>
+            <p className={styles.hint}>{tx(selected ? 'Double-click or press Space to pick' : 'Choose a card')}</p>
             <Button variant="decision" size="xl" disabled={!selected} onClick={() => confirm(selected)}>Pick</Button>
           </div>
         )}
       </main>
 
-      <section className={styles.picks} aria-label={`Your picks, ${picks.length} cards`}>
-        <h2 className={styles.picksLabel}>Your picks <span>{picks.length}</span></h2>
+      <section className={styles.picks} aria-label={tx(`Your picks, ${picks.length} cards`)}>
+        <h2 className={styles.picksLabel}>{tx('Your picks')} <span>{picks.length}</span></h2>
         <div className={styles.columns}>
           {columns.map((column) => (
             <div key={column.label} className={styles.column}>
-              <span className={styles.columnLabel}>{column.label}</span>
+              <span className={styles.columnLabel}>{tx(column.label)}</span>
               <div className={styles.columnCards} style={{ height: 150 + (column.cards.length - 1) * 26 }}>
                 {column.cards.map((card, index) => (
                   <div key={card.id} className={styles.picked} style={{ top: index * 26, zIndex: index }}>
@@ -179,9 +181,10 @@ export function DraftScreen() {
 
 /** Who sits where, and which way the packs go this round. */
 function Seats({ players, me, passLeft }: { players: string[]; me: string; passLeft: boolean }) {
+  const tx = useTx();
   if (players.length === 0) return null;
   return (
-    <ol className={styles.seats} aria-label={`Players, packs pass ${passLeft ? 'left' : 'right'}`}>
+    <ol className={styles.seats} aria-label={tx(`Players, packs pass ${passLeft ? 'left' : 'right'}`)}>
       <li className={styles.direction} aria-hidden="true">{passLeft ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}</li>
       {players.map((name, index) => (
         <li key={`${name}-${index}`} className={[styles.seat, name === me ? styles.seatMe : ''].join(' ')} title={name}>
@@ -194,6 +197,7 @@ function Seats({ players, me, passLeft }: { players: string[]; me: string; passL
 
 /** Time left for this pick, as a ring that empties. */
 function PickClock({ deadline }: { deadline: number }) {
+  const tx = useTx();
   const [now, setNow] = useState(() => Date.now());
   const [total] = useState(() => Math.max(1, deadline - Date.now()));
   useEffect(() => {
@@ -203,7 +207,7 @@ function PickClock({ deadline }: { deadline: number }) {
   const left = Math.max(0, deadline - now);
   const seconds = Math.ceil(left / 1000);
   return (
-    <div className={[styles.clock, seconds <= 10 ? styles.clockLow : ''].join(' ')} role="timer" aria-label={`${seconds} seconds left to pick`}>
+    <div className={[styles.clock, seconds <= 10 ? styles.clockLow : ''].join(' ')} role="timer" aria-label={tx(`${seconds} seconds left to pick`)}>
       <svg viewBox="0 0 44 44" aria-hidden="true">
         <circle cx="22" cy="22" r="19" className={styles.clockTrack} />
         <circle cx="22" cy="22" r="19" className={styles.clockFill} pathLength={100} strokeDasharray={`${(left / total) * 100} 100`} />

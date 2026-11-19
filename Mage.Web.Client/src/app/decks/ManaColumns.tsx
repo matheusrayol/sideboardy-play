@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { CardView } from '../../protocol/generated/views';
 import type { DeckCardLists } from '../../core/decks/types';
+import { useTx } from '../i18n';
 import { CardFace } from '../ui/CardFace';
 import type { DeckRow } from './deckModel';
 import { manaColumns } from './manaColumnLayout';
@@ -14,12 +15,13 @@ export function ManaColumns({ entries, info, onAdd, onRemove, onPreview }: {
   onRemove(row: DeckRow): void;
   onPreview(card: CardView | null, anchor?: DOMRect): void;
 }) {
+  const tx = useTx();
   const columns = useMemo(() => manaColumns(entries, info), [entries, info]);
   return (
     <div className={styles.columns}>
       {columns.map((column) => (
-        <section key={column.key} className={styles.column} aria-label={`${column.label}: ${column.count}`}>
-          <h3 className={styles.head}>{column.label}<span>{column.count}</span></h3>
+        <section key={column.key} className={styles.column} aria-label={`${tx(column.label)}: ${column.count}`}>
+          <h3 className={styles.head}>{tx(column.label)}<span>{column.count}</span></h3>
           <ul className={styles.stack}>
             {column.rows.map((row) => (
               <li key={row.key} className={styles.card}>

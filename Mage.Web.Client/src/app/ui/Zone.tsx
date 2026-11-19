@@ -1,4 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react';
+import { useTx } from '../i18n';
 import styles from './Zone.module.css';
 
 export interface ZoneProps extends HTMLAttributes<HTMLElement> {
@@ -12,11 +13,12 @@ export interface ZoneProps extends HTMLAttributes<HTMLElement> {
 
 /** A printed zone outline on the mat. Content sits inside the printed line. */
 export function Zone({ label, aside, as: Tag = 'section', tone = 'line', className, children, ...rest }: ZoneProps) {
+  const tx = useTx();
   return (
     <Tag className={[styles.zone, styles[tone], className ?? ''].join(' ')} {...rest}>
       {(label || aside) && (
         <header className={styles.head}>
-          {label && <h2 className={styles.label}>{label}</h2>}
+          {label && <h2 className={styles.label}>{tx(label)}</h2>}
           {aside && <div className={styles.aside}>{aside}</div>}
         </header>
       )}

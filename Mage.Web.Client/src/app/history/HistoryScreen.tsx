@@ -8,7 +8,7 @@ import { matchPlayers, matchWinner } from '../../core/history/matchRecord';
 import { appendEvents, EMPTY_TIMELINE, describeResult, replayWinner } from '../../core/replay/timeline';
 import { recordFromReplayFrames, type PlaygroupMatchRecord } from '../../core/playgroup/playgroup';
 import { api } from '../connection';
-import { useT } from '../i18n';
+import { useT, useTx } from '../i18n';
 import '../match/matchMessages';
 import { PlaygroupSyncBox } from '../playgroup/PlaygroupSyncBox';
 import { NameLevel } from '../social/LevelBadge';
@@ -43,6 +43,7 @@ function when(time: number | undefined): string {
 /** Finished matches on this server, with their replays, and every saved replay. */
 export function HistoryScreen() {
   const t = useT();
+  const tx = useTx();
   const navigate = useNavigate();
   const roomId = useSession((state) => state.roomId);
   const me = useSession((state) => state.userName);
@@ -110,18 +111,18 @@ export function HistoryScreen() {
   return (
     <div className={styles.page}>
       <header className={styles.head}>
-        <h1 className={styles.title}>History</h1>
-        <div className={styles.filter} role="radiogroup" aria-label="Show">
-          <button type="button" role="radio" aria-checked={mineOnly} onClick={() => setMineOnly(true)}>Mine</button>
-          <button type="button" role="radio" aria-checked={!mineOnly} onClick={() => setMineOnly(false)}>Everyone</button>
+        <h1 className={styles.title}>{tx('History')}</h1>
+        <div className={styles.filter} role="radiogroup" aria-label={tx('Show')}>
+          <button type="button" role="radio" aria-checked={mineOnly} onClick={() => setMineOnly(true)}>{tx('Mine')}</button>
+          <button type="button" role="radio" aria-checked={!mineOnly} onClick={() => setMineOnly(false)}>{tx('Everyone')}</button>
         </div>
       </header>
       <div className={styles.columns}>
         <Zone label="Finished matches" className={styles.zone}>
-          {matches.isPending && <p className={styles.empty}>Loading…</p>}
+          {matches.isPending && <p className={styles.empty}>{tx('Loading…')}</p>}
           {!matches.isPending && shownMatches.length === 0 && (
             <p className={styles.empty}>
-              {mineOnly ? 'No finished matches of yours since the server last started.' : 'No matches have finished since the server last started.'}
+              {tx(mineOnly ? 'No finished matches of yours since the server last started.' : 'No matches have finished since the server last started.')}
             </p>
           )}
           <ul className={styles.list}>
@@ -131,11 +132,11 @@ export function HistoryScreen() {
           </ul>
         </Zone>
         <Zone label="Replays" className={styles.zone}>
-          {replays.isPending && <p className={styles.empty}>Loading…</p>}
-          {replays.isError && <p className={styles.empty}>This server doesn't keep replays.</p>}
+          {replays.isPending && <p className={styles.empty}>{tx('Loading…')}</p>}
+          {replays.isError && <p className={styles.empty}>{tx("This server doesn't keep replays.")}</p>}
           {replays.isSuccess && shownReplays.length === 0 && (
             <p className={styles.empty}>
-              {mineOnly ? 'Your games are recorded when they finish; they show up here.' : 'No replays saved on this server yet.'}
+              {tx(mineOnly ? 'Your games are recorded when they finish; they show up here.' : 'No replays saved on this server yet.')}
             </p>
           )}
           <ul className={styles.list}>
@@ -168,6 +169,7 @@ export function HistoryScreen() {
 }
 
 function MatchRow({ match, me, replayIds, onReplay }: { match: MatchView; me: string; replayIds: Set<string | undefined>; onReplay(gameId: string): void }) {
+  const tx = useTx();
   const games = match.games ?? [];
   const won = matchWinner(match.result) === me;
   const players = matchPlayers(match.players);
@@ -175,13 +177,13 @@ function MatchRow({ match, me, replayIds, onReplay }: { match: MatchView; me: st
     <li className={styles.row}>
       <div className={styles.main}>
         <p className={styles.name}>
-          {won && <Trophy size={14} className={styles.trophy} aria-label="You won" />}
+          {won && <Trophy size={14} className={styles.trophy} aria-label={tx('You won')} />}
           {players.length > 0 ? <Players names={players} /> : match.matchName}
         </p>
         <p className={styles.meta}>
-          {[formatRules(match.deckType ?? '').label, match.gameType, match.rated ? 'Rated' : '', when(match.endTime)].filter(Boolean).join(' · ')}
+          {[tx(formatRules(match.deckType ?? '').label), match.gameType ? tx(match.gameType) : '', match.rated ? tx('Rated') : '', when(match.endTime)].filter(Boolean).join(' · ')}
         </p>
-        {match.result && <p className={styles.result}>{match.result}</p>}
+        {match.result && <p className={styles.result}>{tx(match.result)}</p>}
       </div>
       <div className={styles.actions}>
         {games.map((gameId, index) => (replayIds.has(gameId)
@@ -216,6 +218,7 @@ function ReplayRow({
   onPlaygroupSync(): void;
 }) {
   const t = useT();
+  const tx = useTx();
   const played = (replay.players ?? []).some((player) => player.name === me);
   const humanPlayers = (replay.players ?? []).filter((player) => player.human !== false).length;
   const names = (replay.players ?? []).map((player) => player.name ?? '').filter(Boolean);
@@ -224,18 +227,18 @@ function ReplayRow({
     <li className={styles.row}>
       <div className={styles.main}>
         <p className={styles.name}>
-          {replayWinner(replay.result) === me && <Trophy size={14} className={styles.trophy} aria-label="You won" />}
+          {replayWinner(replay.result) === me && <Trophy size={14} className={styles.trophy} aria-label={tx('You won')} />}
           <Players names={names} />
         </p>
         <p className={styles.meta}>
           {[
-            formatRules(replay.deckType ?? '').label,
-            replay.turns ? `${replay.turns} ${replay.turns === 1 ? 'turn' : 'turns'}` : '',
+            tx(formatRules(replay.deckType ?? '').label),
+            replay.turns ? tx(`${replay.turns} ${replay.turns === 1 ? 'turn' : 'turns'}`) : '',
             minutes ? `${minutes} min` : '',
             when(replay.endedAt ?? replay.startedAt),
           ].filter(Boolean).join(' · ')}
         </p>
-        <p className={styles.result}>{describeResult(replay.result)}</p>
+        <p className={styles.result}>{tx(describeResult(replay.result))}</p>
       </div>
       <div className={styles.actions}>
         {showPlaygroup && humanPlayers >= 2 && replay.gameId && (

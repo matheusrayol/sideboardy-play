@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { events } from '../connection';
 import { stripMarkup } from '../../core/game/prompt';
+import { tx } from '../i18n';
 import { useSession } from './session';
 
 export interface ToastAction {
@@ -38,7 +39,12 @@ export const useToasts = create<ToastState>((set) => ({
 }));
 
 export function notify(title: string, message: string, tone: Toast['tone'] = 'info', action?: ToastAction) {
-  useToasts.getState().push({ title, message, tone, action });
+  useToasts.getState().push({
+    title: tx(title),
+    message: tx(message),
+    tone,
+    action: action ? { ...action, label: tx(action.label) } : undefined,
+  });
 }
 
 events.on('SHOW_USERMESSAGE', (data) => {

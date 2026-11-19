@@ -7,6 +7,7 @@ import { EMPTY_STATS, goldfish, record, verdict, type Goldfish, type Opposition,
 import type { CardView } from '../../protocol/generated/views';
 import { useCardInfo } from '../decks/cardInfo';
 import { entryKey } from '../decks/deckModel';
+import { useTx } from '../i18n';
 import { readJson, writeJson } from '../stores/persist';
 import { Button } from '../ui/Button';
 import { CardFace } from '../ui/CardFace';
@@ -36,6 +37,7 @@ interface Deal {
 
 /** Keep or ship (S015): deal from your deck, decide, see the table's verdict, and goldfish what you kept. */
 export function MulliganTrainer() {
+  const tx = useTx();
   const [deckId, setDeckId] = useState<string | null>(null);
   const [against, setAgainst] = useState<Opposition>('midrange');
   const [onThePlay, setOnThePlay] = useState(true);
@@ -84,30 +86,30 @@ export function MulliganTrainer() {
   return (
     <section className={styles.tool} aria-labelledby="mulligan-title">
       <header className={styles.toolHead}>
-        <h2 id="mulligan-title">Mulligan trainer</h2>
-        <p>Keep or ship an opening hand, see what the table would do, then watch the hand play out alone for five turns.</p>
+        <h2 id="mulligan-title">{tx('Mulligan trainer')}</h2>
+        <p>{tx('Keep or ship an opening hand, see what the table would do, then watch the hand play out alone for five turns.')}</p>
       </header>
       <div className={styles.controls}>
         <DeckSelect value={deckId} onChange={(id) => { setDeckId(id); setDeal(null); }} />
         <label className={styles.field}>
-          <span>Across the table</span>
+          <span>{tx('Across the table')}</span>
           <select value={against} onChange={(event) => setAgainst(event.target.value as Opposition)}>
-            {OPPOSITION.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+            {OPPOSITION.map((option) => <option key={option.id} value={option.id}>{tx(option.label)}</option>)}
           </select>
         </label>
         <label className={styles.check}>
           <input type="checkbox" checked={onThePlay} onChange={(event) => setOnThePlay(event.target.checked)} />
-          On the play
+          {tx('On the play')}
         </label>
         <Button variant="decision" icon={<Shuffle size={16} />} disabled={library.length < 7} onClick={() => newHand()}>Deal a hand</Button>
       </div>
-      {error && <p className={styles.error} role="alert">{error}</p>}
-      {deckId && deck && library.length < 7 && <p className={styles.quiet}>This deck has fewer than seven cards.</p>}
+      {error && <p className={styles.error} role="alert">{tx(error)}</p>}
+      {deckId && deck && library.length < 7 && <p className={styles.quiet}>{tx('This deck has fewer than seven cards.')}</p>}
 
       {deal && (
         <>
           <p className={styles.quiet}>
-            {deal.mulligans === 0 ? 'Your opening seven.' : `Mulligan to ${7 - deal.mulligans}: pick ${deal.mulligans} card${deal.mulligans === 1 ? '' : 's'} to put on the bottom (${deal.bottom.size} chosen).`}
+            {deal.mulligans === 0 ? tx('Your opening seven.') : tx(`Mulligan to ${7 - deal.mulligans}: pick ${deal.mulligans} card${deal.mulligans === 1 ? '' : 's'} to put on the bottom (${deal.bottom.size} chosen).`)}
           </p>
           <div className={styles.hand}>
             {hand.map((card, index) => {
@@ -120,7 +122,7 @@ export function MulliganTrainer() {
                   className={[styles.handCard, chosen ? styles.bottomed : ''].join(' ')}
                   disabled={needBottom === 0 || !!deal.decided}
                   aria-pressed={needBottom > 0 ? chosen : undefined}
-                  aria-label={`${card.entry.cardName}${chosen ? ', on the bottom' : ''}`}
+                  aria-label={`${card.entry.cardName}${chosen ? tx(', on the bottom') : ''}`}
                   onClick={() => toggleBottom(index)}
                 >
                   <CardFace card={view} size="normal" />
@@ -139,11 +141,11 @@ export function MulliganTrainer() {
         </>
       )}
 
-      <footer className={styles.stats} aria-label="Your record">
-        <span><b>{stats.hands}</b> hands</span>
-        <span><b>{stats.hands ? Math.round((stats.keeps / stats.hands) * 100) : 0}%</b> kept</span>
-        <span><b>{stats.hands ? Math.round((stats.agreed / stats.hands) * 100) : 0}%</b> agreed with the table</span>
-        <span><b>{stats.keeps ? Math.round((stats.stalls / stats.keeps) * 100) : 0}%</b> of keeps stalled on lands</span>
+      <footer className={styles.stats} aria-label={tx('Your record')}>
+        <span><b>{stats.hands}</b> {tx('hands')}</span>
+        <span><b>{stats.hands ? Math.round((stats.keeps / stats.hands) * 100) : 0}%</b> {tx('kept')}</span>
+        <span><b>{stats.hands ? Math.round((stats.agreed / stats.hands) * 100) : 0}%</b> {tx('agreed with the table')}</span>
+        <span><b>{stats.keeps ? Math.round((stats.stalls / stats.keeps) * 100) : 0}%</b> {tx('of keeps stalled on lands')}</span>
         {stats.hands > 0 && (
           <Button size="sm" variant="quiet" icon={<RotateCcw size={14} />} onClick={() => { setStats(EMPTY_STATS); writeJson(STATS_KEY, EMPTY_STATS); }}>Reset</Button>
         )}
@@ -153,38 +155,39 @@ export function MulliganTrainer() {
 }
 
 function Decision({ deal, onNext, onMulligan }: { deal: Deal; onNext(): void; onMulligan(): void }) {
+  const tx = useTx();
   const decided = deal.decided!;
   const agreed = decided.kept === decided.table.keep;
   return (
     <div className={styles.result} aria-live="polite">
       <p className={agreed ? styles.agree : styles.disagree}>
-        <b>{decided.kept ? 'You kept' : 'You shipped it'}. The table would {decided.table.keep ? 'keep' : 'mulligan'}.</b> {decided.table.reason}
+        <b>{tx(decided.kept ? 'You kept' : 'You shipped it')}. {tx(`By the table: would ${decided.table.keep ? 'keep' : 'mulligan'}.`)}</b> {tx(decided.table.reason)}
       </p>
       {decided.fish && (
         <>
           <table className={styles.table}>
             <thead>
-              <tr><th scope="col">Turn</th><th scope="col">Drew</th><th scope="col">Land</th><th scope="col">Cast</th></tr>
+              <tr><th scope="col">{tx('Turn')}</th><th scope="col">{tx('Drew')}</th><th scope="col">{tx('Land')}</th><th scope="col">{tx('Cast')}</th></tr>
             </thead>
             <tbody>
               {decided.fish.turns.map((turn) => (
                 <tr key={turn.turn}>
                   <th scope="row">T{turn.turn}</th>
                   <td>{turn.drew ?? '—'}</td>
-                  <td>{turn.land ?? <em>missed</em>}</td>
+                  <td>{turn.land ?? <em>{tx('missed')}</em>}</td>
                   <td>{turn.cast.length ? turn.cast.join(', ') : '—'}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           <p className={styles.quiet}>
-            {decided.fish.stalled ? 'This keep missed a land drop in the first four turns.' : 'Every land drop made through turn four.'}
-            {' '}{decided.fish.manaSpent} mana spent over five turns.
+            {tx(decided.fish.stalled ? 'This keep missed a land drop in the first four turns.' : 'Every land drop made through turn four.')}
+            {' '}{decided.fish.manaSpent} {tx('mana spent over five turns.')}
           </p>
         </>
       )}
       <div className={styles.controls}>
-        {!decided.kept && deal.mulligans < 3 && <Button variant="decision" onClick={onMulligan}>Deal {6 - deal.mulligans}</Button>}
+        {!decided.kept && deal.mulligans < 3 && <Button variant="decision" onClick={onMulligan}>{tx(`Deal ${6 - deal.mulligans}`)}</Button>}
         <Button variant={decided.kept ? 'decision' : 'print'} onClick={onNext}>New hand</Button>
       </div>
     </div>

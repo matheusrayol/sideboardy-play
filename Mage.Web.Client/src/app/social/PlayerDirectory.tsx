@@ -3,6 +3,7 @@ import { MessageCircle, Star, StarOff } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { DirectoryPlayer } from '../../protocol/generated/views';
 import { api } from '../connection';
+import { useTx } from '../i18n';
 import { useLobby } from '../stores/lobby';
 import { useSession } from '../stores/session';
 import { isFriend, useSocial } from '../stores/social';
@@ -18,6 +19,7 @@ const SEARCH_DELAY_MS = 300;
  * are around, and add them to your friends. Friends stay this browser's list: there are no friend requests.
  */
 export function PlayerDirectory() {
+  const tx = useTx();
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
   const [offset, setOffset] = useState(0);
@@ -44,29 +46,29 @@ export function PlayerDirectory() {
   const size = data?.pageSize || 50;
 
   if (data && !data.enabled) {
-    return <p className={styles.note}>This server doesn&rsquo;t list its players.</p>;
+    return <p className={styles.note}>{tx("This server doesn’t list its players.")}</p>;
   }
   return (
     <div className={styles.players}>
       <label className={styles.search}>
-        <span className={styles.groupLabel}>Find a player</span>
+        <span className={styles.groupLabel}>{tx('Find a player')}</span>
         <input
           type="search"
           value={text}
-          placeholder="Name"
+          placeholder={tx('Name')}
           maxLength={40}
           onChange={(event) => setText(event.target.value)}
           className={styles.searchInput}
         />
       </label>
       {page.error ? (
-        <p className={styles.note}>The list can&rsquo;t be loaded right now.</p>
+        <p className={styles.note}>{tx("The list can’t be loaded right now.")}</p>
       ) : (
         <>
           <p className={styles.note} aria-live="polite">
-            {data ? (total === 0 ? 'Nobody by that name.' : `${total} ${total === 1 ? 'player' : 'players'}`) : 'Loading…'}
+            {data ? tx(total === 0 ? 'Nobody by that name.' : `${total} ${total === 1 ? 'player' : 'players'}`) : tx('Loading…')}
           </p>
-          <ul className={styles.list} aria-label="Registered players">
+          <ul className={styles.list} aria-label={tx('Registered players')}>
             {players.map((player) => <DirectoryRow key={player.name} player={player} />)}
           </ul>
           {total > size && (
@@ -90,20 +92,21 @@ function presenceLabel(player: DirectoryPlayer): string {
 }
 
 function DirectoryRow({ player }: { player: DirectoryPlayer }) {
+  const tx = useTx();
   const name = player.name ?? '';
   const me = useSession((state) => state.userName);
   const friend = useSocial((state) => isFriend(state, name));
   const isMe = name.toLowerCase() === me.toLowerCase();
   return (
     <li className={[styles.player, player.online ? '' : styles.away].join(' ')}>
-      <button type="button" className={styles.identity} onClick={() => useLobby.getState().openProfile(name)} title={`${name}'s profile`}>
+      <button type="button" className={styles.identity} onClick={() => useLobby.getState().openProfile(name)} title={tx(`${name}'s profile`)}>
         <Avatar name={name} size="sm" />
-        <span className={styles.playerName}>{name}<LevelBadge level={player.level} />{isMe ? ' (you)' : ''}</span>
-        {friend && <Star className={styles.star} size={14} aria-label="Friend" />}
+        <span className={styles.playerName}>{name}<LevelBadge level={player.level} />{isMe ? tx(' (you)') : ''}</span>
+        {friend && <Star className={styles.star} size={14} aria-label={tx('Friend')} />}
       </button>
       <span className={styles.status}>
         <span className={[styles.dot, player.online ? styles.dotOn : ''].join(' ')} aria-hidden="true" />
-        {presenceLabel(player)}
+        {tx(presenceLabel(player))}
       </span>
       {!isMe && (
         <span className={styles.rowActions}>

@@ -2,6 +2,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { CardCriteria, CardView } from '../../protocol/generated/views';
 import { api } from '../connection';
+import { useTx } from '../i18n';
 import { CardFace } from '../ui/CardFace';
 import { CardFilterBar } from './CardFilterBar';
 import { InspectButton } from './CardInspect';
@@ -62,6 +63,7 @@ export function Collection({ format, identity, counts, limitOf, onAdd, onRemove,
   onPreview(card: CardView | null, anchor?: DOMRect): void;
   onInspect(card: CardView): void;
 }) {
+  const tx = useTx();
   const [filters, setFilters] = useState<CardFilters>(EMPTY_FILTERS);
   const [allSets, setAllSets] = useState(false);
   // a commander deck shows what its commander allows, unless the player asks for everything
@@ -137,7 +139,7 @@ export function Collection({ format, identity, counts, limitOf, onAdd, onRemove,
   );
 
   return (
-    <section className={styles.collection} aria-label="Collection">
+    <section className={styles.collection} aria-label={tx('Collection')}>
       <CardFilterBar
         filters={filters}
         onChange={setFilters}
@@ -145,17 +147,17 @@ export function Collection({ format, identity, counts, limitOf, onAdd, onRemove,
         toggles={(
           <>
             {identity && (
-              <label className={styles.toggle} title="Only cards your commander's color identity allows">
+              <label className={styles.toggle} title={tx("Only cards your commander's color identity allows")}>
                 <input type="checkbox" checked={!anyIdentity} onChange={(event) => setAnyIdentity(!event.target.checked)} />
-                Commander&rsquo;s colors
+                {tx('Commander’s colors')}
                 {identity.length === 0
-                  ? <i className="ms ms-cost ms-c" aria-label="colorless" />
+                  ? <i className="ms ms-cost ms-c" aria-label={tx('colorless')} />
                   : identity.map((letter) => <i key={letter} className={`ms ms-cost ms-${letter.toLowerCase()}`} aria-hidden="true" />)}
               </label>
             )}
-            <label className={styles.toggle} title="Joke sets, unofficial sets and Arena-only cards">
+            <label className={styles.toggle} title={tx('Joke sets, unofficial sets and Arena-only cards')}>
               <input type="checkbox" checked={allSets} onChange={(event) => setAllSets(event.target.checked)} />
-              Joke &amp; digital sets
+              {tx('Joke & digital sets')}
             </label>
           </>
         )}
@@ -163,26 +165,26 @@ export function Collection({ format, identity, counts, limitOf, onAdd, onRemove,
 
       <div className={styles.results}>
         {results.isPending ? (
-          <p className={styles.note}>Opening the binder…</p>
+          <p className={styles.note}>{tx('Opening the binder…')}</p>
         ) : results.isError ? (
-          <p className={styles.note}>The card search failed. {results.error instanceof Error ? results.error.message : ''}</p>
+          <p className={styles.note}>{tx('The card search failed.')} {results.error instanceof Error ? results.error.message : ''}</p>
         ) : cards.length === 0 && extras.length === 0 ? (
           <p className={styles.note}>
-            {searchSidelined && sidelined.isPending ? 'Opening the binder…' : 'No cards match. Loosen a filter or check the spelling.'}
+            {tx(searchSidelined && sidelined.isPending ? 'Opening the binder…' : 'No cards match. Loosen a filter or check the spelling.')}
           </p>
         ) : (
           <>
             {cards.length > 0 && <div className={styles.grid}>{cards.map(tile)}</div>}
             {extras.length > 0 && (
               <>
-                <p className={styles.note}>Only printed in joke &amp; digital sets:</p>
+                <p className={styles.note}>{tx('Only printed in joke & digital sets:')}</p>
                 <div className={styles.grid}>{extras.map(tile)}</div>
               </>
             )}
           </>
         )}
         <div ref={sentinel} className={styles.sentinel} aria-hidden="true" />
-        {isFetchingNextPage && <p className={styles.note}>More cards…</p>}
+        {isFetchingNextPage && <p className={styles.note}>{tx('More cards…')}</p>}
       </div>
     </section>
   );
@@ -197,6 +199,7 @@ const CollectionCard = memo(function CollectionCard({ card, count, limit, onAdd,
   onPreview(card: CardView | null, anchor?: DOMRect): void;
   onInspect(card: CardView): void;
 }) {
+  const tx = useTx();
   const full = count >= limit;
   return (
     <div
@@ -223,7 +226,7 @@ const CollectionCard = memo(function CollectionCard({ card, count, limit, onAdd,
           </span>
         )}
       </button>
-      <InspectButton card={card} label={`Look at ${card.name ?? 'the card'} up close`} onInspect={onInspect} />
+      <InspectButton card={card} label={tx(`Look at ${card.name ?? 'the card'} up close`)} onInspect={onInspect} />
     </div>
   );
 });

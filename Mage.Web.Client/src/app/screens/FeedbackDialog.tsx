@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { api } from '../connection';
 import { useSession } from '../stores/session';
 import { notify } from '../stores/toasts';
+import { useTx } from '../i18n';
 import { Button } from '../ui/Button';
 import { Dialog } from '../ui/Dialog';
 import styles from '../social/ReportDialog.module.css';
@@ -23,6 +24,7 @@ export function FeedbackDialog({ open, onOpenChange }: { open: boolean; onOpenCh
 }
 
 function FeedbackForm({ onDone }: { onDone(): void }) {
+  const tx = useTx();
   const [type, setType] = useState<string>('bug');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
@@ -47,18 +49,18 @@ function FeedbackForm({ onDone }: { onDone(): void }) {
   return (
     <form className={styles.form} onSubmit={submit}>
       <fieldset className={styles.reasons}>
-        <legend>What is it?</legend>
+        <legend>{tx('What is it?')}</legend>
         {TYPES.map((choice) => (
           <label key={choice.value} className={styles.reason}>
             <input type="radio" name="type" value={choice.value} checked={type === choice.value} onChange={() => setType(choice.value)} />
-            {choice.label}
+            {tx(choice.label)}
           </label>
         ))}
       </fieldset>
       <label className={styles.details}>
-        <span>Your feedback</span>
+        <span>{tx('Your feedback')}</span>
         <textarea value={message} maxLength={4000} rows={6} required autoFocus onChange={(event) => setMessage(event.target.value)}
-          placeholder={type === 'bug' ? 'What happened, and what you expected. Which card or screen, if you know.' : ''} />
+          placeholder={type === 'bug' ? tx('What happened, and what you expected. Which card or screen, if you know.') : ''} />
       </label>
       {error && <p className={styles.error} role="alert">{error}</p>}
       <div className={styles.actions}>
