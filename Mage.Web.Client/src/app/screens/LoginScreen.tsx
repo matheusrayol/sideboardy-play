@@ -3,7 +3,13 @@ import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties, type F
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { APP_NAME } from '../brand';
 import { api, rpc } from '../connection';
-import { syncSideboardySso } from '../../core/deckImport/sideboardy';
+import {
+  forgotPasswordSideboardy,
+  isSideboardyHost,
+  loginSideboardy,
+  registerSideboardy,
+  syncSideboardySso,
+} from '../../core/deckImport/sideboardy';
 import { useT, type MessageKey } from '../i18n';
 import { RichText } from '../i18n/RichText';
 import type { InviteCheck, ServerInfo } from '../../protocol/generated/views';
@@ -78,9 +84,11 @@ export function LoginScreen() {
   const [ssoNonce, setSsoNonce] = useState(0);
   const [ssoChecked, setSsoChecked] = useState(false);
   const [ssoUser, setSsoUser] = useState<string | null>(null);
+  const [ssoReachable, setSsoReachable] = useState(() => isSideboardyHost());
   const ssoReconnected = useRef(false);
   const { status, info } = useServerStatus(serverUrl, ssoNonce);
-  const accounts = !!info?.accounts;
+  const sideboardyAuth = ssoReachable;
+  const accounts = !!info?.accounts || sideboardyAuth;
   const contributors = info?.access === 'allowlist';
   const inviteOnly = info?.registration === 'invite';
   // this server signs in with the identity provider only: the provider is the only way in
@@ -109,6 +117,7 @@ export function LoginScreen() {
     let cancelled = false;
     void syncSideboardySso().then((sso) => {
       if (cancelled) return;
+      if (sso.reachable) setSsoReachable(true);
       setSsoUser(sso.authenticated ? sso.playUsername : null);
       setSsoChecked(true);
     });
@@ -143,10 +152,10 @@ export function LoginScreen() {
 
   // single sign-on: the proxy in front already said who this is, or the server takes nobody else
   const signOn = mode === 'sit' && !elsewhere ? info?.signOn ?? null : null;
-  const signOnOnly = !!info?.signOnOnly;
+  const signOnOnly = !!info?.signOnOnly && !sideboardyAuth;
   const busy = session.phase === 'signingIn' || dealing;
   const name = userName.trim();
-  const nameError = name && !/^[A-Za-z0-9_]{3,14}$/.test(name) ? t('login.nameRule') : null;
+  const nameError = name && !(sideboardyAuth && mode === 'sit') && !/^[A-Za-z0-9_]{3,14}$/.test(name) ? t('login.nameRule') : null;
   const turnstileKey = (mode === 'register' || mode === 'ask') && info?.turnstileSiteKey ? info.turnstileSiteKey : null;
   const checked = !turnstileKey || !!turnstileToken;
   const minPassword = info?.minPasswordLength || 8;
@@ -315,6 +324,24 @@ export function LoginScreen() {
     if (!canSubmit) return;
     const url = serverUrl.trim();
     if (mode === 'sit') {
+      if (sideboardyAuth) {
+        setWorking(true);
+        useSession.setState({ error: null });
+        try {
+          const playUser = await loginSideboardy(name, password);
+          ssoReconnected.current = true;
+          setSsoUser(playUser);
+          rpc.disconnect();
+          if (await session.signInWithSignOn(url, playUser)) seated();
+          else refuse();
+        } catch (error) {
+          useSession.setState({ error: error instanceof Error ? error.message : String(error) });
+          refuse();
+        } finally {
+          setWorking(false);
+        }
+        return;
+      }
       if (await session.signIn(url, name, password, remember)) seated();
       else refuse();
       return;
@@ -322,8 +349,23 @@ export function LoginScreen() {
     setWorking(true);
     try {
       if (mode === 'register') {
-        if (await session.register(url, name, email.trim(), password, remember, invite, turnstileToken)) seated();
-        else refuse();
+        if (sideboardyAuth) {
+          try {
+            const playUser = await registerSideboardy(name, email.trim(), password);
+            ssoReconnected.current = true;
+            setSsoUser(playUser);
+            rpc.disconnect();
+            if (await session.signInWithSignOn(url, playUser)) seated();
+            else refuse();
+          } catch (error) {
+            useSession.setState({ error: error instanceof Error ? error.message : String(error) });
+            refuse();
+          }
+        } else if (await session.register(url, name, email.trim(), password, remember, invite, turnstileToken)) {
+          seated();
+        } else {
+          refuse();
+        }
       } else if (mode === 'githubName' && github) {
         await finishGithub(name);
       } else if (mode === 'oidcName' && oidc) {
@@ -339,7 +381,16 @@ export function LoginScreen() {
           refuse();
         }
       } else if (mode === 'forgot') {
-        if (await session.requestPasswordReset(url, email.trim())) {
+        if (sideboardyAuth) {
+          try {
+            const message = await forgotPasswordSideboardy(email.trim());
+            switchMode('sit');
+            setNotice(message);
+          } catch (error) {
+            useSession.setState({ error: error instanceof Error ? error.message : String(error) });
+            refuse();
+          }
+        } else if (await session.requestPasswordReset(url, email.trim())) {
           setMode('reset');
           setCode('');
           setNotice(t('login.codeSent', { email: email.trim() }));
@@ -413,13 +464,13 @@ export function LoginScreen() {
 
         {!signOn && !signOnOnly && (mode === 'sit' || mode === 'register' || mode === 'ask' || mode === 'githubName' || mode === 'oidcName') && (
           <>
-            <SeatPlate name={name && !nameError ? name : ''} placeholder={t('login.yourName')} />
+            <SeatPlate name={name && !nameError ? (name.includes('@') ? name.split('@')[0].slice(0, 14) : name.slice(0, 14)) : ''} placeholder={t('login.yourName')} />
             <Field
               label={accounts ? t('login.accountName') : t('login.playerName')}
               value={userName}
               autoComplete="username"
               autoFocus
-              maxLength={14}
+              maxLength={sideboardyAuth && mode === 'sit' ? 200 : 14}
               onChange={(event) => setUserName(event.target.value)}
               error={nameError}
               required
@@ -573,7 +624,7 @@ export function LoginScreen() {
           <div className={styles.accountLinks}>
             {!oidcOnly && <button type="button" className={styles.linkButton} onClick={() => switchMode('register')}>{t('login.createAccount')}</button>}
             {(contributors || inviteOnly) && <button type="button" className={styles.linkButton} onClick={() => switchMode('ask')}>{t('login.ask')}</button>}
-            {!oidcOnly && (info?.mail
+            {!oidcOnly && ((info?.mail || sideboardyAuth)
               ? <button type="button" className={styles.linkButton} onClick={() => switchMode('forgot')}>{t('login.forgot')}</button>
               : <span className={styles.quiet}>{t('login.forgotAskAdmin')}</span>)}
           </div>

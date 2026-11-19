@@ -8,6 +8,7 @@ export interface SideboardySsoStatus {
   authenticated: boolean;
   playUsername: string | null;
   migratedCookie?: boolean;
+  reachable?: boolean;
 }
 
 export interface SideboardyDeckSummary {
@@ -62,10 +63,18 @@ function mapFormat(value: string | null | undefined): string | undefined {
   return FORMAT_MAP[value.trim().toLowerCase().replace(/[_-]+/g, ' ')];
 }
 
-function isSideboardyHost(): boolean {
+export function isSideboardyHost(): boolean {
   if (typeof window === 'undefined') return false;
   const host = window.location.hostname.toLowerCase();
   return host === 'sideboardy.app' || host.endsWith('.sideboardy.app');
+}
+
+export function toPlayUsername(username: string, userId?: number | string | null): string {
+  let clean = String(username || '').trim().toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+  if (clean.length < 3) clean = `sb_${clean || 'user'}_${userId || 0}`.replace(/[^a-z0-9_]/g, '');
+  if (clean.length > 14) clean = clean.slice(0, 14);
+  if (clean.toLowerCase() === 'admin') clean = `sb_${userId || 'user'}`.slice(0, 14);
+  return clean;
 }
 
 async function fetchApiJson(path: string, init?: RequestInit): Promise<{ response: Response; data: unknown } | null> {
@@ -102,12 +111,16 @@ async function fetchApiJson(path: string, init?: RequestInit): Promise<{ respons
 }
 
 export async function syncSideboardySso(): Promise<SideboardySsoStatus> {
+  let localReachable = false;
   try {
     const localRes = await fetch('/sideboardy-api/auth/sso', { credentials: 'include', cache: 'no-store' });
-    if (localRes.ok && (localRes.headers.get('content-type') ?? '').includes('application/json')) {
-      const payload = (await localRes.json()) as Partial<SideboardySsoStatus>;
-      if (payload.authenticated && payload.playUsername) {
-        return { authenticated: true, playUsername: payload.playUsername, migratedCookie: false };
+    if ((localRes.headers.get('content-type') ?? '').includes('application/json')) {
+      localReachable = true;
+      if (localRes.ok) {
+        const payload = (await localRes.json()) as Partial<SideboardySsoStatus>;
+        if (payload.authenticated && payload.playUsername) {
+          return { authenticated: true, playUsername: payload.playUsername, migratedCookie: false, reachable: true };
+        }
       }
     }
   } catch {
@@ -115,7 +128,7 @@ export async function syncSideboardySso(): Promise<SideboardySsoStatus> {
   }
 
   if (!isSideboardyHost()) {
-    return { authenticated: false, playUsername: null };
+    return { authenticated: false, playUsername: null, reachable: localReachable };
   }
 
   try {
@@ -123,14 +136,75 @@ export async function syncSideboardySso(): Promise<SideboardySsoStatus> {
     if (apexRes.ok && (apexRes.headers.get('content-type') ?? '').includes('application/json')) {
       const payload = (await apexRes.json()) as Partial<SideboardySsoStatus>;
       if (payload.authenticated && payload.playUsername) {
-        return { authenticated: true, playUsername: payload.playUsername, migratedCookie: true };
+        return { authenticated: true, playUsername: payload.playUsername, migratedCookie: true, reachable: true };
       }
     }
   } catch {
     // unreachable or network blocked
   }
 
-  return { authenticated: false, playUsername: null };
+  return { authenticated: false, playUsername: null, reachable: localReachable || isSideboardyHost() };
+}
+
+export async function loginSideboardy(login: string, password: string): Promise<string> {
+  const result = await fetchApiJson('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ login: login.trim(), password }),
+  });
+  if (!result) {
+    throw new Error('Não foi possível conectar ao Sideboardy para fazer login.');
+  }
+  const data = result.data as { error?: string; user?: { id?: number; username?: string } };
+  if (!result.response.ok) {
+    throw new Error(data?.error || 'Usuário ou senha incorretos.');
+  }
+  const sso = await syncSideboardySso();
+  return sso.authenticated && sso.playUsername ? sso.playUsername : toPlayUsername(data?.user?.username || login, data?.user?.id);
+}
+
+export async function registerSideboardy(username: string, email: string, password: string): Promise<string> {
+  const result = await fetchApiJson('/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      username: username.trim(),
+      email: email.trim(),
+      password,
+      display_name: username.trim(),
+      policies_read: true,
+    }),
+  });
+  if (!result) {
+    throw new Error('Não foi possível conectar ao Sideboardy para criar a conta.');
+  }
+  const data = result.data as { error?: string; user?: { id?: number; username?: string } };
+  if (!result.response.ok) {
+    throw new Error(data?.error || 'Erro ao criar conta.');
+  }
+  const sso = await syncSideboardySso();
+  return sso.authenticated && sso.playUsername ? sso.playUsername : toPlayUsername(data?.user?.username || username, data?.user?.id);
+}
+
+export async function forgotPasswordSideboardy(email: string): Promise<string> {
+  const result = await fetchApiJson('/auth/forgot-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email.trim() }),
+  });
+  if (!result) {
+    throw new Error('Não foi possível conectar ao Sideboardy.');
+  }
+  const data = result.data as { error?: string; message?: string };
+  if (!result.response.ok) {
+    throw new Error(data?.error || 'Não foi possível enviar o e-mail de recuperação.');
+  }
+  return data?.message || 'Se houver uma conta com esse e-mail, enviamos um link para redefinir a senha.';
+}
+
+export async function logoutSideboardy(): Promise<void> {
+  if (!isSideboardyHost()) return;
+  await fetchApiJson('/auth/logout', { method: 'POST' }).catch(() => null);
 }
 
 export async function fetchSideboardyMyDecks(): Promise<{ authenticated: boolean; decks: SideboardyDeckSummary[] }> {

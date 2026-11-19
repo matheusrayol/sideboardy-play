@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { api, DEFAULT_SERVER_URL, rpc } from '../connection';
+import { logoutSideboardy } from '../../core/deckImport/sideboardy';
 import { ConnectionError, RpcError, type ConnectionStatus } from '../../core/rpc/RpcClient';
 import { forgetOpenGames } from './openGames';
 import { readJson, writeJson } from './persist';
@@ -327,6 +328,7 @@ export const useSession = create<SessionState>((set, get) => ({
     if (!keepGames) {
       writeJson<RememberedRestore | null>(RESTORE_KEY, null);
       forgetOpenGames(get().serverUrl, get().userName);
+      await logoutSideboardy();
     }
     writeJson<RememberedLogin>(LOGIN_KEY, { serverUrl: get().serverUrl, userName: get().userName, passwordless: false, account: false, signedOutManually: true });
     rpc.disconnect();
