@@ -172,6 +172,20 @@ export function normalizePlaygroupKey(value: string): string {
   return key;
 }
 
+/** Validates a Playgroup Live URL returned by `/live_sessions` and canonicalizes its origin to `https://playgroup.gg`. */
+export function normalizePlaygroupLiveUrl(rawUrl: string | null | undefined): string | null {
+  const value = String(rawUrl ?? '').trim();
+  if (!value) return null;
+  try {
+    const url = value.startsWith('/') ? new URL(value, 'https://playgroup.gg') : new URL(value);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+    if (!/^\/live_sessions\/[A-Za-z0-9_-]+(?:\/.*)?$/.test(url.pathname)) return null;
+    return `https://playgroup.gg${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return null;
+  }
+}
+
 export function validationText(errors: unknown, max = 300): string {
   if (!errors) return '';
   let text: string;
@@ -319,9 +333,12 @@ export function toPlaygroupEvents(
     const source = seatId(event.kind === 'life_loss' ? (event.target ?? event.source) : (event.source ?? event.target));
     if (source == null) continue;
 
+    const hasCommanderId = event.kind === 'commander_damage' && Boolean(event.commander && commanderIds[event.commander]);
+    const eventName = event.kind === 'commander_damage' && !hasCommanderId ? 'Damage' : pick.name;
+
     const batchEvent: PlaygroupBatchEvent = {
       id: id++,
-      name: pick.name,
+      name: eventName,
       source_player_id: source,
       time: event.t,
       turn: event.turn,
@@ -334,7 +351,7 @@ export function toPlaygroupEvents(
       batchEvent.target_player_id = String(event.target);
     }
     if (event.amount) batchEvent.amount = event.amount;
-    if (event.kind === 'commander_damage' && event.commander && commanderIds[event.commander]) {
+    if (hasCommanderId && event.commander) {
       batchEvent.commander_id = commanderIds[event.commander];
     }
     if (event.kind === 'elimination' && event.reason && batchEvent.metadata) {

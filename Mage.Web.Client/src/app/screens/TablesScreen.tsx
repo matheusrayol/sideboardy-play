@@ -215,15 +215,30 @@ function TableRow({ table, children }: { table: TableView; children?: React.Reac
   );
 }
 
+async function postPlaygroupLiveChat(tableId: string, userName: string, groupName: string, liveUrl: string, t: Translate) {
+  const tableChatId = await api.chatFindByTable(tableId).catch(() => null);
+  if (!tableChatId) return;
+  await api.chatSendMessage(tableChatId, userName, t('match.playgroup.liveChatMessage', { group: groupName, url: liveUrl })).catch(() => undefined);
+}
+
 function MyTable({ table }: { table: TableView }) {
   const t = useT();
   const roomId = useSession((state) => state.roomId);
   const userName = useSession((state) => state.userName);
+  const pgUser = usePlaygroup((state) => state.user);
+  const pgGroups = usePlaygroup((state) => state.playgroups);
+  const defaultPgId = usePlaygroup((state) => state.defaultPlaygroupId);
+  const defaultLeagueId = usePlaygroup((state) => state.defaultLeagueId);
+  const startTableLiveSession = usePlaygroup((state) => state.startTableLiveSession);
   const tableConfig = usePlaygroup((state) => (table.tableId ? state.tableConfigs[table.tableId] : undefined));
   const [chatOpen, setChatOpen] = useState(false);
+  const [startingLive, setStartingLive] = useState(false);
   // the server lists the controller first, then the other seated players: "host, guest"
   const isOwner = (table.controllerName ?? '').split(', ')[0] === userName;
   const ready = table.tableState === 'READY_TO_START';
+  const targetGroupId = tableConfig?.playgroupId ?? defaultPgId;
+  const targetGroup = targetGroupId ? pgGroups.find((group) => group.id === targetGroupId) ?? null : null;
+  const canStartLive = !tableConfig?.liveUrl && isOwner && Boolean(table.tableId && pgUser && targetGroupId);
   const copyInvite = () => {
     if (!table.tableId) return;
     const link = inviteLink(PUBLIC_ORIGIN, table.tableId);
@@ -231,14 +246,44 @@ function MyTable({ table }: { table: TableView }) {
       .then(() => notify('Invite link copied', table.passworded ? 'Send it to a friend, with the table password.' : 'Send it to a friend: it opens this table.'))
       .catch(() => notify('Invite link', link));
   };
+  const createLive = async () => {
+    if (!table.tableId || !pgUser || !targetGroupId || startingLive) return;
+    const groupName = tableConfig?.playgroupName ?? targetGroup?.name ?? 'Playgroup';
+    const activeLeagues = (targetGroup?.leagues ?? []).filter((league) => league.active !== false);
+    const leagueId = tableConfig?.playgroupId
+      ? tableConfig.leagueId
+      : (activeLeagues.some((league) => league.id === defaultLeagueId) ? defaultLeagueId : null);
+    setStartingLive(true);
+    try {
+      const liveUrl = await startTableLiveSession(table.tableId, {
+        playerAmount: Math.max(2, table.seats?.length ?? 2),
+        lifeAmount: isCommanderFormat(table.deckType ?? '') ? 40 : 20,
+        playgroupId: targetGroupId,
+        playgroupName: groupName,
+        leagueId: leagueId ?? null,
+      });
+      if (liveUrl) {
+        window.open(liveUrl, '_blank', 'noopener,noreferrer');
+        await postPlaygroupLiveChat(table.tableId, userName, groupName, liveUrl, t);
+      }
+    } catch (pgError) {
+      notify(t('match.playgroup.liveErrorTitle'), playgroupErrorText(t, pgError), 'error');
+    } finally {
+      setStartingLive(false);
+    }
+  };
   return (
     <>
       <TableRow table={table}>
-        {tableConfig?.liveUrl && (
+        {tableConfig?.liveUrl ? (
           <ButtonLink href={tableConfig.liveUrl} target="_blank" rel="noreferrer" size="sm" variant="quiet" icon={<ExternalLink size={15} />}>
             {t('match.playgroup.liveButton')}
           </ButtonLink>
-        )}
+        ) : canStartLive ? (
+          <Button size="sm" variant="quiet" busy={startingLive} icon={<ExternalLink size={15} />} onClick={() => void createLive()}>
+            {t('match.playgroup.liveButton')}
+          </Button>
+        ) : null}
         {table.tableState === 'WAITING' && (
           <Button size="sm" variant="quiet" icon={<Link2 size={16} />} onClick={copyInvite}>Invite</Button>
         )}
@@ -414,10 +459,7 @@ function HostDialog({ open, onOpenChange, deckId }: { open: boolean; onOpenChang
             leagueId: activeLeagues.some((league) => league.id === leagueId) ? leagueId : null,
           });
           if (liveUrl) {
-            const tableChatId = await api.chatFindByTable(table.tableId).catch(() => null);
-            if (tableChatId) {
-              await api.chatSendMessage(tableChatId, userName, t('match.playgroup.liveChatMessage', { group: chosenGroup.name, url: liveUrl })).catch(() => undefined);
-            }
+            await postPlaygroupLiveChat(table.tableId, userName, chosenGroup.name, liveUrl, t);
           }
         } catch (pgError) {
           notify(t('match.playgroup.liveErrorTitle'), playgroupErrorText(t, pgError), 'error');

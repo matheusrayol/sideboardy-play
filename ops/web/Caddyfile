@@ -135,6 +135,8 @@
 		rewrite * /api/public/v1{uri}
 		reverse_proxy https://playgroup.gg {
 			header_up Host playgroup.gg
+			header_up X-Forwarded-Host playgroup.gg
+			header_up X-Forwarded-Proto https
 			header_up User-Agent "SideboardyPlay/1.0 (+https://sideboardy.app; contato@sideboardy.app)"
 		}
 	}

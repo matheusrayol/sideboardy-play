@@ -218,7 +218,7 @@ export const usePlaygroup = create<PlaygroupState>((set, get) => ({
   async startTableLiveSession(tableId, opts) {
     const apiKey = get().apiKey;
     if (!apiKey) return null;
-    const { createPlaygroupClient } = await loadPlaygroup();
+    const { createPlaygroupClient, normalizePlaygroupLiveUrl } = await loadPlaygroup();
     const client = createPlaygroupClient(apiKey);
     const live = await client.createLive({
       player_amount: Math.min(6, Math.max(1, opts.playerAmount)),
@@ -227,7 +227,7 @@ export const usePlaygroup = create<PlaygroupState>((set, get) => ({
       ...(opts.leagueId ? { league_id: opts.leagueId } : {}),
       client_identifier: 'sideboardy-play',
     });
-    const liveUrl = live?.url && /^https:\/\/playgroup\.gg\//.test(live.url) ? live.url : null;
+    const liveUrl = normalizePlaygroupLiveUrl(live?.url);
     get().setTablePlaygroup(tableId, {
       playgroupId: opts.playgroupId,
       playgroupName: opts.playgroupName,

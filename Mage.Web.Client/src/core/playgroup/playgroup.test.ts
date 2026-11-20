@@ -7,6 +7,7 @@ import {
   findPlaygroupGame,
   nextPlaygroupAttempt,
   normalizePlaygroupKey,
+  normalizePlaygroupLiveUrl,
   parseTime,
   playgroupSkippedKinds,
   recordCommanders,
@@ -22,6 +23,16 @@ describe('playgroup key validation and matching', () => {
     expect(normalizePlaygroupKey('  Bearer pg_live_1234567890abcdef  ')).toBe('pg_live_1234567890abcdef');
     expect(() => normalizePlaygroupKey('short')).toThrow(PlaygroupApiError);
     expect(() => normalizePlaygroupKey('invalid key with spaces')).toThrow(PlaygroupApiError);
+  });
+
+  test('normalizes Playgroup Live session URLs across proxied origins and rejects invalid URLs', () => {
+    expect(normalizePlaygroupLiveUrl('https://playgroup.gg/live_sessions/abc123XYZ')).toBe('https://playgroup.gg/live_sessions/abc123XYZ');
+    expect(normalizePlaygroupLiveUrl('https://play.sideboardy.app/live_sessions/abc123XYZ?foo=bar')).toBe('https://playgroup.gg/live_sessions/abc123XYZ?foo=bar');
+    expect(normalizePlaygroupLiveUrl('/live_sessions/abc123XYZ')).toBe('https://playgroup.gg/live_sessions/abc123XYZ');
+    expect(normalizePlaygroupLiveUrl('https://playgroup.gg/not_live/abc123')).toBeNull();
+    expect(normalizePlaygroupLiveUrl('javascript:alert(1)')).toBeNull();
+    expect(normalizePlaygroupLiveUrl('')).toBeNull();
+    expect(normalizePlaygroupLiveUrl(null)).toBeNull();
   });
 
   test('parses timestamps safely in UTC when timezone is omitted', () => {
@@ -91,6 +102,18 @@ describe('playgroup event export and adaptive retries', () => {
     expect(events[6].amount).toBeUndefined();
     expect(events[11]).toMatchObject({ name: 'WinnerDeclared', source_player_id: '0' });
     expect(recordCommanders(sampleRecord)).toEqual(['Atraxa']);
+  });
+
+  test('falls back commander damage to Damage when commander lookup returned no ID', () => {
+    const events = toPlaygroupEvents(sampleRecord, {});
+    expect(events[2]).toMatchObject({
+      name: 'Damage',
+      amount: 4,
+      source_player_id: '2',
+      target_player_id: '0',
+      metadata: { kind: 'commander_damage' },
+    });
+    expect(events[2].commander_id).toBeUndefined();
   });
 
   test('falls back across candidate names and skips rejected optional event kinds', () => {
